@@ -1,0 +1,144 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+   "http://www.w3.org/TR/html4/strict.dtd">
+<HTML>
+   <HEAD>
+      <TITLE>My first HTML document</TITLE>
+      <style rel="stylesheet" type="text/css">
+body {
+ font-size: 23px;
+
+ margin-top: 50px;
+    margin-bottom: 50px;
+    margin-right: 80px;
+    margin-left: 80px;
+
+    padding-top: 50px;
+    padding-bottom: 50px;
+    padding-right: 80px;
+    padding-left: 80px;
+
+    line-height:35px;
+}
+</style>
+      <script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    "HTML-CSS" : {
+        availableFonts : ["STIX"],
+        preferredFont : "STIX",
+        webFont : "STIX-Web",
+        imageFont : null
+    }
+});
+</script>
+     <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js" type="text/javascript">
+    MathJax.Hub.Config({
+        HTML: ["input/TeX","output/HTML-CSS"],
+        TeX: { extensions: ["AMSmath.js","AMSsymbols.js"],
+               equationNumbers: { autoNumber: "AMS" } },
+        extensions: ["tex2jax.js"],
+        jax: ["input/TeX","output/HTML-CSS"],
+        tex2jax: { inlineMath: [ ['$$$','$$$'] ],
+                   displayMath: [ ['$$$$','$$$$'] ],
+                   processEscapes: true },
+        "HTML-CSS": { availableFonts: ["TeX"],
+                      linebreaks: { automatic: true } }
+    });
+</script>
+   </HEAD>
+   <BODY>
+Lab_3_Dummy Q-learning (table)_03_0_q_table_frozenlake_det.py.html
+<xmp>
+# https://medium.com/emergent-future/simple-reinforcement-learning-with-tensorflow-part-0-q-learning-with-tables-and-neural-networks-d195264329d0#.pjz9g59ap
+
+import gym
+import numpy as np
+import matplotlib.pyplot as plt
+from gym.envs.registration import register
+import random as pr
+
+# https://gist.github.com/stober/1943451
+
+
+# This method is random argmax
+def rargmax(vector):
+    """ Argmax that chooses randomly among eligible maximum indices. """
+    m = np.amax(vector)
+    indices = np.nonzero(vector == m)[0]
+    return pr.choice(indices)
+
+
+register(
+    id='FrozenLake-v3',
+    entry_point='gym.envs.toy_text:FrozenLakeEnv',
+    kwargs={'map_name': '4x4',
+            'is_slippery': False}
+)
+env = gym.make('FrozenLake-v3')
+
+# You initialize table with all zeros
+# From $$$\hat{Q}(s,a)$$$
+# We know s=16, a=4 as given value
+# env has this values
+Q = np.zeros([env.observation_space.n, env.action_space.n])
+
+# You set number of iteration
+num_episodes = 2000
+
+# You create list to save result(total rewards and steps) per episode
+rList = []
+for i in range(num_episodes):
+    # You initialize environment by reseting environment,
+    # and get first new observation
+    state = env.reset()
+    rAll = 0
+    # We will interate until "done" becomes True
+    done = False
+
+    # The Q-Table learning algorithm
+    while not done:
+        # You will choose one action
+        # In this case, you will choose action which outputs highest Q
+        # If values from Q are same, you will choose randomly by using rargmax()
+        # Fox example, if table has 0 in all area,
+        # you will move randomly
+        # In this way, you choose one action
+        action = rargmax(Q[state, :])
+
+        # You execute above chosen action
+        # then, you get "new state", "reward" from environment
+        new_state, reward, done, _ = env.step(action)
+
+        # Update Q-Table with new knowledge using learning rate
+        # Step of updating Q is most important
+        # Q ,at current state, at doing current action, will be
+        # "reward" which you get from above +
+        # Q at next step which is state at new_state,
+        # : means every cases(up, down, left, right)
+        # From new Q, select highest Q
+        Q[state, action] = reward + np.max(Q[new_state, :])
+
+        # You sum all reward from each step
+        rAll += reward
+        state = new_state
+
+    rList.append(rAll)
+
+Hey, I wanted to solve kaggle questions with other people.
+But my coding buddies suggested to do other things..
+But I've tried this question.
+https://www.kaggle.com/c/nyc-taxi-trip-duration/data
+
+
+
+
+
+
+print("Success rate: " + str(sum(rList) / num_episodes))
+print("Final Q-Table Values")
+print("LEFT DOWN RIGHT UP")
+print(Q)
+plt.bar(range(len(rList)), rList, color="blue")
+plt.show()
+</xmp>
+   </BODY>
+</HTML>
