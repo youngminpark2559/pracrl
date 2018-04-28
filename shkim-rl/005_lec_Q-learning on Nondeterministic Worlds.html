@@ -1,0 +1,106 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+   "http://www.w3.org/TR/html4/strict.dtd">
+<HTML>
+   <HEAD>
+      <TITLE>My first HTML document</TITLE>
+      <style rel="stylesheet" type="text/css">
+body {
+ font-size: 23px;
+
+ margin-top: 50px;
+    margin-bottom: 50px;
+    margin-right: 80px;
+    margin-left: 80px;
+
+    padding-top: 50px;
+    padding-bottom: 50px;
+    padding-right: 80px;
+    padding-left: 80px;
+
+    line-height:35px;background-color: black;color:#ABBAB7;
+}
+</style>
+      <script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    "HTML-CSS" : {
+        availableFonts : ["STIX"],
+        preferredFont : "STIX",
+        webFont : "STIX-Web",
+        imageFont : null
+    }
+});
+</script>
+     <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js" type="text/javascript">
+    MathJax.Hub.Config({
+        HTML: ["input/TeX","output/HTML-CSS"],
+        TeX: { extensions: ["AMSmath.js","AMSsymbols.js"],
+               equationNumbers: { autoNumber: "AMS" } },
+        extensions: ["tex2jax.js"],
+        jax: ["input/TeX","output/HTML-CSS"],
+        tex2jax: { inlineMath: [ ['$$$','$$$'] ],
+                   displayMath: [ ['$$$$','$$$$'] ],
+                   processEscapes: true },
+        "HTML-CSS": { availableFonts: ["TeX"],
+                      linebreaks: { automatic: true } }
+    });
+</script>
+   </HEAD>
+   <BODY>
+005_lec_Q-learning on Nondeterministic Worlds.html
+<xmp>
+# https://www.youtube.com/watch?v=6KSf-j4LL-c&t=92s&list=PLlMkM4tgfjnKsCWav-Z2F-MMFRx-2gMGG&index=8
+
+# Deterministic VS Stochastic(non-deterministic)
+# Stochastic(non-deterministic): Even if you want to move to right, you can't move to right
+# Deterministic: output of model is fully determined
+
+
+# @
+# Solution for case in stochastic(non-deterministic) world
+# 1. Listen to Q(s') "just a little bit"
+# 1. Update Q(s) "little bit" (which is managed by learning rate)
+
+# Philosophical way of explanation
+# 1. Don't just listen and follow one mentor
+# 1. Need to listen from many mentors
+
+
+# In previous lecture, way of updating Q is as following
+# $$$Q(s,a) \leftarrow r + \gamma max_{a'} Q(s',a')$$$
+
+# Point is we will take 10 % of new Q ($$$r + \gamma max_{a'} Q(s',a')$$$)
+
+# Learning rate (hyperparameter which you can change) is $$$\alpha$$$
+# $$$\alpha=0.1$$$
+
+# % Q is continuously increased because it's appended
+# % So, you need to discount your own claim ($$$1-\alpha$$$)
+# $$$Q(s,a) \leftarrow (1-\alpha) Q(s,a) + \alpha [\gamma max_{a'} Q(s',a')]$$$
+
+# This version shows one $$$\alpha$$$
+# $$$Q(s,a) \leftarrow Q(s,a) + \alpha [r + \gamma max_{a'} Q(s',a') - Q(s,a)]$$$
+
+
+# Now, your Q learning algorithm can be used also for non-deterministic(stochastic) world
+# 1. You initialize Q table with 0
+# $$$\hat{Q}(s,a) \leftarrow 0$$$
+# 1. After building environment,
+# you get current state s
+# 1. Iterate above step
+#     In iteration,
+#     2. You select on action a by using "exploit and exploration" algorithm,
+#     , and execute it
+#     2. You recieve immediate reward r
+#     2. You observe new state s'
+#     2. You update table (Q) entry for $$$\hat{Q}(s,a)$$$ as following:
+#     You listen from Q a little bit
+#     $$$Q(s,a) \leftarrow Q(s,a) + \alpha [r + \gamma max_{a'} Q(s',a') - Q(s,a)]$$$
+#     2. $$$s \leftarrow s'$$$
+
+# @
+# $$$\hat{Q}$$$ from bew Q algorithm will be converged to real Q?
+# Yes, it's proved
+
+</xmp>
+   </BODY>
+</HTML>
