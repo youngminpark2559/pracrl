@@ -1,0 +1,203 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+   "http://www.w3.org/TR/html4/strict.dtd">
+<HTML>
+   <HEAD>
+      <TITLE>My first HTML document</TITLE>
+      <style rel="stylesheet" type="text/css">
+body {
+ font-size: 23px;
+
+ margin-top: 50px;
+    margin-bottom: 50px;
+    margin-right: 80px;
+    margin-left: 80px;
+
+    padding-top: 50px;
+    padding-bottom: 50px;
+    padding-right: 80px;
+    padding-left: 80px;
+
+    line-height:35px;background-color: black;color:#ABBAB7;
+},
+img {
+ width:900px;
+}
+</style>
+      <script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    "HTML-CSS" : {
+        availableFonts : ["STIX"],
+        preferredFont : "STIX",
+        webFont : "STIX-Web",
+        imageFont : null
+    }
+});
+</script>
+     <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js" type="text/javascript">
+    MathJax.Hub.Config({
+        HTML: ["input/TeX","output/HTML-CSS"],
+        TeX: { extensions: ["AMSmath.js","AMSsymbols.js"],
+               equationNumbers: { autoNumber: "AMS" } },
+        extensions: ["tex2jax.js"],
+        jax: ["input/TeX","output/HTML-CSS"],
+        tex2jax: { inlineMath: [ ['$$$','$$$'] ],
+                   displayMath: [ ['$$$$','$$$$'] ],
+                   processEscapes: true },
+        "HTML-CSS": { availableFonts: ["TeX"],
+                      linebreaks: { automatic: true } }
+    });
+</script>
+   </HEAD>
+   <BODY>
+007_002_lab_DQN 2 (Nature 2015).html
+<xmp>
+# https://www.youtube.com/watch?v=ByB49iDMiZE&list=PLlMkM4tgfjnKsCWav-Z2F-MMFRx-2gMGG&index=16
+
+# @
+# DQN (2013):
+# 1. Go deep
+# 1. You use replay memory storing values
+# to resolve correlations between samples
+
+# DQN (2015):
+# 1. Separate networks,
+# to resolve non-stationary target issue
+
+# Core idea of DQN 2013
+# img 2018-04-29 16-50-01.png
+
+# Core idea of DQN 2015
+# img 2018-04-29 16-50-37.png
+
+
+# @
+# How to create separated networks
+# img 2018-04-29 16-51-24.png
+# img 2018-04-29 16-52-22.png
+
+# @
+"""DQN Class
+DQN(NIPS-2013)
+"Playing Atari with Deep Reinforcement Learning"
+https://www.cs.toronto.edu/~vmnih/docs/dqn.pdf
+DQN(Nature-2015)
+"Human-level control through deep reinforcement learning"
+http://web.stanford.edu/class/psych209/Readings/MnihEtAlHassibis15NatureControlDeepRL.pdf
+"""
+import numpy as np
+import tensorflow as tf
+
+# By creating class, you can create multiple networks conviniently
+class DQN:
+
+    def __init__(self, session: tf.Session, input_size: int, output_size: int, name: str="main") -> None:
+        """DQN Agent can
+        1) Build network
+        2) Predict Q_value given state
+        3) Train parameters
+        Args:
+            session (tf.Session): Tensorflow session
+            input_size (int): Input dimension
+            output_size (int): Number of discrete actions
+            name (str, optional): TF Graph will be built under this name scope
+        """
+        self.session = session
+        self.input_size = input_size
+        self.output_size = output_size
+        self.net_name = name
+
+        self._build_network()
+
+    def _build_network(self, h_size=16, l_rate=0.001) -> None:
+        """DQN Network architecture (simple MLP)
+        Args:
+            h_size (int, optional): Hidden layer dimension
+            l_rate (float, optional): Learning rate
+        """
+        with tf.variable_scope(self.net_name):
+            self._X = tf.placeholder(tf.float32, [None, self.input_size], name="input_x")
+            net = self._X
+
+            net = tf.layers.dense(net, h_size, activation=tf.nn.relu)
+            net = tf.layers.dense(net, self.output_size)
+            self._Qpred = net
+
+            self._Y = tf.placeholder(tf.float32, shape=[None, self.output_size])
+            self._loss = tf.losses.mean_squared_error(self._Y, self._Qpred)
+
+            optimizer = tf.train.AdamOptimizer(learning_rate=l_rate)
+            self._train = optimizer.minimize(self._loss)
+
+    def predict(self, state: np.ndarray) -> np.ndarray:
+        """Returns Q(s, a)
+        Args:
+            state (np.ndarray): State array, shape (n, input_dim)
+        Returns:
+            np.ndarray: Q value array, shape (n, output_dim)
+        """
+        x = np.reshape(state, [-1, self.input_size])
+        return self.session.run(self._Qpred, feed_dict={self._X: x})
+
+    def update(self, x_stack: np.ndarray, y_stack: np.ndarray) -> list:
+        """Performs updates on given X and y and returns a result
+        Args:
+            x_stack (np.ndarray): State array, shape (n, input_dim)
+            y_stack (np.ndarray): Target Q array, shape (n, output_dim)
+        Returns:
+            list: First element is loss, second element is a result from train step
+        """
+        feed = {
+            self._X: x_stack,
+            self._Y: y_stack
+        }
+        return self.session.run([self._loss, self._train], feed)
+
+
+# @
+# How to handle two networks with codes
+# img 2018-04-29 16-54-35.png
+
+# @
+# Copying network means copying value of weights
+# img 2018-04-29 16-56-59.png
+
+# @
+# Summary
+# 1. You create 2 networks
+# 1. You make target same with main network
+# target=mainNet
+# 1. Environment, loop, ...
+# When you create y, you will use target network
+# You will update main network by using y
+# 1. You make target network same with main network,
+# by assigning main network into target network
+
+
+
+# @
+# Code related to replay train (targetDQN added)
+# img 2018-04-29 17-01-39.png
+
+# @
+# Code related to copy network (variable)
+# img 2018-04-29 17-02-23.png
+
+# Code related to bot play
+# img 2018-04-29 17-02-57.png
+
+# Code related to main()
+# img 2018-04-29 17-03-49.png
+
+# Exercise 1
+# img 2018-04-29 17-06-37.png
+
+# Exercise 2
+# img 2018-04-29 17-07-20.png
+
+# Exercise 3
+# img 2018-04-29 17-08-00.png
+
+
+</xmp>
+   </BODY>
+</HTML>
