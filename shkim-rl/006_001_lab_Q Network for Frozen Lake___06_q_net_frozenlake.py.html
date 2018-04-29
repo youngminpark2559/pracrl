@@ -1,0 +1,160 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+   "http://www.w3.org/TR/html4/strict.dtd">
+<HTML>
+   <HEAD>
+      <TITLE>My first HTML document</TITLE>
+      <style rel="stylesheet" type="text/css">
+body {
+ font-size: 23px;
+
+ margin-top: 50px;
+    margin-bottom: 50px;
+    margin-right: 80px;
+    margin-left: 80px;
+
+    padding-top: 50px;
+    padding-bottom: 50px;
+    padding-right: 80px;
+    padding-left: 80px;
+
+    line-height:35px;background-color: black;color:#ABBAB7;
+}
+</style>
+      <script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    "HTML-CSS" : {
+        availableFonts : ["STIX"],
+        preferredFont : "STIX",
+        webFont : "STIX-Web",
+        imageFont : null
+    }
+});
+</script>
+     <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js" type="text/javascript">
+    MathJax.Hub.Config({
+        HTML: ["input/TeX","output/HTML-CSS"],
+        TeX: { extensions: ["AMSmath.js","AMSsymbols.js"],
+               equationNumbers: { autoNumber: "AMS" } },
+        extensions: ["tex2jax.js"],
+        jax: ["input/TeX","output/HTML-CSS"],
+        tex2jax: { inlineMath: [ ['$$$','$$$'] ],
+                   displayMath: [ ['$$$$','$$$$'] ],
+                   processEscapes: true },
+        "HTML-CSS": { availableFonts: ["TeX"],
+                      linebreaks: { automatic: true } }
+    });
+</script>
+   </HEAD>
+   <BODY>
+006_001_lab_Q Network for Frozen Lake___06_q_net_frozenlake.py.html
+<xmp>
+'''
+This code is based on
+https://github.com/hunkim/DeepRL-Agents
+'''
+import gym
+import numpy as np
+import tensorflow as tf
+import matplotlib.pyplot as plt
+
+# You will run in stochastic(non-deterministic) world
+env = gym.make('FrozenLake-v0')
+
+# Input and output size based on the "environment"
+# Number of input is 16 as one-hot-encoding
+input_size = env.observation_space.n
+# Since you have 4 actions,
+output_size = env.action_space.n
+learning_rate = 0.1
+
+# These lines establish feed-forward part of network,
+# used to choose actions
+# You will hand in input data(X) by using placeholder
+# [1,16][?,?]=[1,4]
+# [?,?]=[16,4]
+X = tf.placeholder(shape=[1, input_size], dtype=tf.float32)  # state input
+# Variable means trainable value
+W = tf.Variable(tf.random_uniform([input_size, output_size], 0, 0.01))  # weight
+
+# Qpred is Ws, $$$\hat{Q}$$$
+Qpred = tf.matmul(X, W)
+# Y label
+Y = tf.placeholder(shape=[1, output_size], dtype=tf.float32)
+
+# Since it's matrix, you use reduce_sum
+loss = tf.reduce_sum(tf.square(Y - Qpred))
+train = tf.train.GradientDescentOptimizer(learning_rate=learning_rate).minimize(loss)
+
+# Set Q-learning related parameters
+dis = .99
+num_episodes = 2000
+
+# Create lists to contain total rewards and steps per episode
+rList = []
+
+# This method creates array for one-hot-encoding vector for "input" data
+def one_hot(x):
+    # np.identity(16) returns 16by16 array with value 1 in diagonal element
+    # If state is 0, [0:1] will be index for state 0
+    # If state is 1, [1:2] will be index for state 1
+    # ...
+    return np.identity(16)[x:x + 1]
+
+init = tf.global_variables_initializer()
+with tf.Session() as sess:
+    sess.run(init)
+    for i in range(num_episodes):
+        # Reset environment and get first new observation
+        s = env.reset()
+        e = 1. / ((i / 50) + 10)
+        rAll = 0
+        done = False
+        local_loss = []
+
+        # The Q-Network training
+        while not done:
+            # Choose an action by greedily (with e chance of random action)
+            # from the Q-network
+            Qs = sess.run(Qpred, feed_dict={X: one_hot(s)})
+            if np.random.rand(1) < e:
+                a = env.action_space.sample()
+            else:
+                a = np.argmax(Qs)
+
+            # You do action by given "action a" from above,
+            # then, you obtain values from environment (reward, new state, ...)
+            s1, reward, done, _ = env.step(a)
+            if done:
+                # If done, you update Q only by reward
+                Qs[0, a] = reward
+            else:
+                # If not done, you update Q with values
+                # Obtain the Q_s1 values by feeding the new state through our
+                # network
+                Qs1 = sess.run(Qpred, feed_dict={X: one_hot(s1)})
+                # $$$y=r+\gamma max Q(s')$$$
+                # s': next state
+                # You will use Qs[0, a](y) as y label in feed_dict={}
+                # Update Q
+                # You train Q via only "action a"
+
+                # Reason you use 0 in front of a from Qs[0, a]
+                # input weight output(action)
+                # [[1by16]][[16by4]]=[[1by4]]
+                # [[1by4]]=[[a1,a2,a3,a4]]
+                # Therefore, you use [0,a] index
+                Qs[0, a] = reward + dis * np.max(Qs1)
+
+            # You train your network by using target (Y) and predicted Q (Qpred) values
+            sess.run(train, feed_dict={X: one_hot(s), Y: Qs})
+
+            rAll += reward
+            s = s1
+        rList.append(rAll)
+
+print("Percent of successful episodes: " + str(sum(rList) / num_episodes) + "%")
+plt.bar(range(len(rList)), rList, color="blue")
+plt.show()
+</xmp>
+   </BODY>
+</HTML>
