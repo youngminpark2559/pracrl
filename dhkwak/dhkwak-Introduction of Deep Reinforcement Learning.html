@@ -6,17 +6,14 @@
       <style rel="stylesheet" type="text/css">
 body {
  font-size: 23px;
-
  margin-top: 50px;
     margin-bottom: 50px;
     margin-right: 80px;
     margin-left: 80px;
-
     padding-top: 50px;
     padding-bottom: 50px;
     padding-right: 80px;
     padding-left: 80px;
-
     line-height:35px;background-color: black;color:#ABBAB7;
 },
 img {
@@ -63,6 +60,7 @@ https://www.youtube.com/watch?v=dw0sHzE1oAc&t=378s
 # When you want to find policy,
 # you need cycle composed of "agent", "environment", "interaction"(state, reward, action) as tool
 # img 2018-04-29 18-54-18.png
+</xmp><img src="https://raw.githubusercontent.com/youngmtool/pracrl/master/dhkwak/pic/2018-04-29 18-54-18.png"><xmp>
 
 # To define cycle, you need mathematical tool (MDP: Markov Decision Processes)
 
@@ -78,12 +76,14 @@ https://www.youtube.com/watch?v=dw0sHzE1oAc&t=378s
 # 1. State transition probability:
 # This is process of finding rule from environment
 # img 2018-04-29 19-03-44.png
+</xmp><img src="https://raw.githubusercontent.com/youngmtool/pracrl/master/dhkwak/pic/2018-04-29 19-03-44.png"><xmp>
 
 # @
 # Markov Reward Processes
 # This is concept added by "reward" on "Markov Processes"
 # If agent arrives to A, it gets +1 reward
 # img 2018-04-29 19-06-54.png
+</xmp><img src="https://raw.githubusercontent.com/youngmtool/pracrl/master/dhkwak/pic/2018-04-29 19-06-54.png"><xmp>
 
 # @
 # Markov Decision Processes
@@ -101,6 +101,7 @@ https://www.youtube.com/watch?v=dw0sHzE1oAc&t=378s
 # So, at state of A, opmimal decision is to select action Y
 # By same logic, at state of B, agent should make decision (Y in this case) to move to state of A
 # img 2018-04-29 19-37-40.png
+</xmp><img src="https://raw.githubusercontent.com/youngmtool/pracrl/master/dhkwak/pic/2018-04-29 19-37-40.png"><xmp>
 
 # @
 # Summary: MDP is mathematical framework for modeling decision making
@@ -112,8 +113,10 @@ https://www.youtube.com/watch?v=dw0sHzE1oAc&t=378s
 # but similar to reinforcement learning in terms of mathematical way
 
 # img 2018-04-29 19-44-28.png
+</xmp><img src="https://raw.githubusercontent.com/youngmtool/pracrl/master/dhkwak/pic/2018-04-29 19-44-28.png"><xmp>
 
 # img 2018-04-29 19-48-36.png
+</xmp><img src="https://raw.githubusercontent.com/youngmtool/pracrl/master/dhkwak/pic/2018-04-29 19-48-36.png"><xmp>
 
 # Above agent considers entire reward up to future cases,
 # which means it can eat -1 point to get +3
@@ -150,7 +153,9 @@ https://www.youtube.com/watch?v=dw0sHzE1oAc&t=378s
 # and is function that lets agent to know what action he should do
 # deterministic policy, stochastic policy
 # # img 2018-04-29 20-37-32.png
+</xmp><img src="https://raw.githubusercontent.com/youngmtool/pracrl/master/dhkwak/pic/2018-04-29 20-37-32.png"><xmp>
 # # img 2018-04-29 20-37-59.png
+</xmp><img src="https://raw.githubusercontent.com/youngmtool/pracrl/master/dhkwak/pic/2018-04-29 20-37-59.png"><xmp>
 
 # Some cases are fitted to stochastic policy,
 # and some other cases are fitted to deterministic policy
@@ -159,6 +164,7 @@ https://www.youtube.com/watch?v=dw0sHzE1oAc&t=378s
 # b) is values at each state
 # c) is optimal policy
 # img 2018-04-29 20-54-19.png
+</xmp><img src="https://raw.githubusercontent.com/youngmtool/pracrl/master/dhkwak/pic/2018-04-29 20-54-19.png"><xmp>
 
 # @
 # "Value function" lets you know expected sum of "future rewards" at given state s, following policy $$$\pi$$$
@@ -181,6 +187,7 @@ https://www.youtube.com/watch?v=dw0sHzE1oAc&t=378s
 # $$$v_{\pi}(s) \doteq E_{\pi}[\sum\limits_{k=0}^{\infty}\gamma^{k}R_{t+k+1}|S_{t}=s,A_{t}=a$$$
 
 # img 2018-04-29 21-04-38.png
+</xmp><img src="https://raw.githubusercontent.com/youngmtool/pracrl/master/dhkwak/pic/2018-04-29 21-04-38.png"><xmp>
 
 # @
 # When you find expection value,
@@ -188,22 +195,22 @@ https://www.youtube.com/watch?v=dw0sHzE1oAc&t=378s
 # if you do it without probability but experience, it's machine/deep/reinforment learing
 
 # img 2018-04-29 21-06-41.png
+</xmp><img src="/media/young/5e7be152-8ed5-483d-a8e8-b3fecfa221dc/text/mycodehtml/pracrl/dhkwak/pic/2018-04-29 21-06-41.png"><xmp>
 
 # @
 # One of solutions for MDP: Planning
 # img 2018-04-29 21-08-11.png
+</xmp><img src="https://raw.githubusercontent.com/youngmtool/pracrl/master/dhkwak/pic/2018-04-29 21-08-11.png"><xmp>
 
 # @
 # N: number of state
 # img 2018-04-29 21-10-57.png
+</xmp><img src="https://raw.githubusercontent.com/youngmtool/pracrl/master/dhkwak/pic/2018-04-29 21-10-57.png"><xmp>
 
 # @
 # To reduce number of cases, you can use dynamic programming
 # img 2018-04-29 21-11-56.png
-
-
-
-
+</xmp><img src="https://raw.githubusercontent.com/youngmtool/pracrl/master/dhkwak/pic/2018-04-29 21-11-56.png"><xmp>
 
 
 </xmp>
