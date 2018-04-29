@@ -1,0 +1,80 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+   "http://www.w3.org/TR/html4/strict.dtd">
+<HTML>
+   <HEAD>
+      <TITLE>My first HTML document</TITLE>
+      <style rel="stylesheet" type="text/css">
+body {
+ font-size: 23px;
+
+ margin-top: 50px;
+    margin-bottom: 50px;
+    margin-right: 80px;
+    margin-left: 80px;
+
+    padding-top: 50px;
+    padding-bottom: 50px;
+    padding-right: 80px;
+    padding-left: 80px;
+
+    line-height:35px;background-color: black;color:#ABBAB7;
+},
+img {
+ width:900px;
+}
+</style>
+      <script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    "HTML-CSS" : {
+        availableFonts : ["STIX"],
+        preferredFont : "STIX",
+        webFont : "STIX-Web",
+        imageFont : null
+    }
+});
+</script>
+     <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js" type="text/javascript">
+    MathJax.Hub.Config({
+        HTML: ["input/TeX","output/HTML-CSS"],
+        TeX: { extensions: ["AMSmath.js","AMSsymbols.js"],
+               equationNumbers: { autoNumber: "AMS" } },
+        extensions: ["tex2jax.js"],
+        jax: ["input/TeX","output/HTML-CSS"],
+        tex2jax: { inlineMath: [ ['$$$','$$$'] ],
+                   displayMath: [ ['$$$$','$$$$'] ],
+                   processEscapes: true },
+        "HTML-CSS": { availableFonts: ["TeX"],
+                      linebreaks: { automatic: true } }
+    });
+</script>
+   </HEAD>
+   <BODY>
+006-002_lab_Q Network for Cart Pole___07_0_random_cartpole.py.html
+<xmp>
+import gym
+
+env = gym.make('CartPole-v0')
+env.reset()
+random_episodes = 0
+reward_sum = 0
+# You iterate 10 times
+while random_episodes < 10:
+    # You render appearance
+    env.render()
+    # You take action randomly
+    action = env.action_space.sample()
+    # You do action obtained from above
+    observation, reward, done, _ = env.step(action)
+    # You print values obtained from above
+    # observation: state
+    print(observation, reward, done)
+    reward_sum += reward
+    if done:
+        random_episodes += 1
+        print("Reward for this episode was:", reward_sum)
+        reward_sum = 0
+        env.reset()
+
+</xmp>
+   </BODY>
+</HTML>
