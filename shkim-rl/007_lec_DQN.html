@@ -1,0 +1,167 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+   "http://www.w3.org/TR/html4/strict.dtd">
+<HTML>
+   <HEAD>
+      <TITLE>My first HTML document</TITLE>
+      <style rel="stylesheet" type="text/css">
+body {
+ font-size: 23px;
+
+ margin-top: 50px;
+    margin-bottom: 50px;
+    margin-right: 80px;
+    margin-left: 80px;
+
+    padding-top: 50px;
+    padding-bottom: 50px;
+    padding-right: 80px;
+    padding-left: 80px;
+
+    line-height:35px;background-color: black;color:#ABBAB7;
+},
+img {
+ width:900px;
+}
+</style>
+      <script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    "HTML-CSS" : {
+        availableFonts : ["STIX"],
+        preferredFont : "STIX",
+        webFont : "STIX-Web",
+        imageFont : null
+    }
+});
+</script>
+     <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js" type="text/javascript">
+    MathJax.Hub.Config({
+        HTML: ["input/TeX","output/HTML-CSS"],
+        TeX: { extensions: ["AMSmath.js","AMSsymbols.js"],
+               equationNumbers: { autoNumber: "AMS" } },
+        extensions: ["tex2jax.js"],
+        jax: ["input/TeX","output/HTML-CSS"],
+        tex2jax: { inlineMath: [ ['$$$','$$$'] ],
+                   displayMath: [ ['$$$$','$$$$'] ],
+                   processEscapes: true },
+        "HTML-CSS": { availableFonts: ["TeX"],
+                      linebreaks: { automatic: true } }
+    });
+</script>
+   </HEAD>
+   <BODY>
+007_lec_DQN.html
+<xmp>
+# https://www.youtube.com/watch?v=S1Y9eys2bdg&list=PLlMkM4tgfjnKsCWav-Z2F-MMFRx-2gMGG&index=14
+# @
+# Issue 1. Correlations between samples
+# With 2 samples correlated to each other
+# With 4 samples correlated to each other
+# They create different line compared to correct answer line
+# img 2018-04-29 11-37-10.png
+</xmp><img src="/media/young/5e7be152-8ed5-483d-a8e8-b3fecfa221dc/text/mycodehtml/pracrl/shkim-rl/pic/2018-04-29 11-37-10.png"><xmp>
+
+# @
+# Issue 2. Non-stationary targets (moving target)
+# y label (target) = $$$r_{t}+\gamma max_{a'} \hat{Q}(s_{t+1},a'|\theta)$$$
+# prediction of Q ($$$\hat{y}$$$) = $$$ \hat{Q}(s_{t},a_{t}|\theta)$$$
+
+# You should make them almost same
+
+# You should know above 2 terms run in same network with same parameter $$$\theta$$$
+
+# To make $$$\hat{y}$$$ reach to real y,
+# you update following network (by updating parameters),
+# $$$\hat{y} = \hat{Q}(s_{t},a_{t}|\theta)$$$
+
+# Then, automatically and inevitably,
+# y label (target) = $$$r_{t}+\gamma max_{a'} \hat{Q}(s_{t+1},a'|\theta)$$$ becomes to move by moved $$$\hat{y}$$$
+# because they use same network
+
+# In summary, changing parameter in prediction -> but it leads to move target
+
+# @
+# DQN's three solutions
+# 1. Go deep (multiple layers = convolution layers + pooling layers + fully connected layers + ...  )
+# 1. Captrue and replay (experience replay method)
+#     for "correlation between samples" issue
+# 1. Separate networks: in other words, you create a target network
+#     for "non-stationary target" issue
+
+
+
+# @
+# It's bad idea to train with samples having strong correlations
+# You can use "experience replay" to resolve this issue
+# You iterate following steps, obtain "action", from "action" obtain "state"
+# At this time of iteration, don't train (weights), but store actions and states into buffter
+# Then, you extract several values randomly from buffer
+# You train model with them
+# img 2018-04-29 12-35-17.png
+</xmp><img src="/media/young/5e7be152-8ed5-483d-a8e8-b3fecfa221dc/text/mycodehtml/pracrl/shkim-rl/pic/2018-04-29 12-35-17.png"><xmp>
+
+# @
+# You store actions, rewards, states into buffer D
+# You extract samples randomly from buffer D,
+# and you create mini batch with them,
+# and you train model with those batches
+# img 2018-04-29 12-37-43.png
+</xmp><img src="/media/young/5e7be152-8ed5-483d-a8e8-b3fecfa221dc/text/mycodehtml/pracrl/shkim-rl/pic/2018-04-29 12-37-43.png"><xmp>
+
+# @
+# Why does above technique work?
+# Key is "you extract sample randomly",
+# which can reflect distribution of entire data,
+# with avoiding extracting strongly correlated samples
+# img 2018-04-29 12-40-11.png
+</xmp><img src="/media/young/5e7be152-8ed5-483d-a8e8-b3fecfa221dc/text/mycodehtml/pracrl/shkim-rl/pic/2018-04-29 12-40-11.png"><xmp>
+
+# @
+# You will use $$$\theta$$$ and $$$\bar{\theta}$$$,
+# which means you use separated different network for y and $$$\hat{h}$$$
+
+# You won't use second formular which has one \theta for y and $$$\hat{y}$$$
+
+# Step:
+# You bring label y from second term,
+# and you stay it,
+# and you update first term
+# img 2018-04-29 12-45-50.png
+</xmp><img src="/media/young/5e7be152-8ed5-483d-a8e8-b3fecfa221dc/text/mycodehtml/pracrl/shkim-rl/pic/2018-04-29 12-45-50.png"><xmp>
+# img 2018-04-29 12-46-42.png
+</xmp><img src="/media/young/5e7be152-8ed5-483d-a8e8-b3fecfa221dc/text/mycodehtml/pracrl/shkim-rl/pic/2018-04-29 12-46-42.png"><xmp>
+
+# You copy value from first network into second network
+
+# In formular in box,
+# $$$r_{j}+\gamma max_{a'} \hat{Q}(\phi_{j+1},a';\bar{\theta})$$$ is target $y_{j}$,
+# you will create target from $$$\bar{\theta}$$$
+
+# You will create prediction from another networking using $$$\theta$$$
+# $$$Q(\phi_{j},a_{j};\theta)$$$
+# And you will perform gradient descent in respect to $$$\theta$$$,
+# which means you update only second network,
+# without touching $$$y_{j}$$$ having $$$\bar{\theta}$$$
+# And then, after enough time, you copy Q into $$$\hat{Q}$$$
+# img 2018-04-29 12-53-19.png
+</xmp><img src="/media/young/5e7be152-8ed5-483d-a8e8-b3fecfa221dc/text/mycodehtml/pracrl/shkim-rl/pic/2018-04-29 12-53-19.png"><xmp>
+
+# @
+# Understanding Nature Paper(2015) about DQN
+# 1. You create replay memory buffer named D
+# 1. You create Q network and $$$\bar{Q}$$$ network
+# At initial time, you make those two network same, $$$\bar{\theta}=\theta$$$
+
+# 1. You select action,
+# you can select action randomly or by using Q network
+# You execute "action",
+# You get values like reward, state,
+# And then, don't train network but copy values into buffer D
+# ...
+# img 2018-04-29 12-59-03.png
+</xmp><img src="/media/young/5e7be152-8ed5-483d-a8e8-b3fecfa221dc/text/mycodehtml/pracrl/shkim-rl/pic/2018-04-29 12-59-03.png"><xmp>
+
+
+
+</xmp>
+   </BODY>
+</HTML>

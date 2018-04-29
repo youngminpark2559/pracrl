@@ -1,0 +1,233 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+   "http://www.w3.org/TR/html4/strict.dtd">
+<HTML>
+   <HEAD>
+      <TITLE>My first HTML document</TITLE>
+      <style rel="stylesheet" type="text/css">
+body {
+ font-size: 23px;
+
+ margin-top: 50px;
+    margin-bottom: 50px;
+    margin-right: 80px;
+    margin-left: 80px;
+
+    padding-top: 50px;
+    padding-bottom: 50px;
+    padding-right: 80px;
+    padding-left: 80px;
+
+    line-height:35px;background-color: black;color:#ABBAB7;
+},
+img {
+ width:900px;
+}
+</style>
+      <script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    "HTML-CSS" : {
+        availableFonts : ["STIX"],
+        preferredFont : "STIX",
+        webFont : "STIX-Web",
+        imageFont : null
+    }
+});
+</script>
+     <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js" type="text/javascript">
+    MathJax.Hub.Config({
+        HTML: ["input/TeX","output/HTML-CSS"],
+        TeX: { extensions: ["AMSmath.js","AMSsymbols.js"],
+               equationNumbers: { autoNumber: "AMS" } },
+        extensions: ["tex2jax.js"],
+        jax: ["input/TeX","output/HTML-CSS"],
+        tex2jax: { inlineMath: [ ['$$$','$$$'] ],
+                   displayMath: [ ['$$$$','$$$$'] ],
+                   processEscapes: true },
+        "HTML-CSS": { availableFonts: ["TeX"],
+                      linebreaks: { automatic: true } }
+    });
+</script>
+   </HEAD>
+   <BODY>
+007_001_lab_DQN 1 (NIPS 2013).html
+<xmp>
+# You will implement algorithm presented in 2013
+
+# You can see DQN 2013
+# You initialize network like following
+# You initialize replay memory D
+# You initialize "action-value function Q" with random weights
+
+# You perform preprocessing
+# You take state $$$s_{1}$$$,
+# and you convert it into shape you want
+# img 2018-04-29 13-12-02.png
+</xmp><img src="/media/young/5e7be152-8ed5-483d-a8e8-b3fecfa221dc/text/mycodehtml/pracrl/shkim-rl/pic/2018-04-29 13-12-02.png"><xmp>
+
+    # You use E-greedy to select "action"
+# If random value is less than e, you select action randomly
+# or else, you ask mainDQN network with passing state to select action
+
+# You use buffer to store values(state, action, reward, next_state, done)
+
+# You create mini-batches by using random.sample()
+# Then you perform training model
+
+# You should define target $$$y_{j}$$$
+# You should be above processo with deviding two cases (done, else)
+# img 2018-04-29 13-14-13.png
+</xmp><img src="/media/young/5e7be152-8ed5-483d-a8e8-b3fecfa221dc/text/mycodehtml/pracrl/shkim-rl/pic/2018-04-29 13-14-13.png"><xmp>
+# @
+class DQN:
+    def __init__(self,session,input_size,ouput_size,name="main"):
+        self.session=session
+        self.input_size=input_size
+        self.output_size=output_size
+        self.net_name=name
+
+    def _build_network(self,h_size=10,l_rate=1e-1):
+        with tf.variable_scope(self.net_name):
+            self._X=tf.placeholder(tf.float32,[None,self.input_size],name="input_x")
+
+            # Weight in first layer
+            W1=tf.get_variable("W1",shape=[self.input_size,h_size],initialize=tf.contrib.layers.xavier_initializer())
+            layer1=tf.nn.tanh(tf.matmul(self._X,W1))
+
+            # Weight in second layer
+            W2=tf.get_variable("W2",shape=[h_size,self.output_size],initialize=tf.contrib.layers.xavier_initializer())
+
+            # Q prediction
+            self._Qpred=tf.matmul(layer1,W2)
+        # You need to define parts of network needed for learning policy
+        self._Y=tf.placeholder(shape=[None,self.output_size],dtype=tf.float32)
+
+        # Loss function
+        self._loss=tf.reduce_mean(tf.square(self._Y-self._Qpred))
+
+        # Learning
+        self._train=tf.train.AdapOptimizer(learning_rate=l_rate).minimize(self._loss)
+
+    def predict(self,state):
+        x=np.reshape(state,[1,self.input_size])
+        return self.session.run(self._Qpred,feed_dict={self._X:x})
+
+    def update(self,x_stack,y_stack):
+        return self.session.run([self._loss,self._train],feed_dict={self._X:x_stack,self._Y:y_stack})
+
+
+    def simple_replay_train(DQN,train_batch):
+        x_stack=np.empty(0).reshape(0,DQN.input_size)
+        y_stack=np.empty(0).reshape(0,DQN.output_size)
+
+        # You get stored information from buffer
+        for state,action,reward,next_state,done in train_batch:
+            Q=DQN.predict(state)
+
+            # Is it terminated?
+            if done:
+                Q[0,action]=reward
+            else:
+                # You obtain Q' values by feeding new state via your network
+                Q[0,action]=reward+dis*np.max(DQN.predict(next_state))
+            y_stack=np.vstack([y_stack,Q])
+            x_stack=np.vstack([x_stack,state])
+        return DQN.update(x_stack,y_stack)
+
+    # If model trained well, you can play model
+    def bot_play(mainDQN):
+        s=env.reset()
+        reward_sum=0
+        while True:
+            env.render()
+            a=np.argmax(mainDQN.predict(s))
+            s,reward,done,_=env.step(a)
+            reward_sum+=reward
+            if done:
+                print("Total score:{}".format(reward_sum))
+                break
+
+
+
+def main():
+    max_episodes=5000
+
+    # store the previous observations in replay memory
+    replay_buffer = deque()
+
+    with tf.Session() as sess:
+        mainDQN = dqn.DQN(sess, input_size, output_size)
+        init = tf.global_variables_initializer()
+        sess.run(init)
+
+        for episode in range(max_episodes):
+            e = 1./((episode/10)+1)
+            done = False
+            step_count = 0
+
+            state=env.reset()
+
+            while not done:
+
+                if np.random.rand() < e:
+                    action = env.action_space.sample()
+                else:
+                    action = np.argmax(mainDQN.predict(state))
+
+                next_state, reward, done, _ = env.step(action)
+
+                if done:
+                    reward = -100
+
+                # You store experience values into buffer
+                replay_buffer.append((state, action, reward, next_state, done))
+                if len(replay_buffer) > REPLAY_MEMORY:
+                    replay_buffer.popleft()
+
+                state = next_state
+                step_count += 1
+
+            print("Episode:{} steps: {}".format(episode,step_count)
+            if step_count>10000:
+                pass
+
+            if episode%10==1
+                for _ in range(50):
+                    minibatch=random.sample(replay_buffer,10)
+                    loss,_=simple_replay_train(mainDQN,minibatch)
+                print("loss",loss)
+        bot_play(mainDQN)
+
+if __name__ == "__main__":
+    main()
+
+
+
+# @
+# Implement replay memory
+# You will use simply deque() to input values and extract values
+# img 2018-04-29 13-43-06.png
+</xmp><img src="/media/young/5e7be152-8ed5-483d-a8e8-b3fecfa221dc/text/mycodehtml/pracrl/shkim-rl/pic/2018-04-29 13-43-06.png"><xmp>
+# You can keep fixed size by using popleft()
+
+
+# @
+# You train model with values from replay memory
+# img 2018-04-29 14-04-31.png
+</xmp><img src="/media/young/5e7be152-8ed5-483d-a8e8-b3fecfa221dc/text/mycodehtml/pracrl/shkim-rl/pic/2018-04-29 14-04-31.png"><xmp>
+# @
+# Summary
+# 1. You build network, and initialize it
+# 1. You build environment
+# 1. You perform loop, in that step,
+# you get "action" by several ways
+# you use obtained "action", and obtain values (reward, new state, done or not done)
+# 1. You store above values into buffer
+# and you keep performing loop
+# 1. At some point (like one time per 10 loops),
+# you extract values randomly from buffer,
+# 1. You train model with randomly extracted values
+# 1. You keep performing loop
+
+</xmp>
+   </BODY>
+</HTML>
