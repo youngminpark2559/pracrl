@@ -6,17 +6,14 @@
       <style rel="stylesheet" type="text/css">
 body {
  font-size: 23px;
-
  margin-top: 50px;
     margin-bottom: 50px;
     margin-right: 80px;
     margin-left: 80px;
-
     padding-top: 50px;
     padding-bottom: 50px;
     padding-right: 80px;
     padding-left: 80px;
-
     line-height:35px;background-color: black;color:#ABBAB7;
 },
 img {
@@ -58,7 +55,7 @@ MathJax.Hub.Config({
 # With 4 samples correlated to each other
 # They create different line compared to correct answer line
 # img 2018-04-29 11-37-10.png
-</xmp><img src="/media/young/5e7be152-8ed5-483d-a8e8-b3fecfa221dc/text/mycodehtml/pracrl/shkim-rl/pic/2018-04-29 11-37-10.png"><xmp>
+</xmp><img src="https://raw.githubusercontent.com/youngmtool/pracrl/master/shkim-rl/pic/2018-04-29 11-37-10.png"><xmp>
 
 # @
 # Issue 2. Non-stationary targets (moving target)
@@ -97,7 +94,7 @@ MathJax.Hub.Config({
 # Then, you extract several values randomly from buffer
 # You train model with them
 # img 2018-04-29 12-35-17.png
-</xmp><img src="/media/young/5e7be152-8ed5-483d-a8e8-b3fecfa221dc/text/mycodehtml/pracrl/shkim-rl/pic/2018-04-29 12-35-17.png"><xmp>
+</xmp><img src="https://raw.githubusercontent.com/youngmtool/pracrl/master/shkim-rl/pic/2018-04-29 12-35-17.png"><xmp>
 
 # @
 # You store actions, rewards, states into buffer D
@@ -105,7 +102,7 @@ MathJax.Hub.Config({
 # and you create mini batch with them,
 # and you train model with those batches
 # img 2018-04-29 12-37-43.png
-</xmp><img src="/media/young/5e7be152-8ed5-483d-a8e8-b3fecfa221dc/text/mycodehtml/pracrl/shkim-rl/pic/2018-04-29 12-37-43.png"><xmp>
+</xmp><img src="https://raw.githubusercontent.com/youngmtool/pracrl/master/shkim-rl/pic/2018-04-29 12-37-43.png"><xmp>
 
 # @
 # Why does above technique work?
@@ -113,7 +110,7 @@ MathJax.Hub.Config({
 # which can reflect distribution of entire data,
 # with avoiding extracting strongly correlated samples
 # img 2018-04-29 12-40-11.png
-</xmp><img src="/media/young/5e7be152-8ed5-483d-a8e8-b3fecfa221dc/text/mycodehtml/pracrl/shkim-rl/pic/2018-04-29 12-40-11.png"><xmp>
+</xmp><img src="https://raw.githubusercontent.com/youngmtool/pracrl/master/shkim-rl/pic/2018-04-29 12-40-11.png"><xmp>
 
 # @
 # You will use $$$\theta$$$ and $$$\bar{\theta}$$$,
@@ -126,9 +123,9 @@ MathJax.Hub.Config({
 # and you stay it,
 # and you update first term
 # img 2018-04-29 12-45-50.png
-</xmp><img src="/media/young/5e7be152-8ed5-483d-a8e8-b3fecfa221dc/text/mycodehtml/pracrl/shkim-rl/pic/2018-04-29 12-45-50.png"><xmp>
+</xmp><img src="https://raw.githubusercontent.com/youngmtool/pracrl/master/shkim-rl/pic/2018-04-29 12-45-50.png"><xmp>
 # img 2018-04-29 12-46-42.png
-</xmp><img src="/media/young/5e7be152-8ed5-483d-a8e8-b3fecfa221dc/text/mycodehtml/pracrl/shkim-rl/pic/2018-04-29 12-46-42.png"><xmp>
+</xmp><img src="https://raw.githubusercontent.com/youngmtool/pracrl/master/shkim-rl/pic/2018-04-29 12-46-42.png"><xmp>
 
 # You copy value from first network into second network
 
@@ -143,7 +140,7 @@ MathJax.Hub.Config({
 # without touching $$$y_{j}$$$ having $$$\bar{\theta}$$$
 # And then, after enough time, you copy Q into $$$\hat{Q}$$$
 # img 2018-04-29 12-53-19.png
-</xmp><img src="/media/young/5e7be152-8ed5-483d-a8e8-b3fecfa221dc/text/mycodehtml/pracrl/shkim-rl/pic/2018-04-29 12-53-19.png"><xmp>
+</xmp><img src="https://raw.githubusercontent.com/youngmtool/pracrl/master/shkim-rl/pic/2018-04-29 12-53-19.png"><xmp>
 
 # @
 # Understanding Nature Paper(2015) about DQN
@@ -158,7 +155,7 @@ MathJax.Hub.Config({
 # And then, don't train network but copy values into buffer D
 # ...
 # img 2018-04-29 12-59-03.png
-</xmp><img src="/media/young/5e7be152-8ed5-483d-a8e8-b3fecfa221dc/text/mycodehtml/pracrl/shkim-rl/pic/2018-04-29 12-59-03.png"><xmp>
+</xmp><img src="https://raw.githubusercontent.com/youngmtool/pracrl/master/shkim-rl/pic/2018-04-29 12-59-03.png"><xmp>
 
 
 
