@@ -1,0 +1,211 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+   "http://www.w3.org/TR/html4/strict.dtd">
+<HTML>
+   <HEAD>
+      <TITLE>My first HTML document</TITLE>
+      <style rel="stylesheet" type="text/css">
+body {
+ font-size: 23px;
+
+ margin-top: 50px;
+    margin-bottom: 50px;
+    margin-right: 80px;
+    margin-left: 80px;
+
+    padding-top: 50px;
+    padding-bottom: 50px;
+    padding-right: 80px;
+    padding-left: 80px;
+
+    line-height:35px;background-color: black;color:#ABBAB7;
+},
+img {
+ width:900px;
+}
+</style>
+      <script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    "HTML-CSS" : {
+        availableFonts : ["STIX"],
+        preferredFont : "STIX",
+        webFont : "STIX-Web",
+        imageFont : null
+    }
+});
+</script>
+     <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js" type="text/javascript">
+    MathJax.Hub.Config({
+        HTML: ["input/TeX","output/HTML-CSS"],
+        TeX: { extensions: ["AMSmath.js","AMSsymbols.js"],
+               equationNumbers: { autoNumber: "AMS" } },
+        extensions: ["tex2jax.js"],
+        jax: ["input/TeX","output/HTML-CSS"],
+        tex2jax: { inlineMath: [ ['$$$','$$$'] ],
+                   displayMath: [ ['$$$$','$$$$'] ],
+                   processEscapes: true },
+        "HTML-CSS": { availableFonts: ["TeX"],
+                      linebreaks: { automatic: true } }
+    });
+</script>
+   </HEAD>
+   <BODY>
+dhkwak-Introduction of Deep Reinforcement Learning.html
+<xmp>
+https://www.youtube.com/watch?v=dw0sHzE1oAc&t=378s
+# Reinforcement learning:
+# Goal is to find policy function p(a|s) which maximizes sum of reward
+
+# s: current state where object you train is in
+# a: in that state, what action object should do?
+
+
+# @
+# When you want to find policy,
+# you need cycle composed of "agent", "environment", "interaction"(state, reward, action) as tool
+# img 2018-04-29 18-54-18.png
+
+# To define cycle, you need mathematical tool (MDP: Markov Decision Processes)
+
+
+# @
+# Markov Processes are defined by two factors
+
+# 1. Discrete state space
+# Suppose 5 by 5 maze
+# Mice can be located in 25 locations
+# In this case, size of state space is 25
+
+# 1. State transition probability:
+# This is process of finding rule from environment
+# img 2018-04-29 19-03-44.png
+
+# @
+# Markov Reward Processes
+# This is concept added by "reward" on "Markov Processes"
+# If agent arrives to A, it gets +1 reward
+# img 2018-04-29 19-06-54.png
+
+# @
+# Markov Decision Processes
+# This is about "action"
+# Number of decision has 2 (X, Y)
+# paper, stone and scissors: 3 actions
+# maze: 4 actions (R,L,U,D)
+
+# At state of A, which action will give agent more reward?
+# Finding policy for it is goal of Reinforcement learning
+
+# At state A, agent has 2 options (action X, action Y)
+# Since moving to A gives + reward, moving to B is false action
+# So, if agent is in A, it should stay in A
+# So, at state of A, opmimal decision is to select action Y
+# By same logic, at state of B, agent should make decision (Y in this case) to move to state of A
+# img 2018-04-29 19-37-40.png
+
+# @
+# Summary: MDP is mathematical framework for modeling decision making
+
+# @
+# MDP question can be solved by two methods (planning, reinforcement learning)
+
+# dynamic programming is not machine learning methodology,
+# but similar to reinforcement learning in terms of mathematical way
+
+# img 2018-04-29 19-44-28.png
+
+# img 2018-04-29 19-48-36.png
+
+# Above agent considers entire reward up to future cases,
+# which means it can eat -1 point to get +3
+
+# Reinforcement learning wants to deal with "sparse reward" problem and "delayed reward" problem
+
+# @
+# You should consider "discount factor" to complete Markov Decision Processes
+# Discount factor is concept which was created to define "future reward" mathematically
+
+# Sum of future rewards in "episodic tasks"
+
+# Episodic task: task which has end point (T), for example, go match
+# t: arbitary current time point
+# R: reward
+# $$$G_{t}=R_{t+1}+R_{t+2}+...+R_{T}$$$
+
+
+# Continuous tasks: task which has no end point (T), for example, car driving, stock market
+# Sum of "future rewards" in continuous tasks
+# $$$G_{t}=R_{t+1}+R_{t+2}+...+R_{T}+...$$$
+# $$$G_{t}$$$ can be diverged
+# $$$G_{t} \rightarrow \infty$$$
+
+
+# To mathematically manage above cases,
+# you multiply "discount factor" ($$$0<= \gamma<1$$$)
+# Sum of discounted "future rewards" in both case
+# $$$G_{t}:=R_{t+1}+\gamma R_{t+2}+\gamma^{2}R_{t+3}+...+\gamma^{T-1}R_{T}+...$$$
+# $$$G_{t}:= \sum\limits_{k=1}^{\infty} \gamma^{k-1}R_{t+k} $$$ (This will be converged)
+
+# Thera are 2 kinds of policy,
+# which is object of train,
+# and is function that lets agent to know what action he should do
+# deterministic policy, stochastic policy
+# # img 2018-04-29 20-37-32.png
+# # img 2018-04-29 20-37-59.png
+
+# Some cases are fitted to stochastic policy,
+# and some other cases are fitted to deterministic policy
+
+# @
+# b) is values at each state
+# c) is optimal policy
+# img 2018-04-29 20-54-19.png
+
+# @
+# "Value function" lets you know expected sum of "future rewards" at given state s, following policy $$$\pi$$$
+# 1. State-value function
+# If you use only state-value function,
+# to make decision, you should need exploration
+# You should simulate all actions you can use,
+# to inspect next state values
+# This method is called "one step ahead search" for all actions
+# In real world app, one step ahead search is not possible to use
+
+# $$$v_{\pi}(s) \doteq E_{\pi}[G_{t}|S_{t}=s]$$$
+# $$$v_{\pi}(s) \doteq E_{\pi}[\sum\limits_{k=0}^{\infty}\gamma^{k}R_{t+k+1}|S_{t}=s]$$$
+
+# 1. (State)-Action-value function
+# This complements state-value fucntion
+# This doesn't require one step ahead search because it's already processed
+# Note that you input s and a into q function
+# $$$q_{\pi}(s,a) \doteq E_{\pi}[S_{t}-s,A_{t}=a]$$$
+# $$$v_{\pi}(s) \doteq E_{\pi}[\sum\limits_{k=0}^{\infty}\gamma^{k}R_{t+k+1}|S_{t}=s,A_{t}=a$$$
+
+# img 2018-04-29 21-04-38.png
+
+# @
+# When you find expection value,
+# if you do it with probability, it's planning,
+# if you do it without probability but experience, it's machine/deep/reinforment learing
+
+# img 2018-04-29 21-06-41.png
+
+# @
+# One of solutions for MDP: Planning
+# img 2018-04-29 21-08-11.png
+
+# @
+# N: number of state
+# img 2018-04-29 21-10-57.png
+
+# @
+# To reduce number of cases, you can use dynamic programming
+# img 2018-04-29 21-11-56.png
+
+
+
+
+
+
+</xmp>
+   </BODY>
+</HTML>
