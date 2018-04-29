@@ -6,17 +6,14 @@
       <style rel="stylesheet" type="text/css">
 body {
  font-size: 23px;
-
  margin-top: 50px;
     margin-bottom: 50px;
     margin-right: 80px;
     margin-left: 80px;
-
     padding-top: 50px;
     padding-bottom: 50px;
     padding-right: 80px;
     padding-left: 80px;
-
     line-height:35px;background-color: black;color:#ABBAB7;
 },
 img {
@@ -62,9 +59,9 @@ MathJax.Hub.Config({
 # You take state $$$s_{1}$$$,
 # and you convert it into shape you want
 # img 2018-04-29 13-12-02.png
-</xmp><img src="/media/young/5e7be152-8ed5-483d-a8e8-b3fecfa221dc/text/mycodehtml/pracrl/shkim-rl/pic/2018-04-29 13-12-02.png"><xmp>
+</xmp><img src="https://raw.githubusercontent.com/youngmtool/pracrl/master/shkim-rl/pic/2018-04-29 13-12-02.png"><xmp>
 
-    # You use E-greedy to select "action"
+# You use E-greedy to select "action"
 # If random value is less than e, you select action randomly
 # or else, you ask mainDQN network with passing state to select action
 
@@ -76,7 +73,7 @@ MathJax.Hub.Config({
 # You should define target $$$y_{j}$$$
 # You should be above processo with deviding two cases (done, else)
 # img 2018-04-29 13-14-13.png
-</xmp><img src="/media/young/5e7be152-8ed5-483d-a8e8-b3fecfa221dc/text/mycodehtml/pracrl/shkim-rl/pic/2018-04-29 13-14-13.png"><xmp>
+</xmp><img src="https://raw.githubusercontent.com/youngmtool/pracrl/master/shkim-rl/pic/2018-04-29 13-14-13.png"><xmp>
 # @
 class DQN:
     def __init__(self,session,input_size,ouput_size,name="main"):
@@ -206,14 +203,14 @@ if __name__ == "__main__":
 # Implement replay memory
 # You will use simply deque() to input values and extract values
 # img 2018-04-29 13-43-06.png
-</xmp><img src="/media/young/5e7be152-8ed5-483d-a8e8-b3fecfa221dc/text/mycodehtml/pracrl/shkim-rl/pic/2018-04-29 13-43-06.png"><xmp>
+</xmp><img src="https://raw.githubusercontent.com/youngmtool/pracrl/master/shkim-rl/pic/2018-04-29 13-43-06.png"><xmp>
 # You can keep fixed size by using popleft()
 
 
 # @
 # You train model with values from replay memory
 # img 2018-04-29 14-04-31.png
-</xmp><img src="/media/young/5e7be152-8ed5-483d-a8e8-b3fecfa221dc/text/mycodehtml/pracrl/shkim-rl/pic/2018-04-29 14-04-31.png"><xmp>
+</xmp><img src="https://raw.githubusercontent.com/youngmtool/pracrl/master/shkim-rl/pic/2018-04-29 14-04-31.png"><xmp>
 # @
 # Summary
 # 1. You build network, and initialize it
