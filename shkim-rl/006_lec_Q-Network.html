@@ -1,0 +1,87 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+   "http://www.w3.org/TR/html4/strict.dtd">
+<HTML>
+   <HEAD>
+      <TITLE>My first HTML document</TITLE>
+      <style rel="stylesheet" type="text/css">
+body {
+ font-size: 23px;
+
+ margin-top: 50px;
+    margin-bottom: 50px;
+    margin-right: 80px;
+    margin-left: 80px;
+
+    padding-top: 50px;
+    padding-bottom: 50px;
+    padding-right: 80px;
+    padding-left: 80px;
+
+    line-height:35px;background-color: black;color:#ABBAB7;
+}
+</style>
+      <script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    "HTML-CSS" : {
+        availableFonts : ["STIX"],
+        preferredFont : "STIX",
+        webFont : "STIX-Web",
+        imageFont : null
+    }
+});
+</script>
+     <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js" type="text/javascript">
+    MathJax.Hub.Config({
+        HTML: ["input/TeX","output/HTML-CSS"],
+        TeX: { extensions: ["AMSmath.js","AMSsymbols.js"],
+               equationNumbers: { autoNumber: "AMS" } },
+        extensions: ["tex2jax.js"],
+        jax: ["input/TeX","output/HTML-CSS"],
+        tex2jax: { inlineMath: [ ['$$$','$$$'] ],
+                   displayMath: [ ['$$$$','$$$$'] ],
+                   processEscapes: true },
+        "HTML-CSS": { availableFonts: ["TeX"],
+                      linebreaks: { automatic: true } }
+    });
+</script>
+   </HEAD>
+   <BODY>
+006_lec_Q-Network.html
+<xmp>
+
+# https://www.youtube.com/watch?v=w9GwqPx7LW8&list=PLlMkM4tgfjnKsCWav-Z2F-MMFRx-2gMGG&index=11
+
+# @
+# Q algorithm is easy to use and shows good result
+# But you can't apply Q algorithm to real world question
+
+# @
+# To resolve this issue,
+# you can use "network",
+# which takes 2 inputs (state s, action a)
+
+# Then, you perform forward proopagation,
+# then, you obtain one output
+# Or, you can obtain multiple outputs from one input
+
+# img 2018-04-29 08-53-22.png
+</xmp><img src="/media/young/5e7be152-8ed5-483d-a8e8-b3fecfa221dc/text/mycodehtml/pracrl/shkim-rl/pic/2018-04-29 08-53-22.png"><xmp>
+
+# @
+# img 2018-04-29 09-44-40.png
+</xmp><img src="/media/young/5e7be152-8ed5-483d-a8e8-b3fecfa221dc/text/mycodehtml/pracrl/shkim-rl/pic/2018-04-29 09-44-40.png"><xmp>
+
+# img 2018-04-29 09-45-30.png
+</xmp><img src="/media/young/5e7be152-8ed5-483d-a8e8-b3fecfa221dc/text/mycodehtml/pracrl/shkim-rl/pic/2018-04-29 09-45-30.png"><xmp>
+
+# img 2018-04-29 09-46-23.png
+</xmp><img src="/media/young/5e7be152-8ed5-483d-a8e8-b3fecfa221dc/text/mycodehtml/pracrl/shkim-rl/pic/2018-04-29 09-46-23.png"><xmp>
+
+# @
+# "Diverge" issue is resolved by deepmind team via DQN algorithm
+# img 2018-04-29 09-47-39.png
+</xmp><img src="/media/young/5e7be152-8ed5-483d-a8e8-b3fecfa221dc/text/mycodehtml/pracrl/shkim-rl/pic/2018-04-29 09-47-39.png"><xmp>
+
+</xmp>
+   </BODY>
+</HTML>
