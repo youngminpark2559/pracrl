@@ -60,20 +60,21 @@ import matplotlib.pyplot as plt
 # You will run in stochastic(non-deterministic) world
 env = gym.make('FrozenLake-v0')
 
-# Input and output size based on the "environment"
-# Number of input is 16 as one-hot-encoding
+# Input size and output size based on the frozen lake "environment"
+# Dimension of of one input vector will be 16 as one-hot-encoding vector
 input_size = env.observation_space.n
-# Since you have 4 actions,
+# Since you have 4 actions(up, down, left, right),
+# dimension of output vector will be 4
 output_size = env.action_space.n
 learning_rate = 0.1
 
 # These lines establish feed-forward part of network,
-# used to choose actions
+# which is used to choose actions
 # You will hand in input data(X) by using placeholder
+X = tf.placeholder(shape=[1, input_size], dtype=tf.float32)  # state input
+# Variable node in tensorflow means trainable value
 # [1,16][?,?]=[1,4]
 # [?,?]=[16,4]
-X = tf.placeholder(shape=[1, input_size], dtype=tf.float32)  # state input
-# Variable means trainable value
 W = tf.Variable(tf.random_uniform([input_size, output_size], 0, 0.01))  # weight
 
 # Qpred is Ws, $$$\hat{Q}$$$
@@ -81,7 +82,7 @@ Qpred = tf.matmul(X, W)
 # Y label
 Y = tf.placeholder(shape=[1, output_size], dtype=tf.float32)
 
-# Since it's matrix, you use reduce_sum
+# Since it's matrix, you should use reduce_sum
 loss = tf.reduce_sum(tf.square(Y - Qpred))
 train = tf.train.GradientDescentOptimizer(learning_rate=learning_rate).minimize(loss)
 
@@ -92,11 +93,15 @@ num_episodes = 2000
 # Create lists to contain total rewards and steps per episode
 rList = []
 
-# This method creates array for one-hot-encoding vector for "input" data
+# This method creates array for one-hot-encoding vector for "input" data,
+# and returns one hot vector for specific one state
 def one_hot(x):
-    # np.identity(16) returns 16by16 array with value 1 in diagonal element
-    # If state is 0, [0:1] will be index for state 0
-    # If state is 1, [1:2] will be index for state 1
+    # np.identity(16) returns 16by16 array,
+    # initialized with value 1 in only diagonal elements
+    # If state is 0, you need 0 index value from above array,
+    # indexing with [0:1] will give you that value
+    # If state is 1, you need 1 index value from above array,
+    # indexing with [1:2] will give you that value
     # ...
     return np.identity(16)[x:x + 1]
 
@@ -104,7 +109,7 @@ init = tf.global_variables_initializer()
 with tf.Session() as sess:
     sess.run(init)
     for i in range(num_episodes):
-        # Reset environment and get first new observation
+        # Reset environment and get first new observation (state)
         s = env.reset()
         e = 1. / ((i / 50) + 10)
         rAll = 0
