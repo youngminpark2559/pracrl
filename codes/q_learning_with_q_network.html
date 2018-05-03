@@ -1,0 +1,125 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+   "http://www.w3.org/TR/html4/strict.dtd">
+<HTML>
+   <HEAD>
+      <TITLE>My first HTML document</TITLE>
+      <style rel="stylesheet" type="text/css">
+body {
+ font-size: 23px;
+ margin-top: 50px;
+    margin-bottom: 50px;
+    margin-right: 80px;
+    margin-left: 80px;
+    padding-top: 50px;
+    padding-bottom: 50px;
+    padding-right: 80px;
+    padding-left: 80px;
+    line-height:35px;
+}
+</style>
+      <script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    "HTML-CSS" : {
+        availableFonts : ["STIX"],
+        preferredFont : "STIX",
+        webFont : "STIX-Web",
+        imageFont : null
+    }
+});
+</script>
+     <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js" type="text/javascript">
+    MathJax.Hub.Config({
+        HTML: ["input/TeX","output/HTML-CSS"],
+        TeX: { extensions: ["AMSmath.js","AMSsymbols.js"],
+               equationNumbers: { autoNumber: "AMS" } },
+        extensions: ["tex2jax.js"],
+        jax: ["input/TeX","output/HTML-CSS"],
+        tex2jax: { inlineMath: [ ['$$$','$$$'] ],
+                   displayMath: [ ['$$$$','$$$$'] ],
+                   processEscapes: true },
+        "HTML-CSS": { availableFonts: ["TeX"],
+                      linebreaks: { automatic: true } }
+    });
+</script>
+   </HEAD>
+   <BODY>
+q_learning_with_q_network.html
+<xmp>
+import gym
+import numpy as np
+import random
+import tensorflow as tf
+import matplotlib.pyplot as plt
+# %matplotlib inline
+
+env = gym.make('FrozenLake-v0')
+tf.reset_default_graph()
+
+inputs1 = tf.placeholder(shape=[1,16],dtype=tf.float32)
+
+W = tf.Variable(tf.random_uniform([16,4],0,0.01))
+
+Qout = tf.matmul(inputs1,W)
+
+predict = tf.argmax(Qout,1)
+
+nextQ = tf.placeholder(shape=[1,4],dtype=tf.float32)
+
+loss = tf.reduce_sum(tf.square(nextQ - Qout))
+
+trainer = tf.train.GradientDescentOptimizer(learning_rate=0.1)
+
+updateModel = trainer.minimize(loss)
+
+init = tf.global_variables_initializer()
+
+y = .99
+e = 0.1
+num_episodes = 2000
+
+jList = []
+rList = []
+
+with tf.Session() as sess:
+    sess.run(init)
+    
+    for i in range(num_episodes):
+        s = env.reset()
+        rAll = 0
+        d = False
+        j = 0
+        
+        while j < 99:
+            j+=1
+            a,allQ = sess.run([predict,Qout],feed_dict={inputs1:np.identity(16)[s:s+1]})
+            if np.random.rand(1) < e:
+                a[0] = env.action_space.sample()
+            
+            s1,r,d,_ = env.step(a[0])
+            
+            Q1 = sess.run(Qout,feed_dict={inputs1:np.identity(16)[s1:s1+1]})
+            
+            maxQ1 = np.max(Q1)
+            
+            targetQ = allQ
+            targetQ[0,a[0]] = r + y*maxQ1
+            
+            _,W1 = sess.run([updateModel,W],feed_dict={inputs1:np.identity(16)[s:s+1],nextQ:targetQ})
+            rAll += r
+            s = s1
+            if d == True:
+                e = 1./((i/50) + 10)
+                break
+        jList.append(j)
+        rList.append(rAll)
+print ("Percent of succesful episodes: " + str(sum(rList)/num_episodes) + "%")
+# Percent of succesful episodes: 0.2525%
+plt.plot(rList)
+plt.show()
+# img 2018-05-03 12-16-21.png
+plt.plot(jList)
+plt.show()
+# img 2018-05-03 12-14-44.png
+</xmp>
+   </BODY>
+</HTML>
