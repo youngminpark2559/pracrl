@@ -1,0 +1,171 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+   "http://www.w3.org/TR/html4/strict.dtd">
+<HTML>
+   <HEAD>
+      <TITLE>My first HTML document</TITLE>
+      <style rel="stylesheet" type="text/css">
+body {
+ font-size: 23px;
+ margin-top: 50px;
+    margin-bottom: 50px;
+    margin-right: 80px;
+    margin-left: 80px;
+    padding-top: 50px;
+    padding-bottom: 50px;
+    padding-right: 80px;
+    padding-left: 80px;
+    line-height:35px;
+}
+</style>
+      <script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    "HTML-CSS" : {
+        availableFonts : ["STIX"],
+        preferredFont : "STIX",
+        webFont : "STIX-Web",
+        imageFont : null
+    }
+});
+</script>
+     <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js" type="text/javascript">
+    MathJax.Hub.Config({
+        HTML: ["input/TeX","output/HTML-CSS"],
+        TeX: { extensions: ["AMSmath.js","AMSsymbols.js"],
+               equationNumbers: { autoNumber: "AMS" } },
+        extensions: ["tex2jax.js"],
+        jax: ["input/TeX","output/HTML-CSS"],
+        tex2jax: { inlineMath: [ ['$$$','$$$'] ],
+                   displayMath: [ ['$$$$','$$$$'] ],
+                   processEscapes: true },
+        "HTML-CSS": { availableFonts: ["TeX"],
+                      linebreaks: { automatic: true } }
+    });
+</script>
+   </HEAD>
+   <BODY>
+q_learning_with_q_network_with_states_and_actions.html
+<xmp>
+import tensorflow as tf
+import tensorflow.contrib.slim as slim
+import numpy as np
+
+class contextual_bandit():
+    def __init__(self):
+        self.state = 0
+        
+        self.bandits = np.array([[0.2,0,-0.0,-5],[0.1,-5,1,0.25],[-5,5,5,5]])
+        self.num_bandits = self.bandits.shape[0]
+        self.num_actions = self.bandits.shape[1]
+    
+    def getBandit(self):
+        self.state = np.random.randint(0,len(self.bandits))
+        return self.state
+    
+    def pullArm(self,action):
+        bandit = self.bandits[self.state,action]
+        
+        result = np.random.randn(1)
+        if result > bandit:
+            return 1
+        else:
+            return -1
+
+class agent():
+    def __init__(self, lr, s_size,a_size):
+        self.state_in= tf.placeholder(shape=[1],dtype=tf.int32)
+        state_in_OH = slim.one_hot_encoding(self.state_in,s_size)
+        # state [1,16]
+        # weight [16,4]
+        # output [1,4]
+        output = slim.fully_connected(
+            state_in_OH
+            ,a_size
+            ,biases_initializer=None
+            ,activation_fn=tf.nn.sigmoid
+            ,weights_initializer=tf.ones_initializer())
+
+        self.output = tf.reshape(output,[-1])
+        self.chosen_action = tf.argmax(self.output,0)
+
+        self.reward_holder = tf.placeholder(shape=[1],dtype=tf.float32)
+        self.action_holder = tf.placeholder(shape=[1],dtype=tf.int32)
+        self.responsible_weight = tf.slice(self.output,self.action_holder,[1])
+        self.loss = -(tf.log(self.responsible_weight)*self.reward_holder)
+        optimizer = tf.train.GradientDescentOptimizer(learning_rate=lr)
+        self.update = optimizer.minimize(self.loss)
+
+tf.reset_default_graph() 
+
+cBandit = contextual_bandit()
+myAgent=agent(lr=0.001,s_size=cBandit.num_bandits,a_size=cBandit.num_actions)
+weights=tf.trainable_variables()[0] 
+total_episodes = 10000
+total_reward = np.zeros([cBandit.num_bandits,cBandit.num_actions]) 
+e = 0.1 
+
+init = tf.global_variables_initializer()
+
+config = tf.ConfigProto(
+        device_count={'GPU': 0}
+    )
+    
+with tf.Session(config=config) as sess:
+    sess.run(init)
+    i = 0
+    while i < total_episodes:
+        s = cBandit.getBandit() 
+        if np.random.rand(1) < e:
+            action = np.random.randint(cBandit.num_actions)
+        else:
+            action = sess.run(myAgent.chosen_action,feed_dict={myAgent.state_in:[s]})
+        
+        reward = cBandit.pullArm(action)
+        
+        feed_dict={
+            myAgent.reward_holder:[reward]
+            ,myAgent.action_holder:[action]
+            ,myAgent.state_in:[s]}
+
+        _,ww = sess.run([myAgent.update,weights], feed_dict=feed_dict)
+        
+        total_reward[s,action] += reward
+        if i % 500 == 0:
+            print( "Mean reward for each of the " + str(cBandit.num_bandits) + " bandits: " + str(np.mean(total_reward,axis=1)))
+        i+=1
+
+for a in range(cBandit.num_bandits):
+    print ("The agent thinks action " + str(np.argmax(ww[a])+1) + " for bandit " + str(a+1) + " is the most promising....")
+    if np.argmax(ww[a]) == np.argmin(cBandit.bandits[a]):
+        print ("...and it was right!")
+    else:
+        print ("...and it was wrong!")
+
+# Mean reward for each of the 3 bandits: [ 0.25  0.    0.  ]
+# Mean reward for each of the 3 bandits: [ 37.25  33.    34.5 ]
+# Mean reward for each of the 3 bandits: [ 73.75  75.5   68.  ]
+# Mean reward for each of the 3 bandits: [ 116.75  111.    100.5 ]
+# Mean reward for each of the 3 bandits: [ 153.25  152.5   130.5 ]
+# Mean reward for each of the 3 bandits: [ 192.5   186.25  168.5 ]
+# Mean reward for each of the 3 bandits: [ 231.25  225.25  205.75]
+# Mean reward for each of the 3 bandits: [ 277.75  259.75  235.75]
+# Mean reward for each of the 3 bandits: [ 310.75  298.    273.  ]
+# Mean reward for each of the 3 bandits: [ 351.    334.    310.75]
+# Mean reward for each of the 3 bandits: [ 391.25  370.    345.5 ]
+# Mean reward for each of the 3 bandits: [ 431.75  409.75  376.25]
+# Mean reward for each of the 3 bandits: [ 470.25  447.    412.  ]
+# Mean reward for each of the 3 bandits: [ 503.75  488.25  446.75]
+# Mean reward for each of the 3 bandits: [ 543.75  528.    479.  ]
+# Mean reward for each of the 3 bandits: [ 579.25  565.75  517.75]
+# Mean reward for each of the 3 bandits: [ 616.5   597.5   555.25]
+# Mean reward for each of the 3 bandits: [ 655.25  634.5   591.  ]
+# Mean reward for each of the 3 bandits: [ 691.75  677.25  621.75]
+# Mean reward for each of the 3 bandits: [ 731.75  709.75  660.75]
+# The agent thinks action 4 for bandit 1 is the most promising....
+# ...and it was right!
+# The agent thinks action 2 for bandit 2 is the most promising....
+# ...and it was right!
+# The agent thinks action 1 for bandit 3 is the most promising....
+# ...and it was right!
+</xmp>
+   </BODY>
+</HTML>
