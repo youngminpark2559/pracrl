@@ -1,0 +1,104 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+   "http://www.w3.org/TR/html4/strict.dtd">
+<HTML>
+   <HEAD>
+      <TITLE>My first HTML document</TITLE>
+      <style rel="stylesheet" type="text/css">
+body {
+ font-size: 23px;
+ margin-top: 50px;
+    margin-bottom: 50px;
+    margin-right: 80px;
+    margin-left: 80px;
+    padding-top: 50px;
+    padding-bottom: 50px;
+    padding-right: 80px;
+    padding-left: 80px;
+    line-height:35px;
+}
+</style>
+      <script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    "HTML-CSS" : {
+        availableFonts : ["STIX"],
+        preferredFont : "STIX",
+        webFont : "STIX-Web",
+        imageFont : null
+    }
+});
+</script>
+     <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js" type="text/javascript">
+    MathJax.Hub.Config({
+        HTML: ["input/TeX","output/HTML-CSS"],
+        TeX: { extensions: ["AMSmath.js","AMSsymbols.js"],
+               equationNumbers: { autoNumber: "AMS" } },
+        extensions: ["tex2jax.js"],
+        jax: ["input/TeX","output/HTML-CSS"],
+        tex2jax: { inlineMath: [ ['$$$','$$$'] ],
+                   displayMath: [ ['$$$$','$$$$'] ],
+                   processEscapes: true },
+        "HTML-CSS": { availableFonts: ["TeX"],
+                      linebreaks: { automatic: true } }
+    });
+</script>
+   </HEAD>
+   <BODY>
+003_lab_Dummy Q-learning (table)_03_0_q_table_frozenlake_det.py.html
+<xmp>
+# cd /media/young/5e7be152-8ed5-483d-a8e8-b3fecfa221dc/code/PythonPractice/
+# python PythonTemp017.py
+
+import gym
+import numpy as np
+
+env = gym.make('FrozenLake-v0')
+
+Q = np.zeros([env.observation_space.n,env.action_space.n])
+
+lr = .85
+y = .99
+num_episodes = 2000
+
+jList = []
+rList = []
+for i in range(num_episodes):
+    s = env.reset()
+    rAll = 0
+    d = False
+    j = 0
+    while j < 99:
+        j+=1
+        a = np.argmax(Q[s,:] + np.random.randn(1,env.action_space.n)*(1./(i+1)))
+        s1,r,d,_ = env.step(a)
+        Q[s,a] = Q[s,a] + lr*(r + y*np.max(Q[s1,:]) - Q[s,a])
+        rAll += r
+        s = s1
+        if d == True:
+            break
+    rList.append(rAll)
+print ("Score over time: " +  str(sum(rList)/num_episodes))
+# Score over time: 0.392
+
+print ("Final Q-Table Values")
+print (np.round(Q,3))
+# Final Q-Table Values
+# [[0.012 0.012 0.304 0.01 ]
+#  [0.003 0.002 0.003 0.245]
+#  [0.006 0.007 0.004 0.195]
+#  [0.    0.001 0.002 0.185]
+#  [0.46  0.    0.007 0.   ]
+#  [0.    0.    0.    0.   ]
+#  [0.028 0.    0.    0.001]
+#  [0.    0.    0.    0.   ]
+#  [0.002 0.005 0.    0.622]
+#  [0.    0.702 0.    0.002]
+#  [0.263 0.    0.    0.001]
+#  [0.    0.    0.    0.   ]
+#  [0.    0.    0.    0.   ]
+#  [0.    0.002 0.761 0.003]
+#  [0.    0.    0.    0.967]
+#  [0.    0.    0.    0.   ]]
+
+</xmp>
+   </BODY>
+</HTML>
