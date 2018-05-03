@@ -1,0 +1,135 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+   "http://www.w3.org/TR/html4/strict.dtd">
+<HTML>
+   <HEAD>
+      <TITLE>My first HTML document</TITLE>
+      <style rel="stylesheet" type="text/css">
+body {
+ font-size: 23px;
+ margin-top: 50px;
+    margin-bottom: 50px;
+    margin-right: 80px;
+    margin-left: 80px;
+    padding-top: 50px;
+    padding-bottom: 50px;
+    padding-right: 80px;
+    padding-left: 80px;
+    line-height:35px;
+}
+</style>
+      <script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    "HTML-CSS" : {
+        availableFonts : ["STIX"],
+        preferredFont : "STIX",
+        webFont : "STIX-Web",
+        imageFont : null
+    }
+});
+</script>
+     <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js" type="text/javascript">
+    MathJax.Hub.Config({
+        HTML: ["input/TeX","output/HTML-CSS"],
+        TeX: { extensions: ["AMSmath.js","AMSsymbols.js"],
+               equationNumbers: { autoNumber: "AMS" } },
+        extensions: ["tex2jax.js"],
+        jax: ["input/TeX","output/HTML-CSS"],
+        tex2jax: { inlineMath: [ ['$$$','$$$'] ],
+                   displayMath: [ ['$$$$','$$$$'] ],
+                   processEscapes: true },
+        "HTML-CSS": { availableFonts: ["TeX"],
+                      linebreaks: { automatic: true } }
+    });
+</script>
+   </HEAD>
+   <BODY>
+q_learning_with_q_network_selecting_from_multiple_actions.html
+<xmp>
+import tensorflow as tf
+import numpy as np
+
+bandits = [0.2,0,-0.2,-5]
+num_bandits = len(bandits)
+
+def pullBandit(bandit):
+    result = np.random.randn(1)
+    if result > bandit:
+        return 1
+    else:
+        return -1
+
+tf.reset_default_graph()
+
+weights = tf.Variable(tf.ones([num_bandits]))
+
+chosen_action = tf.argmax(weights,0)
+
+reward_holder = tf.placeholder(shape=[1],dtype=tf.float32)
+action_holder = tf.placeholder(shape=[1],dtype=tf.int32)
+responsible_weight = tf.slice(weights,action_holder,[1])
+loss = -(tf.log(responsible_weight)*reward_holder)
+optimizer = tf.train.GradientDescentOptimizer(learning_rate=0.001)
+update = optimizer.minimize(loss)
+
+total_episodes = 1000
+total_reward = np.zeros(num_bandits)
+e = 0.1
+
+init = tf.global_variables_initializer()
+
+with tf.Session() as sess:
+    sess.run(init)
+    i = 0
+    while i < total_episodes:
+        if np.random.rand(1) < e:
+            action = np.random.randint(num_bandits)
+        else:
+            action = sess.run(chosen_action)
+
+        reward = pullBandit(bandits[action]) 
+
+        _,resp,ww = sess.run([update,responsible_weight,weights], feed_dict={reward_holder:[reward],action_holder:[action]})
+
+        total_reward[action] += reward
+        
+        if i % 50 == 0:
+            print( "Running reward for the " + str(num_bandits) + " bandits: " + str(total_reward))
+            # pass
+        
+        i+=1
+
+print ("The agent thinks bandit " + str(np.argmax(ww)+1) + " is the most promising....")
+
+if np.argmax(ww) == np.argmax(-np.array(bandits)):
+    print ("...and it was right!")
+    # pass
+else:
+    print ("...and it was wrong!")
+    # pass
+
+# Running reward for the 4 bandits: [-1.  0.  0.  0.]
+# Running reward for the 4 bandits: [-3.  0. -1. 45.]
+# Running reward for the 4 bandits: [-2. -2.  0. 89.]
+# Running reward for the 4 bandits: [ -1.  -1.   1. 136.]
+# Running reward for the 4 bandits: [ -1.   0.   2. 184.]
+# Running reward for the 4 bandits: [ -1.   0.   3. 233.]
+# Running reward for the 4 bandits: [  0.   1.   2. 278.]
+# Running reward for the 4 bandits: [  2.   2.   2. 323.]
+# Running reward for the 4 bandits: [ -2.   1.   0. 366.]
+# Running reward for the 4 bandits: [ -3.  -1.   0. 411.]
+# Running reward for the 4 bandits: [ -4.  -2.   1. 458.]
+# Running reward for the 4 bandits: [ -4.  -1.   2. 506.]
+# Running reward for the 4 bandits: [ -7.   1.   2. 551.]
+# Running reward for the 4 bandits: [ -7.   0.   2. 600.]
+# Running reward for the 4 bandits: [ -6.   0.   1. 646.]
+# Running reward for the 4 bandits: [ -5.  -1.   2. 693.]
+# Running reward for the 4 bandits: [ -7.   2.   1. 737.]
+# Running reward for the 4 bandits: [ -8.   2.   1. 784.]
+# Running reward for the 4 bandits: [ -9.   0.  -1. 827.]
+# Running reward for the 4 bandits: [-10.   0.   0. 871.]
+# The agent thinks bandit 4 is the most promising....
+# ...and it was right!
+
+</xmp>
+   </BODY>
+</HTML>
