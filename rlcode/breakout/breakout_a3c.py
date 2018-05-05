@@ -43,7 +43,6 @@ class A3CAgent:
         # self.critic is value network which approximates value to value function
         self.actor, self.critic = self.build_model()
 
-        # actor(policy network)과 critic(value network)을 업데이트하는 함수 생성
         # self.optimizer is list containing self.actor_optimizer(), self.critic_optimizer(),
         # that each function updates actor (policy network) and critic (value network)
         self.optimizer = [self.actor_optimizer(), self.critic_optimizer()]
@@ -289,7 +288,6 @@ class Agent(threading.Thread):
                 else:
                     history = next_history
 
-                # 에피소드가 끝나거나 최대 타임스텝 수에 도달하면 학습을 진행
                 # If epidode ends or it reaches to max time step,
                 # you start training
                 if self.t >= self.t_max or done:
