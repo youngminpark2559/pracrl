@@ -40,7 +40,7 @@ class A3CAgent:
         self.threads = 8
 
         # self.actor is policy network which approximates policy to policy function $$$\pi$$$
-        # self.critic is value network which approximates value to value function
+        # (Not sure) self.critic is q function network which approximates value function to v
         self.actor, self.critic = self.build_model()
 
         # self.optimizer is list containing self.actor_optimizer(), self.critic_optimizer(),
@@ -93,7 +93,7 @@ class A3CAgent:
         # policy will be used as policy function
         policy = Dense(self.action_size, activation='softmax')(fc)
         
-        # value will be used as value function
+        # value will be used as value function(q function?)
         value = Dense(1, activation='linear')(fc)
 
         # This is actor network which takes input, outputs policy
@@ -346,7 +346,7 @@ class Agent(threading.Thread):
         # You update actor policy network
         self.optimizer[0]([states, self.actions, advantages])
 
-        # You update critic value network
+        # You update critic value(q function?) network
         self.optimizer[1]([states, discounted_prediction])
 
         self.states, self.actions, self.rewards = [], [], []
