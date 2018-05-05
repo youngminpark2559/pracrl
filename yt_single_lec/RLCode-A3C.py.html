@@ -1,0 +1,195 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+   "http://www.w3.org/TR/html4/strict.dtd">
+<HTML>
+   <HEAD>
+      <TITLE>My first HTML document</TITLE>
+      <style rel="stylesheet" type="text/css">
+body {
+ font-size: 23px;
+ margin-top: 50px;
+    margin-bottom: 50px;
+    margin-right: 80px;
+    margin-left: 80px;
+    padding-top: 50px;
+    padding-bottom: 50px;
+    padding-right: 80px;
+    padding-left: 80px;
+    line-height:35px;
+}
+</style>
+      <script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    "HTML-CSS" : {
+        availableFonts : ["STIX"],
+        preferredFont : "STIX",
+        webFont : "STIX-Web",
+        imageFont : null
+    }
+});
+</script>
+     <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js" type="text/javascript">
+    MathJax.Hub.Config({
+        HTML: ["input/TeX","output/HTML-CSS"],
+        TeX: { extensions: ["AMSmath.js","AMSsymbols.js"],
+               equationNumbers: { autoNumber: "AMS" } },
+        extensions: ["tex2jax.js"],
+        jax: ["input/TeX","output/HTML-CSS"],
+        tex2jax: { inlineMath: [ ['$$$','$$$'] ],
+                   displayMath: [ ['$$$$','$$$$'] ],
+                   processEscapes: true },
+        "HTML-CSS": { availableFonts: ["TeX"],
+                      linebreaks: { automatic: true } }
+    });
+</script>
+   </HEAD>
+   <BODY>
+RLCode-A3C.py.html
+<xmp>
+# RLCode와 A3C 쉽고 깊게 이해하기
+# https://www.youtube.com/watch?v=gINks-YCTBs&t=621s
+
+# RLCode-A3C.py.html
+
+# You have policy neural network $$$\theta$$$
+# You have target function $$$J(\theta)$$$ of neural network $$$\theta$$$
+
+# You will update neural network $$$\theta$$$, 
+# by using gradient ascent on target function $$$J(\theta)$$$
+# $$$\theta'=\theta+\alpha \nabla_{\theta}J(\theta)$$$
+# $$$\nabla_{\theta}J(\theta)$$$ is policy gradient
+# In other words, policy gradient is differentiation in respect to $$$\theta$$$
+
+
+# @
+# Basic algorithm for policy gradient is REINFORCE
+# REINFORCE can be notated as following
+# $$$\nabla_{\theta}J(\theta)\sim \sum\limits_{t=0}^{T-1} \nabla_{\theta}\log{\pi_{\theta}}(a_{t}|s_{t})G_{t}$$$
+
+# Again, target function $$$J(\theta)$$$ for policy gradient can be notated as following
+# $$$J(\theta)=E[\sum\limits_{t=0}^{T-1}r_{t+1}|\pi_{\theta}]$$$
+
+# Expectation value = sum of (probability of occurring x)*(value at x) in respect to x
+# For example, expectation value from dice
+# $$$E[f(x)]=\sum\limits_{x}p(x)f(x)$$$
+
+# When $$$\tau = s_{0},a_{0},r_{1},s_{1},a_{1},r_{2},...,s_{T}$$$
+# target function $$$J(\theta)$$$ can be notated as following
+# $$$J(\theta)=E[\sum\limits_{t=1}^{T-1}r_{t+1}|\pi_{\theta}]$$$
+# $$$J(\theta)=E_{\tau}[r_{1}|\pi_{\theta}] + E_{\tau}[r_{2}|\pi_{\theta}] + E_{\tau}[r_{3}|\pi_{\theta}] + ...$$$
+# $$$E_{\tau}[r_{1}|\pi_{\theta}]$$$ : expectation value in respect to $$$r_{1}$$$ at tragectory $$$\tau$$$
+# $$$J(\theta)=\sum\limits_{t=0}^{T-1}P(s_{t},a_{t}|\tau)R(s_{t},a_{t})$$$
+# $$$P(s_{t},a_{t}|\tau)$$$ : probability at $$$(s_{t},a_{t})$$$
+# $$$R(s_{t},a_{t})$$$ : value at $$$(s_{t},a_{t})$$$
+# $$$J(\theta)=\sum\limits_{t=0}^{T-1}P(s_{t},a_{t}|\tau)r_{t+1}$$$
+
+# Perform $$$\nabla_{\theta}$$$ (differentiation) on both side
+# $$$\nabla_{\theta}J(\theta)=\nabla_{\theta} E[\sum\limits_{t=1}^{T-1}r_{t+1}|\pi_{\theta}]$$$
+# $$$\nabla_{\theta}J(\theta)=\nabla_{\theta} \sum\limits_{t=0}^{T-1} P(s_{t},a_{t}|\tau)r_{t+1}$$$
+# $$$\nabla_{\theta}J(\theta)=\sum\limits_{t=0}^{T-1} \nabla_{\theta} P(s_{t},a_{t}|\tau)r_{t+1}$$$
+# We will inspect this step more detail
+# $$$\nabla_{\theta}J(\theta)=\sum\limits_{t=0}^{T-1} P(s_{t},a_{t}|\tau) \nabla_{\theta} \log{P(s_{t},a_{t}|\tau)r_{t+1}} $$$
+
+
+# Step:
+# $$$\nabla_{\theta}J(\theta)=\sum\limits_{t=0}^{T-1} \nabla_{\theta} P(s_{t},a_{t}|\tau)r_{t+1}$$$
+# According to characteristic of log differentiation
+# $$$\frac{d}{dx}\log{x}=\frac{1}{x}$$$
+# $$$\frac{d}{dx}\log{f(x)}=\frac{\frac{d}{dx}f(x)}{f(x)}$$$
+
+# $$$\nabla_{\theta}J(\theta) = \sum\limits_{t=0}^{T-1} P(s_{t},a_{t}|\tau) \frac{\nabla_{\theta} P(s_{t},a_{t}|\tau)}{P(s_{t},a_{t}|\tau)} r_{t+1}$$$
+# Finally,
+# $$$\nabla_{\theta}J(\theta) = \sum\limits_{t=0}^{T-1} P(s_{t},a_{t}|\tau) \nabla_{\theta} \log{P(s_{t},a_{t}|\tau)r_{t+1}}$$$
+# You convert above formular into expectation value notation
+# $$$\nabla_{\theta}J(\theta) = E_{\tau}[\sum\limits_{t=0}^{T-1} \nabla_{\theta} \log{P(s_{t},a_{t}|\tau)r_{t+1}}]$$$
+# When it comes to reinforcement learing,
+# you can't calculate E[],
+# so you do sampling,
+# which means you do one try and calculate and the update,
+# you do second try and calculate and the update,...
+# $$$\rightarrow \sum\limits_{t=0}^{T-1}\nabla_{\theta}\log{P(s_{t},a_{t}|\tau)r_{t+1}}$$$
+# You should find $$$\log{P(s_{t},a_{t}|\tau)}$$$
+# to go further
+
+# $$$P(s_{t},a_{t}|\tau)=P(s_{0},a_{0},r_{1},s_{1},a_{1},r_{2},...,s_{t},a_{t}|\theta])$$$
+# You will see traces of interaction between agent and environment from following notation
+# $$$P(s_{t},a_{t}|\tau)=P(s_{0})\pi_{\theta}(a_{0}|s_{0}) P(s_{1}|s_{0},a_{0})\pi_{\theta}(a_{1}|s_{1}) P(s_{2}|s_{1},a_{1})...$$$
+# P is environment
+# $$$\pi$$$ is agent
+# Agent can't know P
+
+# We can try to perform log on both side
+# $$$\log{P(s_{t},a_{t}|\tau)}=\log{} P(s_{0})\pi_{\theta}(a_{0}|s_{0}) P(s_{1}|s_{0},a_{0})\pi_{\theta}(a_{1}|s_{1}) ... P(s_{t}|s_{t-1},a_{t-1})\pi_{\theta}(a_{t}|s_{t})$$$
+# We can use following rule,
+# $$$\log{AB}=\log{A}+\log{B}$$$
+# $$$\log{P(s_{t},a_{t}|\tau)}=\log{P(s_{0})} + \log{\pi_{\theta}(a_{0}|s_{0})} +  \log{P(s_{1}|s_{0},a_{0})} + \log{\pi_{\theta}(a_{1}|s_{1})} + ... + \log{P(s_{t}|s_{t-1},a_{t-1})} + \log{\pi_{\theta}(a_{t}|s_{t})}$$$
+# ...
+# To do writing formulars
+
+
+# @
+# REINFORCE
+# 1. You run one episode by current policy
+# 1. You write trajectory which is obtained from each running
+# 1. When episode ends, you calculate $$$G_{t}$$$
+# If written trajectory values are 100, it means you obtain 100 returns
+# 1. You calculate policy gradient, then update policy
+# 1. You iterate above 1-4 steps
+
+# Since you update policy every episode,
+# you call this way as Monte Carlo policy gradient, or REINFORCE
+# Updating policy every "episode" doesn't mean "online"
+
+# @
+# Issue of REINFORCE
+# 1. It creates high variance because as episode becomes longer, you can obtain various trajectory
+# 1. You only can update policy per episode (can't be with online)
+
+
+# Resolving ways:
+# 1. You can upgrade from Monte Carlo to TD (Temporal Difference)
+# Temporal Difference means you update policy more often than Monte Carlo,
+# Monte Carlo means you update when episode is finished
+# 1. You can upgrade from Monte Carlo to Actor-Critic
+# Actor-Critic means you update policy at each step
+
+# @
+# Simply, actor-critic means you use 2 networks
+# One (actor network) will be used as policy
+# One (critic network) will be used as q function
+
+# Critic (q function) is critic person who criticises agent's action,
+# saying that actions is either good or bad
+
+# Then, you can update policy every step
+
+# @
+# You won't use q function as it is.
+# For example, suppose moving to right is +2 which means good action.
+# Suposse moving to left is +1 which means bad action.
+
+# But if we think right is +1, left is -1,
+# task of update and train will be easier
+
+# Therefore, you will use advantage function instead of q function.
+# Advantage function is generated by (q function) - (baseline)
+# By substacting them, it reduces variance
+
+# @
+# Q function means value from at specific state, by specific action
+# Value function is baseline,
+# value function is value from at specific state, by general action
+
+
+# @
+# Approximating Q and V is inefficient.
+
+# @
+# Actor approximates policy to $$$\theta$$$
+# You update by using this loss function $$$\nabla_{theta}\log{\pi_{\theta}}(a_{t}|s_{t})(r_{t+1}+\gamma V_{v}(s_{t+1}-V_{v}(s_{t}))$$$
+
+# Critic approximates value function to v
+# You update by using this MSE loss function $$$ (r_{t+1}+\gamma V_{v}(s_{t+1})-V_{v}(s_{t}))^{2} $$$
+
+</xmp>
+   </BODY>
+</HTML>
