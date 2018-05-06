@@ -57,47 +57,54 @@ import numpy as np
 import tensorflow as tf
 import matplotlib.pyplot as plt
 
-# You will run in stochastic(non-deterministic) world
+# You will run agent in stochastic(non-deterministic) environment
 env = gym.make('FrozenLake-v0')
 
-# Input size and output size based on the frozen lake "environment"
-# Dimension of of one input vector will be 16 as one-hot-encoding vector
+# Input size and output size are defined based on frozen lake environment
+# Dimension of one input vector (one state) will be 16 as one-hot-encoding vector
 input_size = env.observation_space.n
+
 # Since you have 4 actions(up, down, left, right),
-# dimension of output vector will be 4
+# Dimension of output vector (actions) will be 4
 output_size = env.action_space.n
 learning_rate = 0.1
 
 # These lines establish feed-forward part of network,
 # which is used to choose actions
-# You will hand in input data(X) by using placeholder
-X = tf.placeholder(shape=[1, input_size], dtype=tf.float32)  # state input
+# You will hand in input data (state) by using placeholder X
+X = tf.placeholder(shape=[1, input_size], dtype=tf.float32)
+
 # Variable node in tensorflow means trainable value
 # [1,16][?,?]=[1,4]
 # [?,?]=[16,4]
-W = tf.Variable(tf.random_uniform([input_size, output_size], 0, 0.01))  # weight
+W = tf.Variable(tf.random_uniform([input_size, output_size], 0, 0.01))
 
-# Qpred is Ws, $$$\hat{Q}$$$
+# Qpred $$$\hat{Q}$$$ function, representing predictied actions
 Qpred = tf.matmul(X, W)
-# Y label
+
+# Y is output representing 4 actions
 Y = tf.placeholder(shape=[1, output_size], dtype=tf.float32)
 
 # Since it's matrix, you should use reduce_sum
 loss = tf.reduce_sum(tf.square(Y - Qpred))
 train = tf.train.GradientDescentOptimizer(learning_rate=learning_rate).minimize(loss)
 
-# Set Q-learning related parameters
+# Set Q-learning-related parameters
+# dis is discount factor
 dis = .99
 num_episodes = 2000
 
-# Create lists to contain total rewards and steps per episode
+# You create list to save total rewards and steps per episode
 rList = []
 
-# This method creates array for one-hot-encoding vector for "input" data,
-# and returns one hot vector for specific one state
+# This method creates array 
+# to hold one-hot-encoding vectors (each state) 
+# to be used as input data to network,
+# and this method returns one hot vector (one state vector)
 def one_hot(x):
     # np.identity(16) returns 16by16 array,
-    # initialized with value 1 in only diagonal elements
+    # initialized with value 1 in only diagonal elements,
+    # which is useful when you create array holding one hot encoded vectors
     # If state is 0, you need 0 index value from above array,
     # indexing with [0:1] will give you that value
     # If state is 1, you need 1 index value from above array,
@@ -106,51 +113,60 @@ def one_hot(x):
     return np.identity(16)[x:x + 1]
 
 init = tf.global_variables_initializer()
+
 with tf.Session() as sess:
     sess.run(init)
     for i in range(num_episodes):
-        # Reset environment and get first new observation (state)
+        # You reset environment,
+        # and you get first new observation (state)
         s = env.reset()
         e = 1. / ((i / 50) + 10)
         rAll = 0
         done = False
         local_loss = []
 
-        # The Q-Network training
+        # This is Q-Network training
         while not done:
-            # Choose an action by greedily (with e chance of random action)
-            # from the Q-network
+            # You choose action by greedily 
+            # (with e chance of random action) from the Q-network
+            # You throw one state as input data
+            # You want to obtain predicted q value Qpred (action)
             Qs = sess.run(Qpred, feed_dict={X: one_hot(s)})
             if np.random.rand(1) < e:
+                # You randomly choose one action 
                 a = env.action_space.sample()
             else:
+                # You choose one action from predicted actions
                 a = np.argmax(Qs)
 
-            # You do action by given "action a" from above,
-            # then, you obtain values from environment (reward, new state, ...)
+            # You execute obtained action,
+            # then, you obtain experience data (reward, new state, ...) from environment 
             s1, reward, done, _ = env.step(a)
+            # If episode ends,
             if done:
-                # If done, you update Q only by reward
+                # you update Q with reward
+
                 Qs[0, a] = reward
             else:
                 # If not done, you update Q with values
-                # Obtain the Q_s1 values by feeding the new state through our
-                # network
+                # Obtain the Q_s1 values by feeding new state through our network
                 Qs1 = sess.run(Qpred, feed_dict={X: one_hot(s1)})
+                
                 # $$$y=r+\gamma max Q(s')$$$
                 # s': next state
                 # You will use Qs[0, a](y) as y label in feed_dict={}
                 # Update Q
-                # You train Q via only "action a"
+                # You train Q function via only "action a"
 
                 # Reason you use 0 in front of a from Qs[0, a]
-                # input weight output(action)
+                # input * weight = output(action)
+                # Let's see shape of them
                 # [[1by16]][[16by4]]=[[1by4]]
                 # [[1by4]]=[[a1,a2,a3,a4]]
                 # Therefore, you use [0,a] index
                 Qs[0, a] = reward + dis * np.max(Qs1)
 
-            # You train your network by using target (Y) and predicted Q (Qpred) values
+            # You train your network by using target Y and X (state)
             sess.run(train, feed_dict={X: one_hot(s), Y: Qs})
 
             rAll += reward
