@@ -56,8 +56,8 @@ MathJax.Hub.Config({
 
 
 # @
-# Solution for case in stochastic(non-deterministic) world
-# 1. Listen to Q(s') "just a little bit"
+# Solution for case in stochastic(non-deterministic) environment
+# 1. Listen to and believe Q(s') value "a little bit"
 # 1. Update Q(s) "little bit" (which is managed by learning rate)
 
 # Philosophical way of explanation
@@ -65,42 +65,43 @@ MathJax.Hub.Config({
 # 1. Need to listen from many mentors
 
 
-# In previous lecture, way of updating Q is as following
+# In previous lecture, you saw way of updating Q function notated as following
 # $$$Q(s,a) \leftarrow r + \gamma max_{a'} Q(s',a')$$$
 
-# Point is we will take 10 % of new Q ($$$r + \gamma max_{a'} Q(s',a')$$$)
+# Point is you will take 10 % from new Q function ($$$r + \gamma max_{a'} Q(s',a')$$$)
 
 # Learning rate (hyperparameter which you can change) is $$$\alpha$$$
 # $$$\alpha=0.1$$$
 
-# % Q is continuously increased because it's appended
-# % So, you need to discount your own claim ($$$1-\alpha$$$)
+# Q function is continuously increasing function 
+# because values are continuously appended
+# So, you need to discount your own claim Q(s,a) by appending ($$$1-\alpha$$$)
+# Finally, you get new q function:
 # $$$Q(s,a) \leftarrow (1-\alpha) Q(s,a) + \alpha [\gamma max_{a'} Q(s',a')]$$$
 
-# This version shows one $$$\alpha$$$
+# This version shows one $$$\alpha$$$ after arrange above notation
 # $$$Q(s,a) \leftarrow Q(s,a) + \alpha [r + \gamma max_{a'} Q(s',a') - Q(s,a)]$$$
 
-
-# Now, your Q learning algorithm can be used also for non-deterministic(stochastic) world
+# Now, your new Q learning algorithm (q function) also can be used 
+# for non-deterministic(stochastic) environment
 # 1. You initialize Q table with 0
 # $$$\hat{Q}(s,a) \leftarrow 0$$$
 # 1. After building environment,
 # you get current state s
 # 1. Iterate above step
 #     In iteration,
-#     2. You select on action a by using "exploit and exploration" algorithm,
-#     , and execute it
-#     2. You recieve immediate reward r
-#     2. You observe new state s'
-#     2. You update table (Q) entry for $$$\hat{Q}(s,a)$$$ as following:
-#     You listen from Q a little bit
-#     $$$Q(s,a) \leftarrow Q(s,a) + \alpha [r + \gamma max_{a'} Q(s',a') - Q(s,a)]$$$
+#     2. You select action by using "exploit and exploration" algorithm,
+#     , and execute action
+#     2. You recieve immediate reward r from environment
+#     2. You observe new state s' from environment
+#     2. You update q table entry for $$$\hat{Q}(s,a)$$$ as following:
+#     You listen from Q fuction a little bit
+#     $$$\hat{Q}(s,a) \leftarrow Q(s,a) + \alpha [r + \gamma max_{a'} Q(s',a') - Q(s,a)]$$$
 #     2. $$$s \leftarrow s'$$$
 
 # @
-# $$$\hat{Q}$$$ from bew Q algorithm will be converged to real Q?
+# $$$\hat{Q}$$$ function from new Q algorithm will be converged to real Q function?
 # Yes, it's proved
-
 </xmp>
    </BODY>
 </HTML>
