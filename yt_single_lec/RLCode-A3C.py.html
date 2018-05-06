@@ -50,6 +50,103 @@ RLCode-A3C.py.html
 
 # RLCode-A3C.py.html
 
+# @
+# A3C uses policy based algorithm
+# A3C resolves correlation sample issue by asynchronous update
+# so, it doesn't need to use replay memory
+# so, it uses policy gradient algorithm (which is called actor-critic architecture)
+# A3C shows fast training speed 
+# because multiple agents interact with environment at the same time
+
+# A3C is architecture which asynchronously updates actor-critic architecture,
+# which means A3C create multiple actor-critic agents and environments
+
+# Actor-critic is architecture 
+# which trains REINFORCE algorithm in online way (in other words, real time training)
+
+# REINFORCE algorithm is algorithm 
+# which updates Monte-Carlo by using policy gradient
+
+# Monte-Carlo means, when there are episodes, 
+# Monte-Carlo updates itself every each episode
+
+
+# @
+# There is cross entropy loss function which is used for supervised learning
+# Cross entropy loss function can be notated as following:
+# $$$-\sum y_{i}\log{p_{i}}$$$ which tells you how different between p and y
+# img 2018-05-06 16-45-16.png
+</xmp><img src="https://raw.githubusercontent.com/youngmtool/pracrl/master/yt_single_lec/pic/2018-05-06 16-45-16.png"><xmp>
+
+# img 2018-05-06 16-46-16.png
+</xmp><img src="https://raw.githubusercontent.com/youngmtool/pracrl/master/yt_single_lec/pic/2018-05-06 16-46-16.png"><xmp>
+
+# @
+# You can use cross entropy loss function for reinforcement learning
+# Let's say you have policy
+# And you can approximate that policy into neural network
+# That approximated network takes in each state vector as input data
+# And that approximated network outputs probability of each action which agent can execute
+# And you can consider probability as prediction p
+# And there should be action which agent actually execute,
+# and you can consider it as label y
+# img 2018-05-06 16-49-56.png
+</xmp><img src="https://raw.githubusercontent.com/youngmtool/pracrl/master/yt_single_lec/pic/2018-05-06 16-49-56.png"><xmp>
+
+# Then, you can use cross entropy loss function on it
+# States as input data: $$$s_{0},s_{1},s_{2},...$$$
+# We input that input data into network appximated from policy
+# Network outputs prediction p representing probability
+# Actual action which agent executes : $$$a_{0},a_{1},a_{2},...$$$
+
+# But it's odd you see actual action as label
+
+# So, you need direction for update
+# img 2018-05-06 16-50-35.png
+</xmp><img src="https://raw.githubusercontent.com/youngmtool/pracrl/master/yt_single_lec/pic/2018-05-06 16-50-35.png"><xmp>
+
+# @
+# You know q function which represents how much good actural action is
+# $$$Q_{\pi}(s,a)=E_{\pi}[R_{t+1}+\gamma R_{t+2}+...|S_{t}=s,A_{t}=a]$$$
+
+# You can use q function as direction and size for update
+# And you can say q function in this circumstance as critic
+# Critic also can be approximated to neural network 
+# just like policy is approximated to neural network
+# In other words, critic uses neural network to know q function
+
+# And then you can apply gradient descent 
+# on function from $$$Q(S_{t},A_{t})(-\sum y_{i}\log{p_{i}})$$$
+# img 2018-05-06 16-59-40.png
+</xmp><img src="https://raw.githubusercontent.com/youngmtool/pracrl/master/yt_single_lec/pic/2018-05-06 16-59-40.png"><xmp>
+
+# Actor critic is one agent
+# Using only one actor critic is slow performance
+# And it can't resolve correlation sample issue
+
+# To resolve above issue, you can use multiple actor critic agents
+# Generally, people create 16 agents
+# img 2018-05-06 17-03-59.png
+</xmp><img src="https://raw.githubusercontent.com/youngmtool/pracrl/master/yt_single_lec/pic/2018-05-06 17-03-59.png"><xmp>
+
+# @
+# Agent1 asynchronously updates global network
+# Other agents keep going tasks
+# Then, finally global network updates agent1
+# img 2018-05-06 17-05-49.png
+</xmp><img src="https://raw.githubusercontent.com/youngmtool/pracrl/master/yt_single_lec/pic/2018-05-06 17-05-49.png"><xmp>
+
+
+# Agent1 updates global network
+# img 2018-05-06 17-06-37.png
+</xmp><img src="https://raw.githubusercontent.com/youngmtool/pracrl/master/yt_single_lec/pic/2018-05-06 17-06-37.png"><xmp>
+
+# Global network updates agent1
+# img 2018-05-06 17-07-18.png
+</xmp><img src="https://raw.githubusercontent.com/youngmtool/pracrl/master/yt_single_lec/pic/2018-05-06 17-07-18.png"><xmp>
+
+
+# @
 # You have policy neural network $$$\theta$$$
 # You have target function $$$J(\theta)$$$ of neural network $$$\theta$$$
 
