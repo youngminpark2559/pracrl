@@ -15,7 +15,7 @@ body {
     padding-right: 80px;
     padding-left: 80px;
     line-height:35px;background-color: black;color:#ABBAB7;
-},
+}
 img {
  width:900px;
 }
@@ -48,60 +48,70 @@ MathJax.Hub.Config({
    <BODY>
 dhkwak-Introduction of Deep Reinforcement Learning.html
 <xmp>
-https://www.youtube.com/watch?v=dw0sHzE1oAc&t=378s
+# https://www.youtube.com/watch?v=dw0sHzE1oAc&t=378s
+
 # Reinforcement learning:
 # Goal is to find policy function p(a|s) which maximizes sum of reward
 
-# s: current state where object you train is in
-# a: in that state, what action object should do?
-
+# s: current state where agent which you train is in
+# a: in that state, what action agent should do?
 
 # @
 # When you want to find policy,
 # you need cycle composed of "agent", "environment", "interaction"(state, reward, action) as tool
 # img 2018-04-29 18-54-18.png
-</xmp><img src="https://raw.githubusercontent.com/youngmtool/pracrl/master/dhkwak/pic/2018-04-29 18-54-18.png"><xmp>
-
+# </xmp><img src="https://raw.githubusercontent.com/youngmtool/pracrl/master/dhkwak/pic/2018-04-29 18-54-18.png"><xmp>
+    
 # To define cycle, you need mathematical tool (MDP: Markov Decision Processes)
 
+# You will see MDP in 3 steps 
+# (Markov process, Markov Reward Process, Markov Decision Process)
 
 # @
-# Markov Processes are defined by two factors
+# Markov Process is defined by two factors
 
-# 1. Discrete state space
+# 1. Discrete state space (like circles)
 # Suppose 5 by 5 maze
 # Mice can be located in 25 locations
 # In this case, size of state space is 25
 
 # 1. State transition probability:
 # This is process of finding rule from environment
+# This is dynamics about environment
+
 # img 2018-04-29 19-03-44.png
-</xmp><img src="https://raw.githubusercontent.com/youngmtool/pracrl/master/dhkwak/pic/2018-04-29 19-03-44.png"><xmp>
+# </xmp><img src="https://raw.githubusercontent.com/youngmtool/pracrl/master/dhkwak/pic/2018-04-29 19-03-44.png"><xmp>
 
 # @
 # Markov Reward Processes
-# This is concept added by "reward" on "Markov Processes"
+# This is concept added by "reward" (+1, -1) on "Markov Processes"
 # If agent arrives to A, it gets +1 reward
+# MRP lets agent to know state A is better state
 # img 2018-04-29 19-06-54.png
-</xmp><img src="https://raw.githubusercontent.com/youngmtool/pracrl/master/dhkwak/pic/2018-04-29 19-06-54.png"><xmp>
+# </xmp><img src="https://raw.githubusercontent.com/youngmtool/pracrl/master/dhkwak/pic/2018-04-29 19-06-54.png"><xmp>
 
 # @
 # Markov Decision Processes
-# This is about "action"
-# Number of decision has 2 (X, Y)
-# paper, stone and scissors: 3 actions
-# maze: 4 actions (R,L,U,D)
+# This is added by "action" 
+# In this example,
+# Discrete state space is S={A,B}
+# Discrete action space is A={X,Y}
+# (Action conditional) State transition probability:
+# $$$P(S'|S,A)={...}$$$
+# Reward function:
+# $$$R(S'=A)=+1, R(S'=B)=-1$$$ 
 
 # At state of A, which action will give agent more reward?
-# Finding policy for it is goal of Reinforcement learning
+# Finding policy for it is goal of reinforcement learning
 
 # At state A, agent has 2 options (action X, action Y)
 # Since moving to A gives + reward, moving to B is false action
 # So, if agent is in A, it should stay in A
 # So, at state of A, opmimal decision is to select action Y
-# By same logic, at state of B, agent should make decision (Y in this case) to move to state of A
+# By same logic, at state of B, 
+# agent should make decision (Y in this case) to move to state of A
 # img 2018-04-29 19-37-40.png
-</xmp><img src="https://raw.githubusercontent.com/youngmtool/pracrl/master/dhkwak/pic/2018-04-29 19-37-40.png"><xmp>
+# </xmp><img src="https://raw.githubusercontent.com/youngmtool/pracrl/master/dhkwak/pic/2018-04-29 19-37-40.png"><xmp>
 
 # @
 # Summary: MDP is mathematical framework for modeling decision making
@@ -109,23 +119,39 @@ https://www.youtube.com/watch?v=dw0sHzE1oAc&t=378s
 # @
 # MDP question can be solved by two methods (planning, reinforcement learning)
 
-# dynamic programming is not machine learning methodology,
-# but similar to reinforcement learning in terms of mathematical way
+# Planning: Exhaustive search/Dynamic programming
+# Reinforcement Learning: MC method/TD learning(Q learning)
+
+# Dynamic programming is not machine learning methodology,
+# but similar to reinforcement learning in terms of mathematical way.
 
 # img 2018-04-29 19-44-28.png
-</xmp><img src="https://raw.githubusercontent.com/youngmtool/pracrl/master/dhkwak/pic/2018-04-29 19-44-28.png"><xmp>
+# </xmp><img src="https://raw.githubusercontent.com/youngmtool/pracrl/master/dhkwak/pic/2018-04-29 19-44-28.png"><xmp>
 
 # img 2018-04-29 19-48-36.png
-</xmp><img src="https://raw.githubusercontent.com/youngmtool/pracrl/master/dhkwak/pic/2018-04-29 19-48-36.png"><xmp>
+# </xmp><img src="https://raw.githubusercontent.com/youngmtool/pracrl/master/dhkwak/pic/2018-04-29 19-48-36.png"><xmp>
 
 # Above agent considers entire reward up to future cases,
-# which means it can eat -1 point to get +3
+# which means it can eat -1 reward to get +3 reward
 
 # Reinforcement learning wants to deal with "sparse reward" problem and "delayed reward" problem
 
 # @
-# You should consider "discount factor" to complete Markov Decision Processes
-# Discount factor is concept which was created to define "future reward" mathematically
+# You have 2 methodologies (Planning, RL) to find expectation value
+# Planning:
+# You already know probability of occurring each side from dice is $$$\frac{1}{6}$$$
+# In this case, you can find expection value (3.5) easily.
+# $$$1*\frac{1}{6}+2*\frac{1}{6}+...+6*\frac{1}{6}=3.5$$$
+
+# RL:
+# When you don't know probability of occurring each side,
+# you should find expectation value from manual tries
+# You should throw dices like 100 times,
+# then you find mean value of dice side
+
+# @
+# You should consider "discount factor" to complete Markov Decision Process model
+# Discount factor is concept which was created to mathematically define "future reward"
 
 # Sum of future rewards in "episodic tasks"
 
@@ -148,14 +174,14 @@ https://www.youtube.com/watch?v=dw0sHzE1oAc&t=378s
 # $$$G_{t}:=R_{t+1}+\gamma R_{t+2}+\gamma^{2}R_{t+3}+...+\gamma^{T-1}R_{T}+...$$$
 # $$$G_{t}:= \sum\limits_{k=1}^{\infty} \gamma^{k-1}R_{t+k} $$$ (This will be converged)
 
-# Thera are 2 kinds of policy,
+# There are 2 kinds of policy,
 # which is object of train,
 # and is function that lets agent to know what action he should do
 # deterministic policy, stochastic policy
-# # img 2018-04-29 20-37-32.png
-</xmp><img src="https://raw.githubusercontent.com/youngmtool/pracrl/master/dhkwak/pic/2018-04-29 20-37-32.png"><xmp>
-# # img 2018-04-29 20-37-59.png
-</xmp><img src="https://raw.githubusercontent.com/youngmtool/pracrl/master/dhkwak/pic/2018-04-29 20-37-59.png"><xmp>
+# img 2018-04-29 20-37-32.png
+# </xmp><img src="https://raw.githubusercontent.com/youngmtool/pracrl/master/dhkwak/pic/2018-04-29 20-37-32.png"><xmp>
+# img 2018-04-29 20-37-59.png
+# </xmp><img src="https://raw.githubusercontent.com/youngmtool/pracrl/master/dhkwak/pic/2018-04-29 20-37-59.png"><xmp>
 
 # Some cases are fitted to stochastic policy,
 # and some other cases are fitted to deterministic policy
@@ -164,7 +190,7 @@ https://www.youtube.com/watch?v=dw0sHzE1oAc&t=378s
 # b) is values at each state
 # c) is optimal policy
 # img 2018-04-29 20-54-19.png
-</xmp><img src="https://raw.githubusercontent.com/youngmtool/pracrl/master/dhkwak/pic/2018-04-29 20-54-19.png"><xmp>
+# </xmp><img src="https://raw.githubusercontent.com/youngmtool/pracrl/master/dhkwak/pic/2018-04-29 20-54-19.png"><xmp>
 
 # @
 # "Value function" lets you know expected sum of "future rewards" at given state s, following policy $$$\pi$$$
@@ -187,7 +213,7 @@ https://www.youtube.com/watch?v=dw0sHzE1oAc&t=378s
 # $$$v_{\pi}(s) \doteq E_{\pi}[\sum\limits_{k=0}^{\infty}\gamma^{k}R_{t+k+1}|S_{t}=s,A_{t}=a$$$
 
 # img 2018-04-29 21-04-38.png
-</xmp><img src="https://raw.githubusercontent.com/youngmtool/pracrl/master/dhkwak/pic/2018-04-29 21-04-38.png"><xmp>
+# </xmp><img src="https://raw.githubusercontent.com/youngmtool/pracrl/master/dhkwak/pic/2018-04-29 21-04-38.png"><xmp>
 
 # @
 # When you find expection value,
@@ -195,23 +221,80 @@ https://www.youtube.com/watch?v=dw0sHzE1oAc&t=378s
 # if you do it without probability but experience, it's machine/deep/reinforment learing
 
 # img 2018-04-29 21-06-41.png
-</xmp><img src="/media/young/5e7be152-8ed5-483d-a8e8-b3fecfa221dc/text/mycodehtml/pracrl/dhkwak/pic/2018-04-29 21-06-41.png"><xmp>
+# </xmp><img src="https://raw.githubusercontent.com/youngmtool/pracrl/master/dhkwak/pic/2018-04-29 21-06-41.png"><xmp>
 
 # @
 # One of solutions for MDP: Planning
 # img 2018-04-29 21-08-11.png
-</xmp><img src="https://raw.githubusercontent.com/youngmtool/pracrl/master/dhkwak/pic/2018-04-29 21-08-11.png"><xmp>
+# </xmp><img src="https://raw.githubusercontent.com/youngmtool/pracrl/master/dhkwak/pic/2018-04-29 21-08-11.png"><xmp>
 
 # @
 # N: number of state
 # img 2018-04-29 21-10-57.png
-</xmp><img src="https://raw.githubusercontent.com/youngmtool/pracrl/master/dhkwak/pic/2018-04-29 21-10-57.png"><xmp>
+# </xmp><img src="https://raw.githubusercontent.com/youngmtool/pracrl/master/dhkwak/pic/2018-04-29 21-10-57.png"><xmp>
 
 # @
 # To reduce number of cases, you can use dynamic programming
 # img 2018-04-29 21-11-56.png
-</xmp><img src="https://raw.githubusercontent.com/youngmtool/pracrl/master/dhkwak/pic/2018-04-29 21-11-56.png"><xmp>
+# </xmp><img src="https://raw.githubusercontent.com/youngmtool/pracrl/master/dhkwak/pic/2018-04-29 21-11-56.png"><xmp>
 
+
+# @
+# Temporal Difference Learning
+# This shows good performance
+# Good point of Monte Carlo is Monte Carlo can train from experience
+# Good point of dynamic programming is dynamic programming reduces quantity of calculation
+# because dynamic programming only calculates in respect to 2 time steps
+# TD is combined algorithm from above 2 good points
+
+
+# @
+# Difference between sarsa and q learing
+# Formulars are almost same.
+# This is sarsa notation
+# $$$Q(s_{t},a_{t}) \leftarrow Q(s_{t},a_{t}) + \alpha [r_{t+1}+\gamma Q(s_{t+1},a_{t+1}) - Q(s_{t},a_{t})]$$$
+# $$$[r_{t+1}+\gamma Q(s_{t+1},a_{t+1}) - Q(s_{t},a_{t})]$$$ is loss of q function you're having now
+# You need 5 variables as input data ($$$s_{t}, a_{t}, r_{t+1}, s_{t+1}, a_{t+1}$$$) to create above notation
+
+# What's good point of sarsa algorithm?
+# If you use Monte Carlo method,
+# you should proceed task up to end of episode,
+# then, you get values, then you apply obtained values to all state to update
+
+# If you use temporal difference learing,
+# you can update by very next reward every step
+
+# Both method can learn perfect value function with different method
+
+# Q learning has "max" operator
+# Sarsa is not good because it doesn't have "max" operator
+# $$$Q(s_{t},a_{t}) \leftarrow Q(s_{t},a_{t}) + \alpha [r_{t+1}+\gamma max_{a} Q(s_{t+1},a) - Q(s_{t},a_{t})]$$$
+# You need 4 variables as input data (s_{t}, a_{t}, r_{t+1}, s_{t+1}) to create above notation
+# Reason you need only 4 variables is you use max operator in respect to general a
+# $$$ [r_{t+1}+\gamma max_{a} Q(s_{t+1},a) - Q(s_{t},a_{t})] $$$ is TD loss
+# You use size of TD loss as loss, then you train with regression way
+# $$$\text{Loss function L}=\frac{1}{2}[r+max_{a'}Q(s',a')-Q(s,a)]^{2}$$$
+# $$$r+max_{a'}Q(s',a')$$$ is target
+# Q(s,a) is prediction from model
+
+# <
+# Above difference can also be notated by difference between on policy and off policy
+# on policy : sarsa is on policy.
+# Sarsa only can be used 
+# when target policy which you need to train is same 
+# with behavior policy which you're using 
+
+# off policy: 
+# It's fine with both cases that same or not same
+# off policy is q learning
+# >
+
+# @
+# Unstationary target issue
+
+
+# @
+# Replay memory
 
 </xmp>
    </BODY>
