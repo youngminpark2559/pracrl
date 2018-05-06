@@ -187,30 +187,44 @@ dhkwak-Introduction of Deep Reinforcement Learning.html
 # and some other cases are fitted to deterministic policy
 
 # @
+# You will see value based reinforment learning
+# Value is expection of sum of future rewards
+# You can write sum of future rewards in episodic tasks as following:
+# $$$G_{t}:=R_{t+1}+R_{t+2}+...+R_{T}$$$
+# You can write sum of future rewards in continuous tasks as following:
+# $$$G_{t}:=R_{t+1}+R_{t+2}+...+R_{T}+...$$$
+# $$$G_{t}\rightarrow \infty$$$ ($$$G_{t}$$$ diverges)
+
+# You can write sum of discounted future rewards in both cases (episodic and continuous) as following
+# $$$G_{t}:=R_{t+1}+\gamma R_{t+2}+\gamma^{2}R_{t+3}+...+\gamma^{T-1}R_{T}+...$$$
+# $$$G_{t}:=\sum\limits_{k=1}^{\infty}\gamma^{k-1}R_{t+k}$$$
+# This version of $$$G_{t}$$$ converges
+
 # b) is values at each state
 # c) is optimal policy
 # img 2018-04-29 20-54-19.png
 # </xmp><img src="https://raw.githubusercontent.com/youngmtool/pracrl/master/dhkwak/pic/2018-04-29 20-54-19.png"><xmp>
 
 # @
-# "Value function" lets you know expected sum of "future rewards" at given state s, following policy $$$\pi$$$
+# "Value function" lets you know expected sum of "future rewards" 
+# at given state s, following policy $$$\pi$$$
+# value function takes in state as input, outputs value
 # 1. State-value function
+# $$$v_{\pi}(s)\doteq E_{\pi}[G_{t}|S_{t}=s]$$$
+# $$$v_{\pi}(s)\doteq E_{\pi}[\sum\limits_{k=0}^{\infty}\gamma^{k}R_{t+k+1}|S_{t}=s]$$$
 # If you use only state-value function,
 # to make decision, you should need exploration
 # You should simulate all actions you can use,
-# to inspect next state values
+# to inspect next state's values
 # This method is called "one step ahead search" for all actions
-# In real world app, one step ahead search is not possible to use
-
-# $$$v_{\pi}(s) \doteq E_{\pi}[G_{t}|S_{t}=s]$$$
-# $$$v_{\pi}(s) \doteq E_{\pi}[\sum\limits_{k=0}^{\infty}\gamma^{k}R_{t+k+1}|S_{t}=s]$$$
+# In real world situation, one step ahead search is not possible to use
 
 # 1. (State)-Action-value function
-# This complements state-value fucntion
-# This doesn't require one step ahead search because it's already processed
-# Note that you input s and a into q function
 # $$$q_{\pi}(s,a) \doteq E_{\pi}[S_{t}-s,A_{t}=a]$$$
 # $$$v_{\pi}(s) \doteq E_{\pi}[\sum\limits_{k=0}^{\infty}\gamma^{k}R_{t+k+1}|S_{t}=s,A_{t}=a$$$
+# This complements state-value fucntion
+# This doesn't require one step ahead search because it's already processed in advance
+# Note that you input s and a into q function
 
 # img 2018-04-29 21-04-38.png
 # </xmp><img src="https://raw.githubusercontent.com/youngmtool/pracrl/master/dhkwak/pic/2018-04-29 21-04-38.png"><xmp>
@@ -232,6 +246,24 @@ dhkwak-Introduction of Deep Reinforcement Learning.html
 # N: number of state
 # img 2018-04-29 21-10-57.png
 # </xmp><img src="https://raw.githubusercontent.com/youngmtool/pracrl/master/dhkwak/pic/2018-04-29 21-10-57.png"><xmp>
+
+
+# @
+# Policy iteration consists of Policy evaluation and policy improvement
+
+# Policy evaluation:
+# By using knowledge you know, you make current value function more precise.
+# $$$v_{\pi}(s)\doteq E_{\pi}[R_{t+1}+\gamma R_{t+2}+\gamma^{2}R_{t+3}+...|S_{t}=s]$$$
+# $$$v_{\pi}(s)\doteq E_{\pi}[R_{t+1}+\gamma v_{\pi}(S_{t+1})|S_{t}=s]$$$
+# $$$v_{\pi}(s)=\sum\limits_{a}\pi(a|s)\sum\limits_{s',r}p(s',r|s,a)[r+\gamma v_{\pi}(s')]$$$
+
+# Policy improvement:
+# By using more precisevalue function, you try to make more optimal decision
+# $$$\pi'(s)\doteq arg_{a}max\;q_{\pi}(s,a)$$$
+# $$$\pi'(s)\doteq arg_{a}max\;E[R_{t+1}+\gamma v_{\pi}(S_{t+1})|S_{t}=s,A_{t}=a]$$$
+# $$$\pi'(s)\doteq arg_{a}max\;\sum\limits_{s',r}p(s',r|s,a)[r+\gamma v_{\pi}(s')]$$$
+
+# Then, finally you can find optimal value function and policy
 
 # @
 # To reduce number of cases, you can use dynamic programming
