@@ -63,31 +63,42 @@ register(
 
 env = gym.make('FrozenLake-v3')
 
-# Initialize table with all zeros
+# You initialize q table with all zeros
 Q = np.zeros([env.observation_space.n, env.action_space.n])
-# Discount factor
+
+# dis is discount factor
 dis = .99
 num_episodes = 2000
 
-# create lists to contain total rewards and steps per episode
+# You create list to save "total rewards" and "steps" per episode
 rList = []
 
 for i in range(num_episodes):
-    # Reset environment and get first new observation
+    # You reset environment 
+    # and get first new observation (current state)
     state = env.reset()
     rAll = 0
     done = False
 
-    # The Q-Table learning algorithm
+    # You will implement Q-Table learning algorithm
     while not done:
-        # Choose an action by greedily (with noise) picking from Q table
-        action = np.argmax(Q[state, :] + np.random.randn(1,
-                                                         env.action_space.n) / (i + 1))
+        # You choose one action by greed way
+        # You select one state row,
+        # you select all columns (all actions)
+        # it's q values
 
-        # Get new state and reward from environment
+        # You create noise by np.random.randn(1,env.action_space.n) / (i + 1)
+
+        # You add Q[state, :] by noise
+
+        # You select one action by argmax()
+        action = np.argmax(Q[state, :] + np.random.randn(1,env.action_space.n) / (i + 1))
+
+        # You execute chosen action 
+        # and get experience data from environment
         new_state, reward, done, _ = env.step(action)
 
-        # Update Q-Table with new knowledge using decay rate
+        # You update Q-Table with new experience data with using discount factor
         Q[state, action] = reward + dis * np.max(Q[new_state, :])
 
         rAll += reward
