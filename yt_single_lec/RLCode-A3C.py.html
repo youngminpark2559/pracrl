@@ -76,10 +76,10 @@ RLCode-A3C.py.html
 # Cross entropy loss function can be notated as following:
 # $$$-\sum y_{i}\log{p_{i}}$$$ which tells you how different between p and y
 # img 2018-05-06 16-45-16.png
-</xmp><img src="https://raw.githubusercontent.com/youngmtool/pracrl/master/yt_single_lec/pic/2018-05-06 16-45-16.png"><xmp>
+# </xmp><img src="https://raw.githubusercontent.com/youngmtool/pracrl/master/yt_single_lec/pic/2018-05-06 16-45-16.png"><xmp>
 
 # img 2018-05-06 16-46-16.png
-</xmp><img src="https://raw.githubusercontent.com/youngmtool/pracrl/master/yt_single_lec/pic/2018-05-06 16-46-16.png"><xmp>
+# </xmp><img src="https://raw.githubusercontent.com/youngmtool/pracrl/master/yt_single_lec/pic/2018-05-06 16-46-16.png"><xmp>
 
 # @
 # You can use cross entropy loss function for reinforcement learning
@@ -91,7 +91,7 @@ RLCode-A3C.py.html
 # And there should be action which agent actually execute,
 # and you can consider it as label y
 # img 2018-05-06 16-49-56.png
-</xmp><img src="https://raw.githubusercontent.com/youngmtool/pracrl/master/yt_single_lec/pic/2018-05-06 16-49-56.png"><xmp>
+# </xmp><img src="https://raw.githubusercontent.com/youngmtool/pracrl/master/yt_single_lec/pic/2018-05-06 16-49-56.png"><xmp>
 
 # Then, you can use cross entropy loss function on it
 # States as input data: $$$s_{0},s_{1},s_{2},...$$$
@@ -103,7 +103,7 @@ RLCode-A3C.py.html
 
 # So, you need direction for update
 # img 2018-05-06 16-50-35.png
-</xmp><img src="https://raw.githubusercontent.com/youngmtool/pracrl/master/yt_single_lec/pic/2018-05-06 16-50-35.png"><xmp>
+# </xmp><img src="https://raw.githubusercontent.com/youngmtool/pracrl/master/yt_single_lec/pic/2018-05-06 16-50-35.png"><xmp>
 
 # @
 # You know q function which represents how much good actural action is
@@ -118,7 +118,7 @@ RLCode-A3C.py.html
 # And then you can apply gradient descent 
 # on function from $$$Q(S_{t},A_{t})(-\sum y_{i}\log{p_{i}})$$$
 # img 2018-05-06 16-59-40.png
-</xmp><img src="https://raw.githubusercontent.com/youngmtool/pracrl/master/yt_single_lec/pic/2018-05-06 16-59-40.png"><xmp>
+# </xmp><img src="https://raw.githubusercontent.com/youngmtool/pracrl/master/yt_single_lec/pic/2018-05-06 16-59-40.png"><xmp>
 
 # Actor critic is one agent
 # Using only one actor critic is slow performance
@@ -127,49 +127,135 @@ RLCode-A3C.py.html
 # To resolve above issue, you can use multiple actor critic agents
 # Generally, people create 16 agents
 # img 2018-05-06 17-03-59.png
-</xmp><img src="https://raw.githubusercontent.com/youngmtool/pracrl/master/yt_single_lec/pic/2018-05-06 17-03-59.png"><xmp>
+# </xmp><img src="https://raw.githubusercontent.com/youngmtool/pracrl/master/yt_single_lec/pic/2018-05-06 17-03-59.png"><xmp>
 
 # @
 # Agent1 asynchronously updates global network
 # Other agents keep going tasks
 # Then, finally global network updates agent1
 # img 2018-05-06 17-05-49.png
-</xmp><img src="https://raw.githubusercontent.com/youngmtool/pracrl/master/yt_single_lec/pic/2018-05-06 17-05-49.png"><xmp>
+# </xmp><img src="https://raw.githubusercontent.com/youngmtool/pracrl/master/yt_single_lec/pic/2018-05-06 17-05-49.png"><xmp>
 
 
 # Agent1 updates global network
 # img 2018-05-06 17-06-37.png
-</xmp><img src="https://raw.githubusercontent.com/youngmtool/pracrl/master/yt_single_lec/pic/2018-05-06 17-06-37.png"><xmp>
+# </xmp><img src="https://raw.githubusercontent.com/youngmtool/pracrl/master/yt_single_lec/pic/2018-05-06 17-06-37.png"><xmp>
 
 # Global network updates agent1
 # img 2018-05-06 17-07-18.png
-</xmp><img src="https://raw.githubusercontent.com/youngmtool/pracrl/master/yt_single_lec/pic/2018-05-06 17-07-18.png"><xmp>
+# </xmp><img src="https://raw.githubusercontent.com/youngmtool/pracrl/master/yt_single_lec/pic/2018-05-06 17-07-18.png"><xmp>
 
 
 # @
-# You have policy neural network $$$\theta$$$
-# You have target function $$$J(\theta)$$$ of neural network $$$\theta$$$
+# Goal of reinforcement learning increases probability of action which gives most reward
 
+# Policy means rules which agent use when selecting action at each state
+
+# Agent obtains experience data from environment,
+# then it(containing policy) updates itself
+
+# It means you need 1.criterion for update policy
+# You also need 2.way of update policy based on that criterion
+
+# Criterion will be target function which should be learned by agent
+# Way will be gradient ascent applied on target function to update policy
+
+# @
+# First, you should consider approximating policy
+# If state of question which agent wants to learn is huge and high dimension,
+# it's almost impossible for agent to have policies on each state
+# So, you need to consider states as input value of function f,
+# then you approximate policy into function f.
+# It means output of function f is action
+
+# img 2018-05-06 17-59-48.png
+# </xmp><img src="https://raw.githubusercontent.com/youngmtool/pracrl/master/yt_single_lec/pic/2018-05-06 17-59-48.png"><xmp>
+
+# @
+# Each arrow is policy at each state
+# So you will use x y coordinates representing state as input data
+# You will use approximated policy function $$$\pi$$$
+# Then, policy function outputs action out of up,down,right,left
+# img 2018-05-06 18-03-11.png
+# </xmp><img src="https://raw.githubusercontent.com/youngmtool/pracrl/master/yt_single_lec/pic/2018-05-06 18-03-11.png"><xmp>
+
+# @
+# There can be various ways to approximate policy
+# You will approximate policy into policy function by using deep learning network
+# In other words, policy function will be layers in neural network
+# What you should do is to define input and output
+
+# @
+# $$$\pi(a|s)=P[A_{t}=a|S_{t}=s]$$$: policy $$$\pi$$$ means probability of occurring a, at given state s
+
+# $$$\pi_\theta(a|s)=P[A_{t}=a|S_{t}=s,\theta]$$$: you write this way 
+# since you approximate policy $$$\pi$$$ by neural network $$$\theta$$$
+
+# Since you're using neural network, you would intialize neural network
+# Goal you do is update that neural network
+
+# img 2018-05-06 18-11-19.png
+# </xmp><img src="https://raw.githubusercontent.com/youngmtool/pracrl/master/yt_single_lec/pic/2018-05-06 18-11-19.png"><xmp>
+
+# @
+# Now, you approximated policy into target function by using neural network
+# Then, you need to apply gradient ascent on target function
+
+# <
+# @
+# In RL, there are 2 streams (value based reinforcement learnig, policy based reinforcement learnig)
+
+# Value based reinforcement learnig:
+# Criterion which agent uses to select action at every step is value function
+
+# Policy based reinforcement learnig
+# Criterion which agent uses to select action at every update is target function $$$J(\theta)$$$
+# $$$\theta$$$ is neural network which approximated policy
+# img 2018-05-06 18-18-13.png
+# </xmp><img src="https://raw.githubusercontent.com/youngmtool/pracrl/master/yt_single_lec/pic/2018-05-06 18-18-13.png"><xmp>
+
+# @
+# Let's think about pathway 
+# which agent will walk along based on policy $$$\pi_{\theta}$$$
+
+# And you will call that pathway as trajectory $$$\tau$$$,
+# which represents trace of interation between agent and environment
+
+# $$$s_{0}$$$: initial state
+# $$$a_{0}$$$: initail chosen action basend on policy
+# $$$r_{1}$$$: reward
+# Entire trajectory $$$\tau=s_{0},a_{0},r_{1},s_{1},a_{1},r_{2},...,s_{T}$$$
+
+# J(\theta) means sum of reward during finishing trajectory
+# J(\theta) changes everytime because trajectory changes everytime
+# So, you can use technique of expectation to resolve above trouble
+# $$$J(\theta)=E[\sum\limits_{t=0}^{T-1}r_{t+1}|\pi_{\theta}] $$$
+# $$$J(\theta)=E[r_{1}+r_{2}+r_{3}+...+r_{T}|\pi_{\theta}]$$$
+# $$$J(\theta)$$$ is target function which agent should increase
+
+# @
 # You will update neural network $$$\theta$$$, 
 # by using gradient ascent on target function $$$J(\theta)$$$
 # $$$\theta'=\theta+\alpha \nabla_{\theta}J(\theta)$$$
+# $$$\theta'$$$ is new updated policy
 # $$$\nabla_{\theta}J(\theta)$$$ is policy gradient
-# In other words, policy gradient is differentiation in respect to $$$\theta$$$
-
+# In other words, policy gradient is differentiation of target function J(\theta) 
+# in respect to network $$$\theta$$$
 
 # @
-# Basic algorithm for policy gradient is REINFORCE
+# Basic algorithm doing policy gradient is REINFORCE
 # REINFORCE can be notated as following
 # $$$\nabla_{\theta}J(\theta)\sim \sum\limits_{t=0}^{T-1} \nabla_{\theta}\log{\pi_{\theta}}(a_{t}|s_{t})G_{t}$$$
 
-# Again, target function $$$J(\theta)$$$ for policy gradient can be notated as following
+# Again, target function $$$J(\theta)$$$ for policy gradient can be also notated as following
 # $$$J(\theta)=E[\sum\limits_{t=0}^{T-1}r_{t+1}|\pi_{\theta}]$$$
+# Agent should increate above target function by using gradient ascent
 
 # Expectation value = sum of (probability of occurring x)*(value at x) in respect to x
 # For example, expectation value from dice
 # $$$E[f(x)]=\sum\limits_{x}p(x)f(x)$$$
 
-# When $$$\tau = s_{0},a_{0},r_{1},s_{1},a_{1},r_{2},...,s_{T}$$$
+# When trajectory $$$\tau = s_{0},a_{0},r_{1},s_{1},a_{1},r_{2},...,s_{T}$$$
 # target function $$$J(\theta)$$$ can be notated as following
 # $$$J(\theta)=E[\sum\limits_{t=1}^{T-1}r_{t+1}|\pi_{\theta}]$$$
 # $$$J(\theta)=E_{\tau}[r_{1}|\pi_{\theta}] + E_{\tau}[r_{2}|\pi_{\theta}] + E_{\tau}[r_{3}|\pi_{\theta}] + ...$$$
@@ -204,8 +290,7 @@ RLCode-A3C.py.html
 # which means you do one try and calculate and the update,
 # you do second try and calculate and the update,...
 # $$$\rightarrow \sum\limits_{t=0}^{T-1}\nabla_{\theta}\log{P(s_{t},a_{t}|\tau)r_{t+1}}$$$
-# You should find $$$\log{P(s_{t},a_{t}|\tau)}$$$
-# to go further
+# You should find $$$\log{P(s_{t},a_{t}|\tau)}$$$ to go further
 
 # $$$P(s_{t},a_{t}|\tau)=P(s_{0},a_{0},r_{1},s_{1},a_{1},r_{2},...,s_{t},a_{t}|\theta])$$$
 # You will see traces of interaction between agent and environment from following notation
@@ -222,42 +307,41 @@ RLCode-A3C.py.html
 # ...
 # To do writing formulars
 
-
 # @
 # REINFORCE
-# 1. You run one episode by current policy
+# 1. You run one episode based on current policy
 # 1. You write trajectory which is obtained from each running
 # 1. When episode ends, you calculate $$$G_{t}$$$
 # If written trajectory values are 100, it means you obtain 100 returns
 # 1. You calculate policy gradient, then update policy
 # 1. You iterate above 1-4 steps
 
-# Since you update policy every episode,
+# Since you update policy per episode,
 # you call this way as Monte Carlo policy gradient, or REINFORCE
-# Updating policy every "episode" doesn't mean "online"
+# Updating policy per "episode" doesn't mean "online"
 
 # @
 # Issue of REINFORCE
-# 1. It creates high variance because as episode becomes longer, you can obtain various trajectory
+# 1. It creates high variance 
+# because as episode becomes longer, you can obtain various trajectory
 # 1. You only can update policy per episode (can't be with online)
-
 
 # Resolving ways:
 # 1. You can upgrade from Monte Carlo to TD (Temporal Difference)
 # Temporal Difference means you update policy more often than Monte Carlo,
 # Monte Carlo means you update when episode is finished
 # 1. You can upgrade from Monte Carlo to Actor-Critic
-# Actor-Critic means you update policy at each step
+# Actor-Critic means you update policy per each step
 
 # @
 # Simply, actor-critic means you use 2 networks
 # One (actor network) will be used as policy
 # One (critic network) will be used as q function
 
-# Critic (q function) is critic person who criticises agent's action,
-# saying that actions is either good or bad
+# Critic (q function) can be considered as critic person 
+# who criticises agent's action with saying that actions is either good or bad
 
-# Then, you can update policy every step
+# Then, you can update policy per every step
 
 # @
 # You won't use q function as it is.
@@ -268,7 +352,7 @@ RLCode-A3C.py.html
 # task of update and train will be easier
 
 # Therefore, you will use advantage function instead of q function.
-# Advantage function is generated by (q function) - (baseline)
+# Advantage function is generated by (q function) - (baseline which means average reward)
 # By substacting them, it reduces variance
 
 # @
@@ -282,11 +366,45 @@ RLCode-A3C.py.html
 
 # @
 # Actor approximates policy to $$$\theta$$$
-# You update by using this loss function $$$\nabla_{theta}\log{\pi_{\theta}}(a_{t}|s_{t})(r_{t+1}+\gamma V_{v}(s_{t+1}-V_{v}(s_{t}))$$$
+# You update actor by using actor's loss function 
+# $$$\nabla_{theta}\log{\pi_{\theta}}(a_{t}|s_{t})(r_{t+1}+\gamma V_{v}(s_{t+1}-V_{v}(s_{t}))$$$
 
 # Critic approximates value function to v
-# You update by using this MSE loss function $$$ (r_{t+1}+\gamma V_{v}(s_{t+1})-V_{v}(s_{t}))^{2} $$$
+# You update critic by using MSE loss function 
+# $$$ (r_{t+1}+\gamma V_{v}(s_{t+1})-V_{v}(s_{t}))^{2} $$$
 
+# @
+# Actor network (policy network) outputs policy
+# Critic network (value network) outputs value
+# You can update actor network (policy network) by using (cross entropy)*(TD error)
+# You can update critic network (value network) by using TD error
+# After update, you proceed one step, then you update,
+# which means you update per step unlike REINFORCE,
+# which should reach end of episode to update
+
+# Actor network (value network) calculates value,
+# representing how much good action at each step is
+# img 2018-05-06 19-53-53.png
+# </xmp><img src="https://raw.githubusercontent.com/youngmtool/pracrl/master/yt_single_lec/pic/2018-05-06 19-53-53.png"><xmp>
+
+# Illustraion between actor and critic
+# img 2018-05-06 19-54-49.png
+# </xmp><img src="https://raw.githubusercontent.com/youngmtool/pracrl/master/yt_single_lec/pic/2018-05-06 19-54-49.png"><xmp>
+
+# @
+# A3C:
+# In process of update,
+# actor critic processes update like one step, one update,
+# However, a3c goes 5 steps or 10 steps or anything then asynchronously updates
+
+# If you go 20 steps, after 20 steps, you obtain one loss function
+# Until 19 steps, you add actual reward you obtain, at 20 step, you use value function,
+# which means you create multi steps
+# Since you put more step information, precision will increase, with decreasing bias
+
+# Illustraion of overview step on A3C
+# img 2018-05-06 20-08-26.png
+# </xmp><img src="https://raw.githubusercontent.com/youngmtool/pracrl/master/yt_single_lec/pic/2018-05-06 20-08-26.png"><xmp>
 </xmp>
    </BODY>
 </HTML>
