@@ -59,22 +59,25 @@ random_episodes = 0
 reward_sum = 0
 # You iterate 10 times
 while random_episodes < 10:
-    # You render appearance
+    # You render acting on screen
     env.render()
-    # You take action randomly
+
+    # You randomly generate one action
     action = env.action_space.sample()
-    # You do action obtained from above
+
+    # You execute generated action
     observation, reward, done, _ = env.step(action)
-    # You print values obtained from above
-    # observation: state
-    print(observation, reward, done)
+
+    # You print experience data
+    print("observation:",observation,"reward:",reward,"done:",done)
     reward_sum += reward
+
+    # If episode ends,
     if done:
         random_episodes += 1
         print("Reward for this episode was:", reward_sum)
         reward_sum = 0
         env.reset()
-
 </xmp>
    </BODY>
 </HTML>
