@@ -1,4 +1,4 @@
-# # This code performs q learning with q network
+# This code performs q learning with q network
 
 # @
 # You will implement q network
@@ -35,8 +35,7 @@ Qout = tf.matmul(inputs1,W)
 # c predict: index of hightest predicted q-value
 predict = tf.argmax(Qout,1)
 
-# env.step() 에 action을 던지면 reward, new state, 등이 나온다.
-# Q function 에 new state 를 넣었을때 나오는 Q-value 가 nextQ이다.
+# If you input new state into q function, q function ouputs q value representing nextQ
 # c nextQ: next Q-value obtained from new state which is obtained from executing action
 nextQ = tf.placeholder(shape=[1,4],dtype=tf.float32)
 
@@ -48,7 +47,6 @@ trainer = tf.train.GradientDescentOptimizer(learning_rate=0.1)
 
 # You find weight making loss minimum
 updateModel = trainer.minimize(loss)
-
 
 # @
 # You will train neural network
