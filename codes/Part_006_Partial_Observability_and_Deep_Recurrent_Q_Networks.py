@@ -416,7 +416,7 @@ with tf.Session(config=config) as sess:
             s = s1
             sP = s1P
             state = state1
-
+            # If you reach to end, you go over to next episode
             if d == True:
                 break
 
