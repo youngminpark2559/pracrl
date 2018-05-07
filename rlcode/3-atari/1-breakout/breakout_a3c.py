@@ -14,21 +14,25 @@ import random
 import time
 import gym
 
-# This is global variable for controling multi-threading
+# This is global variable for managing multiple threads
 global episode
 # First, you initialize episode by 0
 episode = 0
 # You will iterate 8000000 times for training
-EPISODES = 8000000
+# EPISODES = 8000000
+EPISODES = 5
 # You create environment
 env_name = "BreakoutDeterministic-v4"
 
-# This class is a3c agent object which will be used as global network
 class A3CAgent:
+    """
+    This class is for a3c agent object which will be used as global network
+    """
     def __init__(self, action_size):
-        # You define state size
+        # You define state size (input data size)
         self.state_size = (84, 84, 4)
-        # You define action size
+
+        # You define action size (output data size)
         self.action_size = action_size
 
         # You define hyper parameters for A3C global network
@@ -39,12 +43,12 @@ class A3CAgent:
         # This is number of threads you will use 
         self.threads = 8
 
-        # self.actor is policy network which approximates policy to policy function $$$\pi$$$
-        # (Not sure) self.critic is q function network which approximates value function to v
+        # You create actor network (policy network) and critic network (value network)
+        # Actor network approximates policy into policy network (policy function $$$\pi$$$)
+        # Critic network approximates value into value network (value function V)
         self.actor, self.critic = self.build_model()
 
-        # self.optimizer is list containing self.actor_optimizer(), self.critic_optimizer(),
-        # that each function updates actor (policy network) and critic (value network)
+        # You create actor network updater and critic network updater
         self.optimizer = [self.actor_optimizer(), self.critic_optimizer()]
 
         # This is configuration for tensorboard
@@ -57,9 +61,11 @@ class A3CAgent:
         self.summary_writer = \
             tf.summary.FileWriter('summary/breakout_a3c', self.sess.graph)
 
-    # train() trains agents (actor network+critic network) on multi threads
     def train(self):
-        # agents is multiple agents objects instantiated as much as number of threads
+        """
+        This method trains actor critic network agents on multiple threads
+        """
+        # agents is multiple agents objects which are instantiated as much as number of threads
         agents = [Agent(self.action_size, self.state_size,
                         [self.actor, self.critic], self.sess,
                         self.optimizer, self.discount_factor,
@@ -67,39 +73,39 @@ class A3CAgent:
                          self.update_ops, self.summary_writer])
                   for _ in range(self.threads)]
 
-        # You start each thread
+        # You start each thread (each agent)
         for agent in agents:
             time.sleep(1)
             agent.start()
 
-        # You save model every 10 minutes
+        # You save model per every 10 minutes
         while True:
             time.sleep(60 * 10)
             self.save_model("./save_model/breakout_a3c")
 
-    # build_model() returns policy network (actor) and value network (critic)
+    
     def build_model(self):
+        """
+        This method returns policy network (actor) and value network (critic)
+        """
         input = Input(shape=self.state_size)
 
         conv = Conv2D(16, (8, 8), strides=(4, 4), activation='relu')(input)
         conv = Conv2D(32, (4, 4), strides=(2, 2), activation='relu')(conv)
         
-        # conv is convolution layer
         conv = Flatten()(conv)
-
-        # fc is fully connected layer
         fc = Dense(256, activation='relu')(conv)
 
-        # policy will be used as policy function
+        # policy will be used as policy network which is approximated from policy
         policy = Dense(self.action_size, activation='softmax')(fc)
-        
-        # value will be used as value function(q function?)
+
+        # value will be used as value network which is approximated from q value
         value = Dense(1, activation='linear')(fc)
 
-        # This is actor network which takes input, outputs policy
+        # This is actor network which takes state as input data, outputs policy
         actor = Model(inputs=input, outputs=policy)
 
-        # This is critic network which takes input, outputs value
+        # This is critic network which takes state as input data, outputs q value
         critic = Model(inputs=input, outputs=value)
 
         # You create function predicting policy (actor)
@@ -108,13 +114,18 @@ class A3CAgent:
         # You create function predicting value (critic)
         critic._make_predict_function()
 
+        print("actor.summary()")
         actor.summary()
+        print("critic.summary()")
         critic.summary()
 
         return actor, critic
 
-    # actor_optimizer() updates policy network (actor)
+    
     def actor_optimizer(self):
+        """
+        This method updates actor network (policy network)
+        """
         action = K.placeholder(shape=[None, self.action_size])
         advantages = K.placeholder(shape=[None, ])
         policy = self.actor.output
@@ -124,7 +135,7 @@ class A3CAgent:
         cross_entropy = K.log(action_prob + 1e-10) * advantages
         cross_entropy = -K.sum(cross_entropy)
 
-        # Remained actors should continuously explore environment
+        # Remained actor network agents should continuously interact environment
         # This is entropy loss function for continuous exploration
         entropy = K.sum(policy * K.log(policy + 1e-10), axis=1)
         entropy = K.sum(entropy)
@@ -133,13 +144,14 @@ class A3CAgent:
         loss = cross_entropy + 0.01 * entropy
 
         optimizer = RMSprop(lr=self.actor_lr, rho=0.99, epsilon=0.01)
-        updates = optimizer.get_updates(self.actor.trainable_weights, [],loss)
-        train = K.function([self.actor.input, action, advantages],
-                           [loss], updates=updates)
+        updates = optimizer.get_updates(self.actor.trainable_weights,[],loss)
+        train = K.function([self.actor.input,action,advantages],[loss], updates=updates)
         return train
 
-    # critic_optimizer() updates value network (critic)
     def critic_optimizer(self):
+        """
+        This method updates critic network (value network)
+        """
         discounted_prediction = K.placeholder(shape=(None,))
         value = self.critic.output
 
@@ -153,15 +165,23 @@ class A3CAgent:
         return train
 
     def load_model(self, name):
+        """
+        This method loads saved model
+        """
         self.actor.load_weights(name + "_actor.h5")
         self.critic.load_weights(name + "_critic.h5")
 
     def save_model(self, name):
+        """
+        This method saves model
+        """
         self.actor.save_weights(name + "_actor.h5")
         self.critic.save_weights(name + "_critic.h5")
 
-    # You record each episode's training history
     def setup_summary(self):
+        """
+        This method records each episode's training history
+        """
         episode_total_reward = tf.Variable(0.)
         episode_avg_max_q = tf.Variable(0.)
         episode_duration = tf.Variable(0.)
@@ -170,20 +190,18 @@ class A3CAgent:
         tf.summary.scalar('Average Max Prob/Episode', episode_avg_max_q)
         tf.summary.scalar('Duration/Episode', episode_duration)
 
-        summary_vars = [episode_total_reward,
-                        episode_avg_max_q,
-                        episode_duration]
+        summary_vars = [episode_total_reward,episode_avg_max_q,episode_duration]
 
-        summary_placeholders = [tf.placeholder(tf.float32)
-                                for _ in range(len(summary_vars))]
-        update_ops = [summary_vars[i].assign(summary_placeholders[i])
-                      for i in range(len(summary_vars))]
+        summary_placeholders = [tf.placeholder(tf.float32) for _ in range(len(summary_vars))]
+        update_ops = [summary_vars[i].assign(summary_placeholders[i]) for i in range(len(summary_vars))]
         summary_op = tf.summary.merge_all()
         return summary_placeholders, update_ops, summary_op
 
 
-# Agent class is for running agents object on multiple threads
 class Agent(threading.Thread):
+    """
+    This class is agents running on multiple threads
+    """
     def __init__(self, action_size, state_size, model, sess,
                 optimizer, discount_factor, summary_ops):
         
@@ -262,14 +280,13 @@ class Agent(threading.Thread):
                 # You execute one step by chosen action
                 next_observe, reward, done, info = env.step(real_action)
 
-                # You perform pre processing (which converts screen black and white) every each time step
+                # You perform pre-processing (which converts screen black and white) per every each time step
                 next_state = pre_processing(next_observe, observe)
                 next_state = np.reshape([next_state], (1, 84, 84, 1))
                 next_history = np.append(next_state,history[:, :, :, :3],axis=3)
 
                 # This is max value of policy
-                self.avg_p_max += np.amax(self.actor.predict(
-                    np.float32(history / 255.)))
+                self.avg_p_max += np.amax(self.actor.predict(np.float32(history / 255.)))
 
                 if start_life > info['ale.lives']:
                     dead = True
@@ -323,8 +340,10 @@ class Agent(threading.Thread):
             discounted_prediction[t]=running_add
         return discounted_prediction
 
-    # train_model() trains policy network (actor) and value network (critic)
     def train_model(self, done):
+        """
+        This method trains policy network (actor) and value network (critic)
+        """
         discounted_prediction = self.discounted_prediction(self.rewards, done)
 
         states = np.zeros((len(self.states), 84, 84, 4))
@@ -343,16 +362,19 @@ class Agent(threading.Thread):
         # advantages = (q function) - (baseline=value function)
         advantages = discounted_prediction - values
 
-        # You update actor policy network
+        # You update actor network (policy network)
         self.optimizer[0]([states, self.actions, advantages])
 
-        # You update critic value(q function?) network
+        # You update critic network (q value network)
         self.optimizer[1]([states, discounted_prediction])
 
         self.states, self.actions, self.rewards = [], [], []
 
-    # build_local_model() builds local networks (actor network and critic network)
+    
     def build_local_model(self):
+        """
+        This method builds local networks (actor network and critic network)
+        """
         input = Input(shape=self.state_size)
 
         conv = Conv2D(16, (8, 8), strides=(4, 4), activation='relu')(input)
@@ -377,29 +399,36 @@ class Agent(threading.Thread):
 
         return local_actor, local_critic
 
-    # update_local_model() updates local networks by global network's parameters
     def update_local_model(self):
+        """
+        This method updates local networks by global network's parameters
+        """
         self.local_actor.set_weights(self.actor.get_weights())
         self.local_critic.set_weights(self.critic.get_weights())
 
-    # get_action() returns action's index and policy
     def get_action(self, history):
+        """
+        This method returns action's index and its policy
+        """
         history=np.float32(history/255.)
         policy = self.local_actor.predict(history)[0]
         action_index = np.random.choice(self.action_size, 1, p=policy)[0]
         return action_index, policy
 
-    # You save sample
     def append_sample(self, history, action, reward):
+        """
+        This method saves sample
+        """
         self.states.append(history)
         act = np.zeros(self.action_size)
         act[action] = 1
         self.actions.append(act)
         self.rewards.append(reward)
 
-
-# c pre_processing(): processes screen as black and whiite to increase training speed
 def pre_processing(next_observe, observe):
+    """
+    This method processes screen as black and whiite to increase training speed
+    """
     processed_observe = np.maximum(next_observe, observe)
     processed_observe = np.uint8(
         resize(rgb2gray(processed_observe)
