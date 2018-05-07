@@ -11,7 +11,7 @@ from keras.layers.convolutional import Conv2D
 global episode
 # First, you initialize episode by 0
 episode = 0
-# You will iterate 8000000 times for training
+# You will iterate 8000000 times
 EPISODES = 8000000
 # You create environment
 env_name = "BreakoutDeterministic-v4"
@@ -73,6 +73,7 @@ if __name__ == "__main__":
         dead = False
 
         score, start_life = 0, 5
+        # You reset environment and you get initial state
         observe = env.reset()
         next_observe = observe
 
