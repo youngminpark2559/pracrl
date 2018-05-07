@@ -1,0 +1,445 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+   "http://www.w3.org/TR/html4/strict.dtd">
+<HTML>
+   <HEAD>
+      <TITLE>My first HTML document</TITLE>
+      <style rel="stylesheet" type="text/css">
+body {
+ font-size: 23px;
+ margin-top: 50px;
+    margin-bottom: 50px;
+    margin-right: 80px;
+    margin-left: 80px;
+    padding-top: 50px;
+    padding-bottom: 50px;
+    padding-right: 80px;
+    padding-left: 80px;
+    line-height:35px;
+}
+</style>
+      <script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    "HTML-CSS" : {
+        availableFonts : ["STIX"],
+        preferredFont : "STIX",
+        webFont : "STIX-Web",
+        imageFont : null
+    }
+});
+</script>
+     <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js" type="text/javascript">
+    MathJax.Hub.Config({
+        HTML: ["input/TeX","output/HTML-CSS"],
+        TeX: { extensions: ["AMSmath.js","AMSsymbols.js"],
+               equationNumbers: { autoNumber: "AMS" } },
+        extensions: ["tex2jax.js"],
+        jax: ["input/TeX","output/HTML-CSS"],
+        tex2jax: { inlineMath: [ ['$$$','$$$'] ],
+                   displayMath: [ ['$$$$','$$$$'] ],
+                   processEscapes: true },
+        "HTML-CSS": { availableFonts: ["TeX"],
+                      linebreaks: { automatic: true } }
+    });
+</script>
+</HEAD>
+<BODY>
+010_001_Actor_Critic.ipynb.html
+<xmp>
+# What is actor critic network?
+# So far we have learned single output network,
+# which produces Q-values(in case of Value Iteration),
+# or action policy (in case of Policy Iteration)
+
+# What if we can use both value functions and policy functions? 
+# That's how actor-critic methods were developed. 
+# It turns out if we use both, 
+# we can learn more complex systems. 
+
+# In this notebook, we will implement simple policy gradient actor-critic methods
+
+# @
+# Structure of Actor Critic Networks
+# There are two networks: actor network and critic network in actor-critic architecture
+# img 2018-05-07 10-08-00.png
+# </xmp><img src="https://raw.githubusercontent.com/youngmtool/pracrl/master/shkim-rl/pic/2018-05-07 10-08-00.png"><xmp>
+
+# Actor network:
+# This network chooses action!
+# It takes input of game state,
+# and produces outputs action policy (as in policy-gradient)
+
+# Critic network:
+# This network is value network
+# Critic network takes same input as actor network,
+# and produces current state value
+
+# @
+# From pervious lectures
+# We used policy gradient methods that is to find policy $$$\pi$$$
+# $$$\text{maximize } E[R|\pi]$$$
+# $$$\text{where } R= r_{0} + r_{1} + \dots + r_{\tau-1}$$$
+
+# We use gradient estimator
+# $$$\hat{g} = \nabla_\theta \log{ \pi (a_{t} | s_{t};\theta)} \cdot R_{t} $$$
+# $$$\text{where } R_t = \sum\limits_{t'=t}^{T-1} \text{(discount_rate)}^{t'-t} \cdot \text{(reward)}_t$$$
+
+# Above gradient estimator means,
+# we boost probability of action which returns high rewards
+
+# @
+# Problems
+# Above method is however not stable,
+# because step size of gradients can be very large,
+# and once we overshoot, 
+# our agent will collect trajectories based on bad policy
+
+# @
+# Solution
+# In order to solve high variance problems, 
+# we will use $$$A_t$$$ instead of $$$R_t$$$
+# $$$A_t$$$ is called advantage function
+# What is advantage function?
+# We know Q function and Value function.
+
+# Q function maps state $$$s$$$ to action $$$a$$$ value which is how good action $$$a$$$ is
+# Value function maps state $$$s$$$ to value that shows how good input state $$$s$$$ is
+# Therefore, we can write two functions as following: 
+# $$$ Q(s, a) = V(s) + A(a) $$$
+# $$$ A(a) = Q(s, a) - V(s) $$$
+
+# A(a) is definition of advatage function. 
+# We are trying to find how good action $$$a$$$ is by subtracting value function V(s)
+# Hence, we need to change gradient estimator $\hat{g}$ to following: 
+# $$$\hat{g} = \nabla_\theta \log \pi(a_t | s_t; \theta) \cdot A_t $$$
+# where,
+# $$$A_t = Q(s_t, a') - V(s_t)$$$
+# $$$A_t = R_{t} - V(s_t)$$$
+
+# @
+# Notes
+# Its performance is still not great because it has few flaws
+# 1. We have to learn $$$V(s)$$$ first
+# And learning $$$V(s)$$$ can be difficult because it requires careful reward enginneering
+# 1. Every trajectories is highly correlated
+
+# In order to deal with these problems, 
+# we will later discuss various methods 
+# such as TRPO(Trust Region Policy Optimization) or A3C(Asynchronous Actor Critic Networks)
+
+import numpy as np
+import gym
+import tensorflow as tf
+
+slim = tf.contrib.slim
+
+class ActorCriticNetwork:
+    """ Actor Critic Network
+    
+    - 3 placeholders for policy
+        - S : state (shared)
+        - A : action one hot
+        - ADV : advantage value
+        
+    - 2 placeholders for value
+        - S : state (shared)
+        - R : reward
+    
+    - 2 outputs
+        - P : action policy, p(a | s)
+        - V : V(s)
+        
+    Examples
+    ----------
+    >>> input_shape = [None, 4]
+    >>> action_n = 2
+    >>> hidden_dims = [32, 32]
+    >>> ac_network = ActorCriticNetwork(input_shape, action_n, hidden_dims)
+    """
+    def __init__(self, input_shape, action_n, hidden_dims):
+        # Policy Input
+        self.S = tf.placeholder(tf.float32, shape=input_shape, name="state_input")
+        self.A = tf.placeholder(tf.float32, shape=[None, action_n], name="action_one_hot_input")
+        self.ADV = tf.placeholder(tf.float32, shape=[None], name="advantage_input")
+        
+        # Value Input
+        self.R = tf.placeholder(tf.float32, shape=[None], name="reward_input")
+    
+        self._create_network(hidden_dims, action_n)
+        
+    def _create_network(self, hidden_dims, action_n):
+        net = self.S
+        
+        for i, h_dim in enumerate(hidden_dims):
+            net = slim.fully_connected(net, h_dim, activation_fn=None, scope=f"fc-{i}")
+            net = tf.nn.relu(net)
+        
+        # Policy shape: [None, action_n]
+        self.P = slim.fully_connected(net, action_n, activation_fn=tf.nn.softmax, scope="policy_output")
+
+        # Value shape: [None, 1] -> [None]
+        _V = slim.fully_connected(net, 1, activation_fn=None, scope="value_output")
+        self.V = tf.squeeze(_V)
+        
+        self._create_op()
+        
+    def _create_op(self):
+        # output shape: [None]
+        policy_gain = tf.reduce_sum(self.P * self.A, 1)
+
+        # output shape: [None]
+        policy_gain = tf.log(policy_gain) * self.ADV
+        policy_gain = tf.reduce_sum(policy_gain, name="policy_gain")
+
+        entropy = - tf.reduce_sum(self.P * tf.log(self.P), 1)
+        entropy = tf.reduce_mean(entropy)
+        
+        value_loss = tf.losses.mean_squared_error(self.V, self.R, scope="value_loss")
+        
+        # Becareful negative sign because we only can minimize
+        # we want to maximize policy gain and entropy (for exploration)
+        self.loss = - policy_gain  + value_loss - entropy * 0.01
+        self.optimizer = tf.train.AdamOptimizer()
+        self.train_op = self.optimizer.minimize(self.loss)
+
+class Agent:
+    """ Agent class  """
+    
+    def __init__(self, env, network):
+        """ Constructor
+        
+        Parameters
+        ----------
+        env
+            Open ai gym environment        
+        network
+            Actor Critic Network   
+        """
+        self.env = env
+        self.model = network
+        self.sess = tf.get_default_session()
+        self.action_n = env.action_space.n
+        
+        
+    def choose_an_action(self, state):
+        """ Returns action (int) """
+        
+        feed = {
+            self.model.S: state
+        }
+        
+        action_prob = self.sess.run(self.model.P, feed_dict=feed)[0]
+        
+        return np.random.choice(np.arange(self.action_n), p=action_prob)
+        
+    def train(self, S, A, R):
+        """ Train actor critic networks
+        
+        (1) Compute discounted rewards R
+        (2) Compute advantage values = R - V
+        (3) Perform gradients updates
+        
+        """
+        
+        def discount_rewards(r, gamma=0.99):
+            """ take 1D float array of rewards and compute discounted reward """
+            discounted_r = np.zeros_like(r, dtype=np.float32)
+            running_add = 0
+            
+            for t in reversed(range(len(r))):
+                running_add = running_add * gamma + r[t]
+                discounted_r[t] = running_add
+
+            return discounted_r
+
+        # 1. Get discounted `R`s
+        R = discount_rewards(R)
+        
+        # 2. Get `V`s
+        feed = {
+            self.model.S: S
+        }
+        V = self.sess.run(self.model.V, feed_dict=feed)
+        
+        # 3. Get Advantage values, = R - V
+        ADV = R - V        
+        ADV = (ADV - np.mean(ADV)) / (np.std(ADV) + 1e-8)
+        
+        # 4. Perform gradient descents
+        feed = {
+            self.model.S: S,
+            self.model.A: A,
+            self.model.ADV: ADV,
+            self.model.R: R
+        }
+
+        self.sess.run(self.model.train_op, feed_dict=feed)
+
+# Tensorflow Reset
+tf.reset_default_graph()
+sess = tf.InteractiveSession()
+
+# Gym Environment Setup
+env_name = "CartPole-v0"
+env = gym.make(env_name)
+env = gym.wrappers.Monitor(env, "./gym-results/", force=True)
+
+# Global parameters
+input_shape = [None, env.observation_space.shape[0]]
+action_n = env.action_space.n
+
+print(f"input_shape: {input_shape}, action_n: {action_n}")
+
+# Define A2C(Actor-Critic) and Agent
+ac_network = ActorCriticNetwork(input_shape, action_n, [32, 32])
+agent = Agent(env, ac_network)
+# [2017-04-08 21:10:41,639] Making new env: CartPole-v0
+# [2017-04-08 21:10:41,643] Clearing 26 monitor files from previous run (because force=True was provided)
+# input_shape: [None, 4], action_n: 2
+
+def preprocess_state(state_list):
+    """ Preprocess state list
+    
+    Currently it's only used to reshape value
+    When single state is given, its shape is 1-d array,
+    which needs to be reshaped in 2-d array
+    """
+    return np.reshape(state_list, [-1, *input_shape[1:]])
+
+def preprocess_action(action_list, n_actions):
+    """Action -> 1-hot """
+    N = len(action_list)
+    one_hot = np.zeros(shape=(N, n_actions))
+    one_hot[np.arange(N), action_list] = 1
+    
+    return one_hot
+
+# Test codes
+# tmp = np.zeros((32, *input_shape[1:]))
+# np.testing.assert_almost_equal(preprocess_state(tmp), np.zeros([32, *input_shape[1:]]))
+# tmp = np.zeros(*input_shape[1:])
+# np.testing.assert_almost_equal(preprocess_state(tmp), np.zeros([1, *input_shape[1:]]))
+# tmp = [0, 1]
+# np.testing.assert_almost_equal(preprocess_action(tmp, 2), np.eye(2))
+
+init = tf.global_variables_initializer()
+sess.run(init)
+
+# MAX_EPISODES = 5000
+MAX_EPISODES = 5
+
+# For checking if game is cleared
+EPISODE_100_REWARDS = []
+CLEAR_REWARD = env.spec.reward_threshold
+CLEAR_REWARD = CLEAR_REWARD if CLEAR_REWARD else 9999
+
+for episode in range(MAX_EPISODES):
+    s = env.reset()    
+    done = False
+    
+    s_list = []
+    a_list = []
+    r_list = []
+    
+    episode_r = 0
+    
+    while not done:
+        
+        s = preprocess_state(s)
+        a = agent.choose_an_action(s)
+
+        s2, r, done, info = env.step(a)
+        
+        s_list.append(s)
+        a_list.append(a)
+        r_list.append(r)
+        
+        s = s2
+            
+        episode_r += r
+   
+    a_list = preprocess_action(a_list, action_n)
+        
+    agent.train(np.vstack(s_list), a_list, r_list)
+    
+    print(f"[Episode-{episode:>6}] {int(episode_r):>4}", end="\r")
+    
+    # For line breaks
+    if episode % (MAX_EPISODES // 5) == 0:
+        print()
+        
+    EPISODE_100_REWARDS.append(episode_r)
+    
+    # Check if game is cleared
+    if len(EPISODE_100_REWARDS) > 100:
+        EPISODE_100_REWARDS = EPISODE_100_REWARDS[1:]
+        
+        avg_rewards = np.mean(EPISODE_100_REWARDS)
+        
+        if avg_rewards > CLEAR_REWARD:
+            print()
+            print(f"Game cleared in {episode}, average rewards: {avg_rewards}")
+            break
+# [2017-04-08 21:10:42,119] Starting new video recorder writing to /home/kkweon/github/ReinforcementZeroToAll/gym-results/openaigym.video.0.12761.video000000.mp4
+# [2017-04-08 21:10:43,292] Starting new video recorder writing to /home/kkweon/github/ReinforcementZeroToAll/gym-results/openaigym.video.0.12761.video000001.mp4
+# [Episode-     0]   16
+# [2017-04-08 21:10:43,998] Starting new video recorder writing to /home/kkweon/github/ReinforcementZeroToAll/gym-results/openaigym.video.0.12761.video000008.mp4
+# [Episode-     7]   13
+# [2017-04-08 21:10:45,072] Starting new video recorder writing to /home/kkweon/github/ReinforcementZeroToAll/gym-results/openaigym.video.0.12761.video000027.mp4
+# [Episode-    46]   22
+# [2017-04-08 21:10:46,212] Starting new video recorder writing to /home/kkweon/github/ReinforcementZeroToAll/gym-results/openaigym.video.0.12761.video000064.mp4
+# [Episode-   107]   10
+# [2017-04-08 21:10:47,241] Starting new video recorder writing to /home/kkweon/github/ReinforcementZeroToAll/gym-results/openaigym.video.0.12761.video000125.mp4
+# [Episode-   209]   19
+# [2017-04-08 21:10:48,925] Starting new video recorder writing to /home/kkweon/github/ReinforcementZeroToAll/gym-results/openaigym.video.0.12761.video000216.mp4
+# [Episode-   337]   60
+# [2017-04-08 21:10:51,951] Starting new video recorder writing to /home/kkweon/github/ReinforcementZeroToAll/gym-results/openaigym.video.0.12761.video000343.mp4
+# [Episode-   507]   31
+# [2017-04-08 21:11:00,967] Starting new video recorder writing to /home/kkweon/github/ReinforcementZeroToAll/gym-results/openaigym.video.0.12761.video000512.mp4
+# [Episode-   722]  104
+# [2017-04-08 21:11:09,900] Starting new video recorder writing to /home/kkweon/github/ReinforcementZeroToAll/gym-results/openaigym.video.0.12761.video000729.mp4
+# [Episode-   993]  130
+# [2017-04-08 21:11:25,444] Starting new video recorder writing to /home/kkweon/github/ReinforcementZeroToAll/gym-results/openaigym.video.0.12761.video001000.mp4
+# [Episode-  1000]  200
+# [Episode-  1996]   26
+# [2017-04-08 21:12:26,066] Starting new video recorder writing to /home/kkweon/github/ReinforcementZeroToAll/gym-results/openaigym.video.0.12761.video002000.mp4
+# [Episode-  2000]  146
+# [Episode-  2363]  200
+# Game cleared in 2363, average rewards: 195.15
+
+# @
+# Test run
+for episode in range(100):
+    s = env.reset()    
+    done = False
+    
+    episode_r = 0
+    while not done:
+        if episode % 20 == 0:
+            env.render()
+        s = preprocess_state(s)
+        a = agent.choose_an_action(s)
+        s2, r, done, info = env.step(a)
+                
+        s = s2
+        episode_r += r    
+    
+    print(f"[Episode-{episode}] {int(episode_r)}", end="\r")
+    
+    if episode % 20 == 0:
+        print()
+        
+env.close()
+# [Episode-0] 198
+# [Episode-20] 200
+# [Episode-40] 200
+# [Episode-60] 200
+# [Episode-80] 200
+# [Episode-98] 200
+# [2017-04-08 21:13:16,119] Finished writing results. You can upload them to scoreboard via gym.upload('/home/kkweon/github/ReinforcementZeroToAll/gym-results')
+# [Episode-99] 200
+
+
+</xmp>
+   </BODY>
+</HTML>
+
