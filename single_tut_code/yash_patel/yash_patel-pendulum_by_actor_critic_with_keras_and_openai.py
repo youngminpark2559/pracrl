@@ -1,6 +1,3 @@
-
-# Yash_Patel-Keras+OpenAI_Actor_Critic_Models.py
-
 """
 This code solves pendulum using actor-critic model
 """
