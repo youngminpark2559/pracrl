@@ -45,7 +45,7 @@ class Qnetwork():
         # activation volumn is 20x20x32
 
         # First convolution layer:
-        # 8x8 kernal
+        # 8x8 kernel
         # 4 stride 
         # generating 32 activation maps
         # shape of output is 20x20x32
@@ -59,7 +59,7 @@ class Qnetwork():
             ,scope=myScope+'_conv1')
         
         # Second convolution layer:
-        # 4x4 kernal
+        # 4x4 kernel
         # 2 stride 
         # generating 64 activation maps
         # shape of output is 9x9x64
@@ -73,7 +73,7 @@ class Qnetwork():
             ,scope=myScope+'_conv2')
         
         # Third convolution layer:
-        # 3x3 kernal
+        # 3x3 kernel
         # 1 stride 
         # generating 64 activation maps
         # shape of output is 7x7x64
@@ -87,7 +87,7 @@ class Qnetwork():
             ,scope=myScope+'_conv3')
         
         # Forth convolution layer:
-        # 7x7 kernal
+        # 7x7 kernel
         # 1 stride 
         # generating 512 activation maps
         # shape of output is 1x1x512
