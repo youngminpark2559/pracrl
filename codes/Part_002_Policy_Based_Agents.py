@@ -1,5 +1,5 @@
 # Part_002_Policy_Based_Agents.py
-# q learing with q network where you use policy gradient based agent in cartpole question
+# q learning with q network where you use policy gradient based agent in cartpole question
 
 import numpy as np
 # python 3.5
