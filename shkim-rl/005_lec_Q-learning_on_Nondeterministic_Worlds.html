@@ -46,29 +46,29 @@ MathJax.Hub.Config({
 </script>
    </HEAD>
    <BODY>
-005_lec_Q-learning on Nondeterministic Worlds.html
+005_lec_Q-learning_on_Nondeterministic_Worlds.html
 <xmp>
+# 005_lec_Q-learning_on_Nondeterministic_Worlds.html
+
 # https://www.youtube.com/watch?v=6KSf-j4LL-c&t=92s&list=PLlMkM4tgfjnKsCWav-Z2F-MMFRx-2gMGG&index=8
 
 # Deterministic VS Stochastic(non-deterministic)
-# Stochastic(non-deterministic): Even if you want to move to right, you can't move to right
+# Stochastic(non-deterministic): Even if you want to move to right, you can't be moving to right
 # Deterministic: output of model is fully determined
-
 
 # @
 # Solution for case in stochastic(non-deterministic) environment
-# 1. Listen to and believe Q(s') value "a little bit"
-# 1. Update Q(s) "little bit" (which is managed by learning rate)
+# 1. You should listen to Q(s') value "a little bit"
+# 1. You should update Q(s) "little bit" (which is managed by learning rate)
 
 # Philosophical way of explanation
 # 1. Don't just listen and follow one mentor
 # 1. Need to listen from many mentors
 
-
 # In previous lecture, you saw way of updating Q function notated as following
 # $$$Q(s,a) \leftarrow r + \gamma max_{a'} Q(s',a')$$$
 
-# Point is you will take 10 % from new Q function ($$$r + \gamma max_{a'} Q(s',a')$$$)
+# Point is you will take 10 % from new Q function ($$$\gamma max_{a'} Q(s',a')$$$)
 
 # Learning rate (hyperparameter which you can change) is $$$\alpha$$$
 # $$$\alpha=0.1$$$
@@ -91,7 +91,7 @@ MathJax.Hub.Config({
 # 1. Iterate above step
 #     In iteration,
 #     2. You select action by using "exploit and exploration" algorithm,
-#     , and execute action
+#     and execute action
 #     2. You recieve immediate reward r from environment
 #     2. You observe new state s' from environment
 #     2. You update q table entry for $$$\hat{Q}(s,a)$$$ as following:
@@ -101,7 +101,7 @@ MathJax.Hub.Config({
 
 # @
 # $$$\hat{Q}$$$ function from new Q algorithm will be converged to real Q function?
-# Yes, it's proved
+# Yes, it's mathematically proved
 </xmp>
    </BODY>
 </HTML>
