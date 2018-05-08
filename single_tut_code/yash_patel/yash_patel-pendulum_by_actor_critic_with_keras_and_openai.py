@@ -1,7 +1,5 @@
-"""
-This code solves pendulum using actor-critic model
-https://towardsdatascience.com/reinforcement-learning-w-keras-openai-actor-critic-models-f084612cfd69
-"""
+# This code solves pendulum by using actor-critic architecture
+# https://towardsdatascience.com/reinforcement-learning-w-keras-openai-actor-critic-models-f084612cfd69
 
 import gym
 import numpy as np 
@@ -13,6 +11,7 @@ import keras.backend as K
 import tensorflow as tf
 import random
 from collections import deque
+
 
 class ActorCritic:
     """
@@ -29,46 +28,57 @@ class ActorCritic:
         self.tau   = .125
 
         # ===================================================================== #
-        #                           Entire Actor Model                          #
+        #                               Actor Model                             #
         # ===================================================================== #
         
+        # c self.memory: buffer memory for experience data
         self.memory = deque(maxlen=2000)
+        # c self.actor_state_input: state into actor network as input data
+        # c self.actor_model: actor network object
         self.actor_state_input, self.actor_model = self.create_actor_model()
+        # c self.target_actor_model: target actor network object
         _, self.target_actor_model = self.create_actor_model()
 
         # where we will feed de/dC (from critic)
-        self.actor_critic_grad = tf.placeholder(tf.float32, [None, self.env.action_space.shape[0]]) 
-        
+        # c self.actor_critic_grad: nby1 node representing gradient for actor-critic network
+        self.actor_critic_grad = tf.placeholder(tf.float32, [None, self.env.action_space.shape[0]])
+        # c actor_model_weights: weight for actor network
         actor_model_weights = self.actor_model.trainable_weights
-        # dC/dA (from actor)
-        self.actor_grads = tf.gradients(self.actor_model.output,actor_model_weights, -self.actor_critic_grad) 
+        # c self.actor_grads: gradient for actor network
+        self.actor_grads = tf.gradients(self.actor_model.output,actor_model_weights,-self.actor_critic_grad)
+        # c grads: zipped one from self.actor network gradients and actor network weights
         grads = zip(self.actor_grads, actor_model_weights)
+        # c self.optimize: node applying grads
         self.optimize = tf.train.AdamOptimizer(self.learning_rate).apply_gradients(grads)
 
         # ===================================================================== #
-        #                          Entire Critic Model                          #
+        #                              Critic Model                             #
         # ===================================================================== #        
 
+        # c self.critic_state_input: state into critic network as input data
+        # c self.critic_action_input: action from actor network into critic network as input data
+        # c self.critic_model: critic network object
         self.critic_state_input,self.critic_action_input,self.critic_model=\
             self.create_critic_model()
+        # c self.target_critic_model: target critic network object
         _, _, self.target_critic_model=self.create_critic_model()
 
-        # where we calcaulte de/dC for feeding above
+        # c self.critic_grads: gradient for critic network
         self.critic_grads = tf.gradients(self.critic_model.output,self.critic_action_input) 
         
-        # Initialize for later gradient calculations
+        # You initialize for later gradient calculations
         self.sess.run(tf.initialize_all_variables())
 
     # ========================================================================= #
-    #                Definitions for actor model and critic model               #
+    #                              Model Definitions                            #
     # ========================================================================= #
 
     def create_actor_model(self):
         """
-        This method create actor network\n
+        This method create actor network (policy network)\n
         Returns:
-            1.state_input(): state as input data
-            2.model(Model): actor network
+            1.state_input(): state into actor network as input data
+            2.model(Model): actor network object
         """
         state_input = Input(shape=self.env.observation_space.shape)
 
@@ -84,11 +94,11 @@ class ActorCritic:
 
     def create_critic_model(self):
         """
-        This method create critic network\n
+        This method create critic network (value network)\n
         Returns:
-            1.state_input(): state as input data
-            1.action_input: action as input data
-            1.model(Model): critic network
+            1.state_input(): state into critic network as input data
+            1.action_input: action from actor network into critic network as input data
+            1.model(Model): critic network object
         """
         state_input = Input(shape=self.env.observation_space.shape)
         state_h1 = Dense(24, activation='relu')(state_input)
@@ -107,12 +117,12 @@ class ActorCritic:
         return state_input, action_input, model
 
     # ========================================================================= #
-    #                 Training for actor model and critic model                 #
+    #                               Model Training                              #
     # ========================================================================= #
 
     def remember(self, cur_state, action, reward, new_state, done):
         """
-        This method saves experience data into buffer memory
+        This method stores experience data into buffer memory
         """
         self.memory.append([cur_state, action, reward, new_state, done])
 
@@ -126,7 +136,7 @@ class ActorCritic:
             cur_state, action, reward, new_state, _=sample
             predicted_action = self.actor_model.predict(cur_state)
 
-            
+            # c grads: gradient which will be used for update
             grads = self.sess.run(
                 self.critic_grads
                 ,feed_dict={
@@ -165,18 +175,19 @@ class ActorCritic:
             return
 
         rewards = []
-        
+        # c samples: mini batch data from buffer memory
         samples = random.sample(self.memory,batch_size)
         self._train_critic(samples)
         self._train_actor(samples)
 
     # ========================================================================= #
-    #        Updating for actor target network and critic target network        #
+    #                         Target Model Updating                             #
     # ========================================================================= #
 
     def _update_actor_target(self):
         """
-        This method updates actor target network
+        This method updates target actor network
+        (local actor network) from global actor network
         """
         actor_model_weights  = self.actor_model.get_weights()
         actor_target_weights = self.target_critic_model.get_weights()
@@ -187,7 +198,8 @@ class ActorCritic:
 
     def _update_critic_target(self):
         """
-        This method updates critic target network
+        This method updates target critic network
+        (local critic network) from global critic network
         """
         critic_model_weights  = self.critic_model.get_weights()
         critic_target_weights = self.critic_target_model.get_weights()
@@ -198,18 +210,20 @@ class ActorCritic:
 
     def update_target(self):
         """
-        This method is first call for updating actor target network and critic target network
+        This method is first call 
+        for updating local target actor network and local target critic network
         """
         self._update_actor_target()
         self._update_critic_target()
 
     # ========================================================================= #
-    #                         Predict action from state                         #
+    #                              Model Predictions                            #
     # ========================================================================= #
 
     def act(self, cur_state):
         """
-        This method predicts action from state
+        This method predicts action from current state,
+        by using decaying e-greedy algorithm
         """
         self.epsilon *= self.epsilon_decay
         if np.random.random() < self.epsilon:
@@ -220,28 +234,35 @@ def main():
     sess = tf.Session()
     K.set_session(sess)
     env = gym.make("Pendulum-v0")
-    
+    # c actor_critic: actor critic network object
     actor_critic = ActorCritic(env, sess)
 
     num_trials = 10000
     trial_len  = 500
 
+    # c cur_state: first state
     cur_state = env.reset()
-    
+    # c action: first action
     action = env.action_space.sample()
+
     while True:
         env.render()
+        # c cur_state: reshaped first state to be into network as input data
         cur_state = cur_state.reshape((1, env.observation_space.shape[0]))
+        # You predicts action from state by using actor_critic.act()
         action = actor_critic.act(cur_state)
+        # c action: reshaped predicted action
         action = action.reshape((1, env.action_space.shape[0]))
-
+        # You execute chosen and reshaped action and get experience data
         new_state, reward, done, _ = env.step(action)
+        # You reshape shape of new state
         new_state = new_state.reshape((1, env.observation_space.shape[0]))
 
         # You save experience data into buffer memory
         actor_critic.remember(cur_state, action, reward, new_state, done)
+        # You update actor network and critic network
         actor_critic.train()
-
+        # You convert new state into current state
         cur_state = new_state
 
 if __name__ == "__main__":
