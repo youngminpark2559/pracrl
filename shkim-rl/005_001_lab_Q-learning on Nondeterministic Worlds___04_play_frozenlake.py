@@ -1,4 +1,5 @@
 # 005_001_lab_Q-learning on Nondeterministic Worlds___04_play_frozenlake.py
+# q learning in non-deterministic (stochastic) environment
 
 # @
 # This is game in non-deterministic (stochastic) world
