@@ -63,39 +63,40 @@ MathJax.Hub.Config({
 # This shows 2 cases
 # One:
 # Network takes in 2 inputs (state s, action a) as input data,
-# then, network ouputs one output q value
+# then, network outputs one q value
 
 # One:
 # Network takes in 1 input (state s) as input data,
-# then, network ouputs multiple outputs (q values) which can come from multiple actions
+# then, network outputs multiple q values which can come from multiple actions
 # img 2018-04-29 08-53-22.png
-# </xmp><img src="/media/young/5e7be152-8ed5-483d-a8e8-b3fecfa221dc/text/mycodehtml/pracrl/shkim-rl/pic/2018-04-29 08-53-22.png"><xmp>
+# </xmp><img src="https://raw.githubusercontent.com/youngmtool/pracrl/master/shkim-rl/pic/2018-04-29 08-53-22.png"><xmp>
 
 # @
 # You can set target function $$$y_{i}$$$ as following:
-# $$$y_{i}=r_{j}$$$ when terminal $$$\phi_{j+1}$$$
-# $$$y_{i}=r_{j}+\gamma max_{a'}\;Q(\phi_{j+1},a';\theta)$$$ when non-terminal $$$\phi_{j+1}$$$
+# $$$y_{i}=r_{j}$$$ when terminal of episode $$$\phi_{j+1}$$$
+# $$$y_{i}=r_{j}+\gamma max_{a'}\;Q(\phi_{j+1},a';\theta)$$$ when non-terminal of episode $$$\phi_{j+1}$$$
 
 # img 2018-04-29 09-44-40.png
-# </xmp><img src="/media/young/5e7be152-8ed5-483d-a8e8-b3fecfa221dc/text/mycodehtml/pracrl/shkim-rl/pic/2018-04-29 09-44-40.png"><xmp>
+# </xmp><img src="https://raw.githubusercontent.com/youngmtool/pracrl/master/shkim-rl/pic/2018-04-29 09-44-40.png"><xmp>
 
 # @
 # If you use q table, $$$\hat{Q}$$$ function converges to real Q function
 # But if you use q network, $$$\hat{Q}$$$ function diverges from real Q function
 # img 2018-04-29 09-45-30.png
-# </xmp><img src="/media/young/5e7be152-8ed5-483d-a8e8-b3fecfa221dc/text/mycodehtml/pracrl/shkim-rl/pic/2018-04-29 09-45-30.png"><xmp>
+# </xmp><img src="https://raw.githubusercontent.com/youngmtool/pracrl/master/shkim-rl/pic/2018-04-29 09-45-30.png"><xmp>
 
 # @
 # You can use reinforcement learning and neural network together
 # But diverge issue sticks due to correlation between samples and non-stationary targets
 # img 2018-04-29 09-46-23.png
-# </xmp><img src="/media/young/5e7be152-8ed5-483d-a8e8-b3fecfa221dc/text/mycodehtml/pracrl/shkim-rl/pic/2018-04-29 09-46-23.png"><xmp>
+# </xmp><img src="https://raw.githubusercontent.com/youngmtool/pracrl/master/shkim-rl/pic/2018-04-29 09-46-23.png"><xmp>
 
 # @
-# "Diverge" issue is resolved by DQN architecture 
-# (Deep, Replay, Separated networks) created by deepmind
+# "Diverge" issue can be resolved by DQN architecture 
+# (Deep, Replay experience, Separated networks) created by deepmind
 # img 2018-04-29 09-47-39.png
-# </xmp><img src="/media/young/5e7be152-8ed5-483d-a8e8-b3fecfa221dc/text/mycodehtml/pracrl/shkim-rl/pic/2018-04-29 09-47-39.png"><xmp>
+# </xmp><img src="https://raw.githubusercontent.com/youngmtool/pracrl/master/shkim-rl/pic/2018-04-29 09-47-39.png"><xmp>
+
 </xmp>
    </BODY>
 </HTML>
