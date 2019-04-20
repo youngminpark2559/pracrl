@@ -217,7 +217,7 @@ Agent should select edge (action) which make maximum value for Q+u in selection 
 
 $$$a_t=\arg_{a}\max ( Q(s_t,a) + u(s_t,a) )$$$
 
-- $$$u(s_t,a) \prop \dfrac{P(s,a)}{1+N(s,a)}$$$
+- $$$u(s_t,a) \propto \dfrac{P(s,a)}{1+N(s,a)}$$$
 
 - At first of creating tree, N is small
 If N is 0, u is used as P (SL policy value)
@@ -241,7 +241,7 @@ V: evaluation
 v: value function
 $$$\lambda_{z_L}$$$: result which agent gets by simulating entire game.
 
-- $$$Q(s,a) = \frac{1}{N(s,a)} \sum\limits_{i=1}^{n} 1(s,a,i)V(s_{l}^i)$$$
+- $$$Q(s,a) = \dfrac{1}{N(s,a)} \sum\limits_{i=1}^{n} 1(s,a,i)V(s_{l}^i)$$$
 Weighted sum, average
 
 - $$$\lambda = 0.5$$$ is empirically optimal representing 50:50 (value function:rollout)
