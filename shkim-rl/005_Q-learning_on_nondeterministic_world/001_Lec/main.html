@@ -1,0 +1,103 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+   "http://www.w3.org/TR/html4/strict.dtd">
+<HTML>
+   <HEAD>
+      <TITLE>My first HTML document</TITLE>
+      <style rel="stylesheet" type="text/css">
+body {
+ font-size: 20px;
+ 
+ margin-top: 50px;
+    margin-bottom: 50px;
+    margin-right: 80px;
+    margin-left: 100px;
+    
+    padding-top: 50px;
+    padding-bottom: 50px;
+    padding-right: 80px;
+    padding-left: 80px;
+    
+    line-height:35px;
+}
+img {
+ width:900px;
+}
+</style>
+      <script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    "HTML-CSS" : {
+        availableFonts : ["STIX"],
+        preferredFont : "STIX",
+        webFont : "STIX-Web",
+        imageFont : null
+    }
+});
+</script>
+     <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js" type="text/javascript">    
+    MathJax.Hub.Config({
+        HTML: ["input/TeX","output/HTML-CSS"],
+        TeX: { extensions: ["AMSmath.js","AMSsymbols.js"], 
+               equationNumbers: { autoNumber: "AMS" } },
+        extensions: ["tex2jax.js"],
+        jax: ["input/TeX","output/HTML-CSS"],
+        tex2jax: { inlineMath: [ ['$$$','$$$'] ],
+                   displayMath: [ ['$$$$','$$$$'] ],
+                   processEscapes: true },
+        "HTML-CSS": { availableFonts: ["TeX"],
+                      linebreaks: { automatic: true } }
+    });
+</script>
+   </HEAD>
+   <BODY>
+<xmp>
+
+https://www.youtube.com/watch?v=6KSf-j4LL-c&t=92s&list=PLlMkM4tgfjnKsCWav-Z2F-MMFRx-2gMGG&index=8
+
+================================================================================
+Deterministic
+- If agent wants to go right, agent can go right
+- Agents obtain fixed pattern of reward
+
+Non-deterministic (stochastic)
+- If agent wants to go right, agent can go other direction
+- Agents obtain various pattern of reward
+
+================================================================================
+Guide (as Q values) from Q-mentor (as Q function) doesn't work 
+on non-deterministic environment
+
+================================================================================
+Why not work?
+
+Q mentor says his really experience.
+
+But since it's non-deterministic environment, experience of Q mentor can't work
+
+================================================================================
+How to solve this problem?
+
+- Agent will get "a bit" of guide from Q mentor
+- Agent will use "more" Q vallues that agent previously had
+
+================================================================================
+$$$Q(s,a) \leftarrow (1-\alpha) Q(s,a) + \alpha [ r + \gamma \max_{a^{'}} Q(s^{'},a^{'}) ]$$$
+
+$$$\alpha$$$: learning rate, say $$$\alpha=0.1$$$, 10%
+$$$(1-\alpha) Q(s,a)$$$: agent's stubborn is 90%
+$$$\alpha [ r + \gamma \max_{a^{'}} Q(s^{'},a^{'}) ]$$$: Q-mentor's guide, 10%
+
+================================================================================
+You can simplify equation by hyperparameter $$$\alpha$$$
+$$$Q(s,a) \leftarrow Q(s,a) + \alpha [ r + \gamma \max_{a^{'}} Q(s^{'},a^{'}) -Q(s,a) ]$$$
+
+================================================================================
+$$$\hat{Q}(s,a) \leftarrow \hat{Q}(s,a) + \alpha [ r + \gamma \max_{a^{'}} Q(s^{'},a^{'}) - \hat{Q}(s,a) ]$$$
+
+$$$\hat{Q}$$$: Approximated Q
+$$$Q$$$: actual $$$Q$$$
+
+If you iterate algorithm enough, convergence of $$$\hat{Q}$$$ to Q is proved mathematically
+
+</xmp>
+   </BODY>
+</HTML>

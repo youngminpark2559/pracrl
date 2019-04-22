@@ -1,0 +1,122 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+   "http://www.w3.org/TR/html4/strict.dtd">
+<HTML>
+   <HEAD>
+      <TITLE>My first HTML document</TITLE>
+      <style rel="stylesheet" type="text/css">
+body {
+ font-size: 20px;
+ 
+ margin-top: 50px;
+    margin-bottom: 50px;
+    margin-right: 80px;
+    margin-left: 100px;
+    
+    padding-top: 50px;
+    padding-bottom: 50px;
+    padding-right: 80px;
+    padding-left: 80px;
+    
+    line-height:35px;
+}
+img {
+ width:900px;
+}
+</style>
+      <script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    "HTML-CSS" : {
+        availableFonts : ["STIX"],
+        preferredFont : "STIX",
+        webFont : "STIX-Web",
+        imageFont : null
+    }
+});
+</script>
+     <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js" type="text/javascript">    
+    MathJax.Hub.Config({
+        HTML: ["input/TeX","output/HTML-CSS"],
+        TeX: { extensions: ["AMSmath.js","AMSsymbols.js"], 
+               equationNumbers: { autoNumber: "AMS" } },
+        extensions: ["tex2jax.js"],
+        jax: ["input/TeX","output/HTML-CSS"],
+        tex2jax: { inlineMath: [ ['$$$','$$$'] ],
+                   displayMath: [ ['$$$$','$$$$'] ],
+                   processEscapes: true },
+        "HTML-CSS": { availableFonts: ["TeX"],
+                      linebreaks: { automatic: true } }
+    });
+</script>
+   </HEAD>
+   <BODY>
+<xmp>
+
+https://medium.com/emergent-future/simple-reinforcement-learning-with-tensorflow-part-0-q-learning-with-tables-and-neural-networks-d195264329d0#.pjz9g59ap
+
+# ================================================================================
+import gym
+import numpy as np
+import matplotlib.pyplot as plt
+
+# ================================================================================
+# Slippery mode
+env=gym.make('FrozenLake-v0')
+
+# ================================================================================
+# c Q: (16,4) 2D array
+Q=np.zeros([env.observation_space.n,env.action_space.n])
+
+# ================================================================================
+# 0.85 belief on Q-mentor's guide
+learning_rate=.85
+
+# c dis: discount factor on future reward
+dis=.99
+
+num_episodes=2000
+
+# ================================================================================
+rList=[]
+
+for i in range(num_episodes):
+  state=env.reset()
+  rAll=0
+  done=False
+
+  # ================================================================================
+  while not done:
+    # c action: select action using "adding random value to Q values"
+    action=np.argmax(Q[state,:]+np.random.randn(1,env.action_space.n)/(i+1))
+
+    # ================================================================================
+    # Do action
+    new_state,reward,done,_=env.step(action)
+
+    # ================================================================================
+    # Update Q table
+    Q[state,action]=reward+dis*np.max(Q[new_state,:])
+
+    # ================================================================================
+    # Newly observed state into current state
+    state=new_state
+
+    # ================================================================================
+    # Accumulate all rewards in single episode
+    rAll+=reward
+
+  # ================================================================================
+  rList.append(rAll)
+
+# ================================================================================
+print("Score over time: "+str(sum(rList)/num_episodes))
+print("Final Q-Table Values")
+print(Q)
+plt.bar(range(len(rList)),rList,color="blue")
+plt.show()
+
+/home/young/Pictures/2019_04_22_12:45:09.png
+Vertical line: success case
+
+</xmp>
+   </BODY>
+</HTML>
