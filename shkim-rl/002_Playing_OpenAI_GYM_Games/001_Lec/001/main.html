@@ -1,0 +1,124 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+   "http://www.w3.org/TR/html4/strict.dtd">
+<HTML>
+   <HEAD>
+      <TITLE>My first HTML document</TITLE>
+      <style rel="stylesheet" type="text/css">
+body {
+ font-size: 23px;
+
+ margin-top: 50px;
+    margin-bottom: 50px;
+    margin-right: 80px;
+    margin-left: 80px;
+
+    padding-top: 50px;
+    padding-bottom: 50px;
+    padding-right: 80px;
+    padding-left: 80px;
+
+    line-height:35px;
+}
+</style>
+      <script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    "HTML-CSS" : {
+        availableFonts : ["STIX"],
+        preferredFont : "STIX",
+        webFont : "STIX-Web",
+        imageFont : null
+    }
+});
+</script>
+     <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js" type="text/javascript">
+    MathJax.Hub.Config({
+        HTML: ["input/TeX","output/HTML-CSS"],
+        TeX: { extensions: ["AMSmath.js","AMSsymbols.js"],
+               equationNumbers: { autoNumber: "AMS" } },
+        extensions: ["tex2jax.js"],
+        jax: ["input/TeX","output/HTML-CSS"],
+        tex2jax: { inlineMath: [ ['$$$','$$$'] ],
+                   displayMath: [ ['$$$$','$$$$'] ],
+                   processEscapes: true },
+        "HTML-CSS": { availableFonts: ["TeX"],
+                      linebreaks: { automatic: true } }
+    });
+</script>
+   </HEAD>
+   <BODY>
+<xmp>
+This is notes which I wrote as I was taking a video lecture which is originated from
+https://www.youtube.com/watch?v=xgoO54qN4lY&list=PLlMkM4tgfjnKsCWav-Z2F-MMFRx-2gMGG&index=2
+
+================================================================================
+You suppose there are "environment" and "actor"
+
+Determining "action" is performed by algorithm which you should create
+
+================================================================================
+Manually creating all "environment" for every project is arduous and complicated job
+
+OpenAI GYM provides built-in "environments"
+
+Then, task which you only should do is to implement algorithm part
+
+================================================================================
+</xmp><img src='https://raw.githubusercontent.com/youngminpark2559/pracrl/master/shkim-rl/pic/2019_04_21_18:10:49.png' alt=''><xmp>
+
+S: starting place
+
+Agent on state S can move "right", "bottom"
+
+F: Frozon place
+
+H: Hole place, agent falls into the hole
+
+G: Goal place
+
+================================================================================
+</xmp><img src='https://raw.githubusercontent.com/youngminpark2559/pracrl/master/shkim-rl/pic/2018-04-28 20-23-15.png' alt=''><xmp>
+
+- There are 4 actions.
+
+- If agent does "action", environment gives "state" and "reward" to the "agent"
+
+- "State" can be represented in various ways.
+
+- Just say S is state 0, right F is 1, right F is 2, right F is 3
+0,1,2,3,... can be said as states
+
+- If "agent" arrives to "G", "agent" gets reward 1
+
+================================================================================
+</xmp><img src='https://raw.githubusercontent.com/youngminpark2559/pracrl/master/shkim-rl/pic/2018-04-28 20-23-58.png' alt=''><xmp>
+
+Suppose agent does "RIGHT" action.
+
+Then, agent is given "state 1" and "reward 0"
+
+================================================================================
+</xmp><img src='https://raw.githubusercontent.com/youngminpark2559/pracrl/master/shkim-rl/pic/2019_04_21_18:33:29.png' alt=''><xmp>
+
+For human who can see the right paths, above problem is easy.
+
+================================================================================
+</xmp><img src='https://raw.githubusercontent.com/youngminpark2559/pracrl/master/shkim-rl/pic/2019_04_21_18:34:06.png' alt=''><xmp>
+
+But you should see the problem like this.
+
+Agent can't see how environment is composed
+
+Consider your life.
+
+You can't fully predict what will happen after you do an action.
+
+You do action, you get feedback like states and rewards
+
+================================================================================
+</xmp><img src='https://raw.githubusercontent.com/youngminpark2559/pracrl/master/shkim-rl/pic/2019_04_21_18:36:25.png' alt=''><xmp>
+
+Agent moves, and agent can know that place is frozen place or hole
+
+</xmp>
+   </BODY>
+</HTML>

@@ -1,0 +1,251 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+   "http://www.w3.org/TR/html4/strict.dtd">
+<HTML>
+   <HEAD>
+      <TITLE>My first HTML document</TITLE>
+      <style rel="stylesheet" type="text/css">
+body {
+ font-size: 23px;
+
+ margin-top: 50px;
+    margin-bottom: 50px;
+    margin-right: 80px;
+    margin-left: 80px;
+
+    padding-top: 50px;
+    padding-bottom: 50px;
+    padding-right: 80px;
+    padding-left: 80px;
+
+    line-height:35px;
+}
+</style>
+      <script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    "HTML-CSS" : {
+        availableFonts : ["STIX"],
+        preferredFont : "STIX",
+        webFont : "STIX-Web",
+        imageFont : null
+    }
+});
+</script>
+     <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js" type="text/javascript">
+    MathJax.Hub.Config({
+        HTML: ["input/TeX","output/HTML-CSS"],
+        TeX: { extensions: ["AMSmath.js","AMSsymbols.js"],
+               equationNumbers: { autoNumber: "AMS" } },
+        extensions: ["tex2jax.js"],
+        jax: ["input/TeX","output/HTML-CSS"],
+        tex2jax: { inlineMath: [ ['$$$','$$$'] ],
+                   displayMath: [ ['$$$$','$$$$'] ],
+                   processEscapes: true },
+        "HTML-CSS": { availableFonts: ["TeX"],
+                      linebreaks: { automatic: true } }
+    });
+</script>
+   </HEAD>
+   <BODY>
+<xmp>
+This is notes which I wrote as I was taking a video lecture which is originated from
+https://www.youtube.com/watch?v=xvDAURQVDhk&list=PLlMkM4tgfjnKsCWav-Z2F-MMFRx-2gMGG&index=3
+
+================================================================================
+</xmp><img src="/mnt/1T-5e7/mycodehtml/prac_rein_l/shkim-rl/pic/2018-04-28 20-23-15.png"><xmp>
+
+================================================================================
+</xmp>
+<!--
+import gym
+from gym.envs.registration import register
+import sys
+import tty
+import termios
+
+# ================================================================================
+# Class which is used to get "pressed keys"
+class _Getch:
+  def __call__(self):
+    fd=sys.stdin.fileno()
+    old_settings=termios.tcgetattr(fd)
+
+    try:
+      tty.setraw(sys.stdin.fileno())
+      ch=sys.stdin.read(3)
+    finally:
+      termios.tcsetattr(fd,termios.TCSADRAIN,old_settings)
+    return ch
+
+# ================================================================================
+# c inkey: instance of _Getch
+inkey=_Getch()
+
+# ================================================================================
+# Configured key MACROS in OpenAI GYM
+
+LEFT=0
+DOWN=1
+RIGHT=2
+UP=3
+
+# ================================================================================
+# Key mapping from '\x1b[A' to UP
+
+arrow_keys={
+  '\x1b[A':UP,
+  '\x1b[B':DOWN,
+  '\x1b[C':RIGHT,
+  '\x1b[D':LEFT}
+
+# ================================================================================
+# You configure FrozenLake environment with several additional configurations
+
+register(
+  id='FrozenLake-v3',
+  entry_point='gym.envs.toy_text:FrozenLakeEnv',
+  # (4,4) easy and simple grid
+  kwargs={'map_name':'4x4','is_slippery':False})
+
+# ================================================================================
+# You create FrozenLake-v3 env
+
+env = gym.make('FrozenLake-v3')
+
+# ================================================================================
+# Show the initial board visually
+
+env.render()
+
+# ================================================================================
+while True:
+  # Get pressed key
+  key=inkey()
+  if key not in arrow_keys.keys():
+    print("Game aborted!")
+    break
+  
+  # ================================================================================
+  # Choose action from keyboard input
+  action=arrow_keys[key]
+
+  # ================================================================================
+  # Put action into environment
+  # And get state and reward
+  # done: if game ends (like falling into hole, reaching to goal)
+  state,reward,done,info=env.step(action)
+
+  # ================================================================================
+  # Show the board after action visually
+  env.render()
+
+  # ================================================================================
+  print("State:",state,"Action:",action,"Reward:",reward,"Info:",info)
+
+  # ================================================================================
+  if done:
+    print("Finished with reward",reward)
+    break
+-->
+
+<!--
+================================================================================
+-->
+
+<!-- HTML generated using hilite.me -->
+<div style="background: #ffffff; overflow:auto;width:auto;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;"><pre style="margin: 0; line-height: 125%"><span style="color: #008800; font-weight: bold">import</span> <span style="color: #0e84b5; font-weight: bold">gym</span>
+<span style="color: #008800; font-weight: bold">from</span> <span style="color: #0e84b5; font-weight: bold">gym.envs.registration</span> <span style="color: #008800; font-weight: bold">import</span> register
+<span style="color: #008800; font-weight: bold">import</span> <span style="color: #0e84b5; font-weight: bold">sys</span>
+<span style="color: #008800; font-weight: bold">import</span> <span style="color: #0e84b5; font-weight: bold">tty</span>
+<span style="color: #008800; font-weight: bold">import</span> <span style="color: #0e84b5; font-weight: bold">termios</span>
+
+<span style="color: #888888"># ================================================================================</span>
+<span style="color: #888888"># Class which is used to get &quot;pressed keys&quot;</span>
+<span style="color: #008800; font-weight: bold">class</span> <span style="color: #BB0066; font-weight: bold">_Getch</span>:
+  <span style="color: #008800; font-weight: bold">def</span> <span style="color: #0066BB; font-weight: bold">__call__</span>(<span style="color: #007020">self</span>):
+    fd<span style="color: #333333">=</span>sys<span style="color: #333333">.</span>stdin<span style="color: #333333">.</span>fileno()
+    old_settings<span style="color: #333333">=</span>termios<span style="color: #333333">.</span>tcgetattr(fd)
+
+    <span style="color: #008800; font-weight: bold">try</span>:
+      tty<span style="color: #333333">.</span>setraw(sys<span style="color: #333333">.</span>stdin<span style="color: #333333">.</span>fileno())
+      ch<span style="color: #333333">=</span>sys<span style="color: #333333">.</span>stdin<span style="color: #333333">.</span>read(<span style="color: #0000DD; font-weight: bold">3</span>)
+    <span style="color: #008800; font-weight: bold">finally</span>:
+      termios<span style="color: #333333">.</span>tcsetattr(fd,termios<span style="color: #333333">.</span>TCSADRAIN,old_settings)
+    <span style="color: #008800; font-weight: bold">return</span> ch
+
+<span style="color: #888888"># ================================================================================</span>
+<span style="color: #888888"># c inkey: instance of _Getch</span>
+inkey<span style="color: #333333">=</span>_Getch()
+
+<span style="color: #888888"># ================================================================================</span>
+<span style="color: #888888"># Configured key MACROS in OpenAI GYM</span>
+
+LEFT<span style="color: #333333">=</span><span style="color: #0000DD; font-weight: bold">0</span>
+DOWN<span style="color: #333333">=</span><span style="color: #0000DD; font-weight: bold">1</span>
+RIGHT<span style="color: #333333">=</span><span style="color: #0000DD; font-weight: bold">2</span>
+UP<span style="color: #333333">=</span><span style="color: #0000DD; font-weight: bold">3</span>
+
+<span style="color: #888888"># ================================================================================</span>
+<span style="color: #888888"># Key mapping from &#39;\x1b[A&#39; to UP</span>
+
+arrow_keys<span style="color: #333333">=</span>{
+  <span style="background-color: #fff0f0">&#39;</span><span style="color: #666666; font-weight: bold; background-color: #fff0f0">\x1b</span><span style="background-color: #fff0f0">[A&#39;</span>:UP,
+  <span style="background-color: #fff0f0">&#39;</span><span style="color: #666666; font-weight: bold; background-color: #fff0f0">\x1b</span><span style="background-color: #fff0f0">[B&#39;</span>:DOWN,
+  <span style="background-color: #fff0f0">&#39;</span><span style="color: #666666; font-weight: bold; background-color: #fff0f0">\x1b</span><span style="background-color: #fff0f0">[C&#39;</span>:RIGHT,
+  <span style="background-color: #fff0f0">&#39;</span><span style="color: #666666; font-weight: bold; background-color: #fff0f0">\x1b</span><span style="background-color: #fff0f0">[D&#39;</span>:LEFT}
+
+<span style="color: #888888"># ================================================================================</span>
+<span style="color: #888888"># You configure FrozenLake environment with several additional configurations</span>
+
+register(
+  <span style="color: #007020">id</span><span style="color: #333333">=</span><span style="background-color: #fff0f0">&#39;FrozenLake-v3&#39;</span>,
+  entry_point<span style="color: #333333">=</span><span style="background-color: #fff0f0">&#39;gym.envs.toy_text:FrozenLakeEnv&#39;</span>,
+  <span style="color: #888888"># (4,4) easy and simple grid</span>
+  kwargs<span style="color: #333333">=</span>{<span style="background-color: #fff0f0">&#39;map_name&#39;</span>:<span style="background-color: #fff0f0">&#39;4x4&#39;</span>,<span style="background-color: #fff0f0">&#39;is_slippery&#39;</span>:<span style="color: #008800; font-weight: bold">False</span>})
+
+<span style="color: #888888"># ================================================================================</span>
+<span style="color: #888888"># You create FrozenLake-v3 env</span>
+
+env <span style="color: #333333">=</span> gym<span style="color: #333333">.</span>make(<span style="background-color: #fff0f0">&#39;FrozenLake-v3&#39;</span>)
+
+<span style="color: #888888"># ================================================================================</span>
+<span style="color: #888888"># Show the initial board visually</span>
+
+env<span style="color: #333333">.</span>render()
+
+<span style="color: #888888"># ================================================================================</span>
+<span style="color: #008800; font-weight: bold">while</span> <span style="color: #008800; font-weight: bold">True</span>:
+  <span style="color: #888888"># Get pressed key</span>
+  key<span style="color: #333333">=</span>inkey()
+  <span style="color: #008800; font-weight: bold">if</span> key <span style="color: #000000; font-weight: bold">not</span> <span style="color: #000000; font-weight: bold">in</span> arrow_keys<span style="color: #333333">.</span>keys():
+    <span style="color: #007020">print</span>(<span style="background-color: #fff0f0">&quot;Game aborted!&quot;</span>)
+    <span style="color: #008800; font-weight: bold">break</span>
+  
+  <span style="color: #888888"># ================================================================================</span>
+  <span style="color: #888888"># Choose action from keyboard input</span>
+  action<span style="color: #333333">=</span>arrow_keys[key]
+
+  <span style="color: #888888"># ================================================================================</span>
+  <span style="color: #888888"># Put action into environment</span>
+  <span style="color: #888888"># And get state and reward</span>
+  <span style="color: #888888"># done: if game ends (like falling into hole, reaching to goal)</span>
+  state,reward,done,info<span style="color: #333333">=</span>env<span style="color: #333333">.</span>step(action)
+
+  <span style="color: #888888"># ================================================================================</span>
+  <span style="color: #888888"># Show the board after action visually</span>
+  env<span style="color: #333333">.</span>render()
+
+  <span style="color: #888888"># ================================================================================</span>
+  <span style="color: #007020">print</span>(<span style="background-color: #fff0f0">&quot;State:&quot;</span>,state,<span style="background-color: #fff0f0">&quot;Action:&quot;</span>,action,<span style="background-color: #fff0f0">&quot;Reward:&quot;</span>,reward,<span style="background-color: #fff0f0">&quot;Info:&quot;</span>,info)
+
+  <span style="color: #888888"># ================================================================================</span>
+  <span style="color: #008800; font-weight: bold">if</span> done:
+    <span style="color: #007020">print</span>(<span style="background-color: #fff0f0">&quot;Finished with reward&quot;</span>,reward)
+    <span style="color: #008800; font-weight: bold">break</span>
+</pre></div>
+<xmp>
+
+================================================================================
+
+</xmp>
+   </BODY>
+</HTML>

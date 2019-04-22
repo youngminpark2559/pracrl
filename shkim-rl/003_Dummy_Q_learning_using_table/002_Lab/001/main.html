@@ -1,0 +1,234 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+   "http://www.w3.org/TR/html4/strict.dtd">
+<HTML>
+   <HEAD>
+      <TITLE>My first HTML document</TITLE>
+      <style rel="stylesheet" type="text/css">
+body {
+ font-size: 20px;
+ 
+ margin-top: 50px;
+    margin-bottom: 50px;
+    margin-right: 80px;
+    margin-left: 100px;
+    
+    padding-top: 50px;
+    padding-bottom: 50px;
+    padding-right: 80px;
+    padding-left: 80px;
+    
+    line-height:35px;
+}
+img {
+ width:900px;
+}
+</style>
+      <script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    "HTML-CSS" : {
+        availableFonts : ["STIX"],
+        preferredFont : "STIX",
+        webFont : "STIX-Web",
+        imageFont : null
+    }
+});
+</script>
+     <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js" type="text/javascript">    
+    MathJax.Hub.Config({
+        HTML: ["input/TeX","output/HTML-CSS"],
+        TeX: { extensions: ["AMSmath.js","AMSsymbols.js"], 
+               equationNumbers: { autoNumber: "AMS" } },
+        extensions: ["tex2jax.js"],
+        jax: ["input/TeX","output/HTML-CSS"],
+        tex2jax: { inlineMath: [ ['$$$','$$$'] ],
+                   displayMath: [ ['$$$$','$$$$'] ],
+                   processEscapes: true },
+        "HTML-CSS": { availableFonts: ["TeX"],
+                      linebreaks: { automatic: true } }
+    });
+</script>
+   </HEAD>
+   <BODY>
+
+<xmp>
+
+https://medium.com/emergent-future/simple-reinforcement-learning-with-tensorflow-part-0-q-learning-with-tables-and-neural-networks-d195264329d0#.pjz9g59ap
+
+================================================================================
+</xmp>
+<!--
+# ================================================================================
+import gym
+import numpy as np
+import matplotlib.pyplot as plt
+from gym.envs.registration import register
+import random as pr
+
+# ================================================================================
+# Random argmax
+def rargmax(vector):
+  m=np.amax(vector)
+  indices=np.nonzero(vector==m)[0]
+  returnpr.choice(indices)
+
+# ================================================================================
+register(
+  id='FrozenLake-v3',
+  entry_point='gym.envs.toy_text:FrozenLakeEnv',
+  kwargs={'map_name':'4x4','is_slippery': False}
+)
+
+env=gym.make('FrozenLake-v3')
+
+# ================================================================================
+# c Q: (16,4) 2D array
+Q=np.zeros([env.observation_space.n,env.action_space.n])
+
+# @ 2000 episodes
+num_episodes=2000
+
+# ================================================================================
+# rList will save results("total rewards" and "steps") per episode
+rList=[]
+for i in range(num_episodes):
+  # c state: reset env and get current 1st state
+  state=env.reset()
+
+  rAll=0
+
+  # done=True: end of game
+  done=False
+
+  # The Q-Table learning algorithm
+  while not done:
+    # c action: select action
+    # Select maximal Q
+    # If Q values have same value, select Q randomly
+    # rargmax(): random argmax()
+    action=rargmax(Q[state,:])
+
+    # ================================================================================
+    # Execute action
+    new_state,reward,done,_=env.step(action)
+
+    # ================================================================================
+    # Update Q function Q[state, action] by using equation
+    # : from Q[new_state,:] means all kinds of actions like LRUD
+    Q[state,action]=reward+np.max(Q[new_state,:])
+
+    # ================================================================================
+    # You sum all rewards from each step
+    rAll+=reward
+
+    # https://raw.githubusercontent.com/youngminpark2559/pracrl/master/shkim-rl/pic/2019_04_22_00:04:43.png
+    # In one episode, agent falls into hole (0)
+    # In second episode, agent goes to terminating place (+1)
+    # rAll stroes 0, +1, -1, etc
+
+    # ================================================================================
+    state=new_state
+
+  rList.append(rAll)
+
+# ================================================================================
+print("Success rate: "+str(sum(rList)/num_episodes))
+print("Final Q-Table Values")
+print("LEFT DOWN RIGHT UP")
+print(Q)
+plt.bar(range(len(rList)),rList,color="blue")
+plt.show()
+-->
+
+<!--
+================================================================================
+-->
+
+<!-- HTML generated using hilite.me --><div style="background: #ffffff; overflow:auto;width:auto;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;"><pre style="margin: 0; line-height: 125%"><span style="color: #888888"># ================================================================================</span>
+<span style="color: #008800; font-weight: bold">import</span> <span style="color: #0e84b5; font-weight: bold">gym</span>
+<span style="color: #008800; font-weight: bold">import</span> <span style="color: #0e84b5; font-weight: bold">numpy</span> <span style="color: #008800; font-weight: bold">as</span> <span style="color: #0e84b5; font-weight: bold">np</span>
+<span style="color: #008800; font-weight: bold">import</span> <span style="color: #0e84b5; font-weight: bold">matplotlib.pyplot</span> <span style="color: #008800; font-weight: bold">as</span> <span style="color: #0e84b5; font-weight: bold">plt</span>
+<span style="color: #008800; font-weight: bold">from</span> <span style="color: #0e84b5; font-weight: bold">gym.envs.registration</span> <span style="color: #008800; font-weight: bold">import</span> register
+<span style="color: #008800; font-weight: bold">import</span> <span style="color: #0e84b5; font-weight: bold">random</span> <span style="color: #008800; font-weight: bold">as</span> <span style="color: #0e84b5; font-weight: bold">pr</span>
+
+<span style="color: #888888"># ================================================================================</span>
+<span style="color: #888888"># Random argmax</span>
+<span style="color: #008800; font-weight: bold">def</span> <span style="color: #0066BB; font-weight: bold">rargmax</span>(vector):
+  m<span style="color: #333333">=</span>np<span style="color: #333333">.</span>amax(vector)
+  indices<span style="color: #333333">=</span>np<span style="color: #333333">.</span>nonzero(vector<span style="color: #333333">==</span>m)[<span style="color: #0000DD; font-weight: bold">0</span>]
+  returnpr<span style="color: #333333">.</span>choice(indices)
+
+<span style="color: #888888"># ================================================================================</span>
+register(
+  <span style="color: #007020">id</span><span style="color: #333333">=</span><span style="background-color: #fff0f0">&#39;FrozenLake-v3&#39;</span>,
+  entry_point<span style="color: #333333">=</span><span style="background-color: #fff0f0">&#39;gym.envs.toy_text:FrozenLakeEnv&#39;</span>,
+  kwargs<span style="color: #333333">=</span>{<span style="background-color: #fff0f0">&#39;map_name&#39;</span>:<span style="background-color: #fff0f0">&#39;4x4&#39;</span>,<span style="background-color: #fff0f0">&#39;is_slippery&#39;</span>: <span style="color: #008800; font-weight: bold">False</span>}
+)
+
+env<span style="color: #333333">=</span>gym<span style="color: #333333">.</span>make(<span style="background-color: #fff0f0">&#39;FrozenLake-v3&#39;</span>)
+
+<span style="color: #888888"># ================================================================================</span>
+<span style="color: #888888"># c Q: (16,4) 2D array</span>
+Q<span style="color: #333333">=</span>np<span style="color: #333333">.</span>zeros([env<span style="color: #333333">.</span>observation_space<span style="color: #333333">.</span>n,env<span style="color: #333333">.</span>action_space<span style="color: #333333">.</span>n])
+
+<span style="color: #888888"># @ 2000 episodes</span>
+num_episodes<span style="color: #333333">=</span><span style="color: #0000DD; font-weight: bold">2000</span>
+
+<span style="color: #888888"># ================================================================================</span>
+<span style="color: #888888"># rList will save results(&quot;total rewards&quot; and &quot;steps&quot;) per episode</span>
+rList<span style="color: #333333">=</span>[]
+<span style="color: #008800; font-weight: bold">for</span> i <span style="color: #000000; font-weight: bold">in</span> <span style="color: #007020">range</span>(num_episodes):
+  <span style="color: #888888"># c state: reset env and get current 1st state</span>
+  state<span style="color: #333333">=</span>env<span style="color: #333333">.</span>reset()
+
+  rAll<span style="color: #333333">=</span><span style="color: #0000DD; font-weight: bold">0</span>
+
+  <span style="color: #888888"># done=True: end of game</span>
+  done<span style="color: #333333">=</span><span style="color: #008800; font-weight: bold">False</span>
+
+  <span style="color: #888888"># The Q-Table learning algorithm</span>
+  <span style="color: #008800; font-weight: bold">while</span> <span style="color: #000000; font-weight: bold">not</span> done:
+    <span style="color: #888888"># c action: select action</span>
+    <span style="color: #888888"># Select maximal Q</span>
+    <span style="color: #888888"># If Q values have same value, select Q randomly</span>
+    <span style="color: #888888"># rargmax(): random argmax()</span>
+    action<span style="color: #333333">=</span>rargmax(Q[state,:])
+
+    <span style="color: #888888"># ================================================================================</span>
+    <span style="color: #888888"># Execute action</span>
+    new_state,reward,done,_<span style="color: #333333">=</span>env<span style="color: #333333">.</span>step(action)
+
+    <span style="color: #888888"># ================================================================================</span>
+    <span style="color: #888888"># Update Q function Q[state, action] by using equation</span>
+    <span style="color: #888888"># : from Q[new_state,:] means all kinds of actions like LRUD</span>
+    Q[state,action]<span style="color: #333333">=</span>reward<span style="color: #333333">+</span>np<span style="color: #333333">.</span>max(Q[new_state,:])
+
+    <span style="color: #888888"># ================================================================================</span>
+    <span style="color: #888888"># You sum all rewards from each step</span>
+    rAll<span style="color: #333333">+=</span>reward
+
+    <span style="color: #888888"># https://raw.githubusercontent.com/youngminpark2559/pracrl/master/shkim-rl/pic/2019_04_22_00:04:43.png</span>
+    <span style="color: #888888"># In one episode, agent falls into hole (0)</span>
+    <span style="color: #888888"># In second episode, agent goes to terminating place (+1)</span>
+    <span style="color: #888888"># rAll stroes 0, +1, -1, etc</span>
+
+    <span style="color: #888888"># ================================================================================</span>
+    state<span style="color: #333333">=</span>new_state
+
+  rList<span style="color: #333333">.</span>append(rAll)
+
+<span style="color: #888888"># ================================================================================</span>
+<span style="color: #007020">print</span>(<span style="background-color: #fff0f0">&quot;Success rate: &quot;</span><span style="color: #333333">+</span><span style="color: #007020">str</span>(<span style="color: #007020">sum</span>(rList)<span style="color: #333333">/</span>num_episodes))
+<span style="color: #007020">print</span>(<span style="background-color: #fff0f0">&quot;Final Q-Table Values&quot;</span>)
+<span style="color: #007020">print</span>(<span style="background-color: #fff0f0">&quot;LEFT DOWN RIGHT UP&quot;</span>)
+<span style="color: #007020">print</span>(Q)
+plt<span style="color: #333333">.</span>bar(<span style="color: #007020">range</span>(<span style="color: #007020">len</span>(rList)),rList,color<span style="color: #333333">=</span><span style="background-color: #fff0f0">&quot;blue&quot;</span>)
+plt<span style="color: #333333">.</span>show()
+</pre></div>
+<xmp>
+
+================================================================================
+</xmp><img src='https://raw.githubusercontent.com/youngminpark2559/pracrl/master/shkim-rl/pic/2019_04_22_00:10:37.png' alt=''><xmp>
+
+</xmp>
+   </BODY>
+</HTML>
