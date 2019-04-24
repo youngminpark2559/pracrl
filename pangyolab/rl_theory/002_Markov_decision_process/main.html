@@ -147,7 +147,7 @@ Historical record of states is created
 But even if agent starts with same initial state, historical record of states can be different
 
 ================================================================================
-</xmp><img src='https://raw.githubusercontent.com/youngminpark2559/pracrl/master/pangyolab/pics/2019_04_24_07:52:09.png' alt=''><xmp>
+</xmp><img src='https://raw.githubusercontent.com/youngminpark2559/pracrl/master/pangyolab/rl_theory/pics/2019_04_24_07:52:09.png' alt=''><xmp>
 
 * Example of markov process
 
@@ -158,7 +158,7 @@ But even if agent starts with same initial state, historical record of states ca
 * Sleep: terminal state
 
 ================================================================================
-</xmp><img src='https://raw.githubusercontent.com/youngminpark2559/pracrl/master/pangyolab/pics/2019_04_24_07:54:46.png' alt=''><xmp>
+</xmp><img src='https://raw.githubusercontent.com/youngminpark2559/pracrl/master/pangyolab/rl_theory/pics/2019_04_24_07:54:46.png' alt=''><xmp>
 
 * Do sampling on episodes
 
@@ -168,7 +168,7 @@ But even if agent starts with same initial state, historical record of states ca
 * You sample 2nd episode: C1 FB FB C1 C2 Sleep
 
 ================================================================================
-</xmp><img src='https://raw.githubusercontent.com/youngminpark2559/pracrl/master/pangyolab/pics/2019_04_24_08:12:28.png' alt=''><xmp>
+</xmp><img src='https://raw.githubusercontent.com/youngminpark2559/pracrl/master/pangyolab/rl_theory/pics/2019_04_24_08:12:28.png' alt=''><xmp>
 
 Markov chain transition matrix
 
@@ -195,7 +195,7 @@ reward_value=reward_function_for_each_state(state)
 * $$$\gamma$$$: discount factor, $$$\gamma \in [0,1]$$$
 
 ================================================================================
-</xmp><img src='https://raw.githubusercontent.com/youngminpark2559/pracrl/master/pangyolab/pics/2019_04_24_08:22:17.png' alt=''><xmp>
+</xmp><img src='https://raw.githubusercontent.com/youngminpark2559/pracrl/master/pangyolab/rl_theory/pics/2019_04_24_08:22:17.png' alt=''><xmp>
 
 R is reward
 
@@ -212,12 +212,12 @@ $$$G_t = R_{t+1}+\gamma R_{t+2}+\cdots=\sum\limits_{k=0}^{\infty}\gamma^k R_{t+k
 * Goal of RL is to maximize cumulative discounted reward
 
 ================================================================================
-</xmp><img src='https://raw.githubusercontent.com/youngminpark2559/pracrl/master/pangyolab/pics/2019_04_24_08:33:47.png' alt=''><xmp>
+</xmp><img src='https://raw.githubusercontent.com/youngminpark2559/pracrl/master/pangyolab/rl_theory/pics/2019_04_24_08:33:47.png' alt=''><xmp>
 
 1. Mathematically convergence
 
 ================================================================================
-</xmp><img src='https://raw.githubusercontent.com/youngminpark2559/pracrl/master/pangyolab/pics/2019_04_24_08:39:32.png' alt=''><xmp>
+</xmp><img src='https://raw.githubusercontent.com/youngminpark2559/pracrl/master/pangyolab/rl_theory/pics/2019_04_24_08:39:32.png' alt=''><xmp>
 
 Value function
 
@@ -240,7 +240,7 @@ expectation_val_of_return_val_at_state_1=value_function(return_val1,return_val2,
 * Value function $$$v(s)$$$ gives the "long-term value of state s"
 
 ================================================================================
-</xmp><img src='https://raw.githubusercontent.com/youngminpark2559/pracrl/master/pangyolab/pics/2019_04_24_08:41:00.png' alt=''><xmp>
+</xmp><img src='https://raw.githubusercontent.com/youngminpark2559/pracrl/master/pangyolab/rl_theory/pics/2019_04_24_08:41:00.png' alt=''><xmp>
 
 Sampled path1: C1 C2 C3 Pass Sleep
 Start state: 1
@@ -255,13 +255,13 @@ Return value: -3.125
 * Agent can predict "return value" at state 1 (C1) based on average value
 
 ================================================================================
-</xmp><img src='https://raw.githubusercontent.com/youngminpark2559/pracrl/master/pangyolab/pics/2019_04_24_08:55:25.png' alt=''><xmp>
+</xmp><img src='https://raw.githubusercontent.com/youngminpark2559/pracrl/master/pangyolab/rl_theory/pics/2019_04_24_08:55:25.png' alt=''><xmp>
 
 ================================================================================
-</xmp><img src='https://raw.githubusercontent.com/youngminpark2559/pracrl/master/pangyolab/pics/2019_04_24_08:55:40.png' alt=''><xmp>
+</xmp><img src='https://raw.githubusercontent.com/youngminpark2559/pracrl/master/pangyolab/rl_theory/pics/2019_04_24_08:55:40.png' alt=''><xmp>
 
 ================================================================================
-</xmp><img src='https://raw.githubusercontent.com/youngminpark2559/pracrl/master/pangyolab/pics/2019_04_24_08:59:13.png' alt=''><xmp>
+</xmp><img src='https://raw.githubusercontent.com/youngminpark2559/pracrl/master/pangyolab/rl_theory/pics/2019_04_24_08:59:13.png' alt=''><xmp>
 
 ================================================================================
 Bellman equation for MRPs
@@ -297,7 +297,7 @@ $$$v(s)=\mathbb{E}[R_{t+1} + \gamma(R_{t+2} + \gamma R_{t+3} + \cdots) |S_t=s]$$
 * Above shows relationship between $$$v(s)$$$ and $$$v(S_{t+1})$$$
 
 ================================================================================
-</xmp><img src='https://raw.githubusercontent.com/youngminpark2559/pracrl/master/pangyolab/pics/2019_04_24_09:28:47.png' alt=''><xmp>
+</xmp><img src='https://raw.githubusercontent.com/youngminpark2559/pracrl/master/pangyolab/rl_theory/pics/2019_04_24_09:28:47.png' alt=''><xmp>
 
 Bellman equation: $$$v(s)=\mathbb{E}[R_{t+1} + \gamma v(S_{t+1}) |S_t=s]$$$
 
@@ -314,7 +314,7 @@ Value of state s: $$$\mathcal{R}_s + \left[ 0.2\times s^{'}_{\text{left circle}}
 $$$\mathcal{R}_s$$$: reward at state s
 
 ================================================================================
-</xmp><img src='https://raw.githubusercontent.com/youngminpark2559/pracrl/master/pangyolab/pics/2019_04_24_09:38:27.png' alt=''><xmp>
+</xmp><img src='https://raw.githubusercontent.com/youngminpark2559/pracrl/master/pangyolab/rl_theory/pics/2019_04_24_09:38:27.png' alt=''><xmp>
 
 * See 4.3 circle
 
@@ -327,10 +327,10 @@ $$$-2 + \left[ 0.6\times 10 + 0.4\times 0.8 \right]$$$
 
 ================================================================================
 Let's express following equation
-</xmp><img src='https://raw.githubusercontent.com/youngminpark2559/pracrl/master/pangyolab/pics/2019_04_24_09:44:45.png' alt=''><xmp>
+</xmp><img src='https://raw.githubusercontent.com/youngminpark2559/pracrl/master/pangyolab/rl_theory/pics/2019_04_24_09:44:45.png' alt=''><xmp>
 
 into vector and matrix
-</xmp><img src='https://raw.githubusercontent.com/youngminpark2559/pracrl/master/pangyolab/pics/2019_04_24_09:45:21.png' alt=''><xmp>
+</xmp><img src='https://raw.githubusercontent.com/youngminpark2559/pracrl/master/pangyolab/rl_theory/pics/2019_04_24_09:45:21.png' alt=''><xmp>
 
 * Bellman equation is a linear equation
 
@@ -339,7 +339,7 @@ into vector and matrix
 * P transition matrix
 
 ================================================================================
-</xmp><img src='https://raw.githubusercontent.com/youngminpark2559/pracrl/master/pangyolab/pics/2019_04_24_09:46:19.png' alt=''><xmp>
+</xmp><img src='https://raw.githubusercontent.com/youngminpark2559/pracrl/master/pangyolab/rl_theory/pics/2019_04_24_09:46:19.png' alt=''><xmp>
 
 * Meaning: when you're given $$$\mathcal{R},\mathcal{P},\gamma$$$ which are definition of MRP
 value function can be found directly by calculating $$$v=(\mathcal{I}-\gamma \mathcal{P})^{-1} \mathcal{R}$$$
@@ -375,7 +375,7 @@ $$$\mathcal{R}_s^a = \mathbb{E} [R_{t+1} | S_t=s,A_t=a]$$$
 * All states are markov states
 
 ================================================================================
-</xmp><img src='https://raw.githubusercontent.com/youngminpark2559/pracrl/master/pangyolab/pics/2019_04_24_10:04:55.png' alt=''><xmp>
+</xmp><img src='https://raw.githubusercontent.com/youngminpark2559/pracrl/master/pangyolab/rl_theory/pics/2019_04_24_10:04:55.png' alt=''><xmp>
 
 * Name of states is not important. So they're void.
 
@@ -392,14 +392,14 @@ When agent does "action", agent goes to specific state in some probabilities whi
 Agent goes from center circle to right circle in 1.0 probability which Study has
 
 ================================================================================
-</xmp><img src='https://raw.githubusercontent.com/youngminpark2559/pracrl/master/pangyolab/pics/2019_04_24_10:45:33.png' alt=''><xmp>
+</xmp><img src='https://raw.githubusercontent.com/youngminpark2559/pracrl/master/pangyolab/rl_theory/pics/2019_04_24_10:45:33.png' alt=''><xmp>
 
 $$$\mathcal{P}_{ss^{'}}$$$ in MRP: probability of going from $$$s$$$ to $$$s^{'}$$$
 
 $$$\mathcal{P}$$$ is $$$m\times m$$$ matrix
 
 ================================================================================
-</xmp><img src='https://raw.githubusercontent.com/youngminpark2559/pracrl/master/pangyolab/pics/2019_04_24_10:48:11.png' alt=''><xmp>
+</xmp><img src='https://raw.githubusercontent.com/youngminpark2559/pracrl/master/pangyolab/rl_theory/pics/2019_04_24_10:48:11.png' alt=''><xmp>
 
 * Note that there is a in superscript
 
@@ -428,7 +428,7 @@ action3 to go from $$$s$$$ to $$$s^{'}$$$: prob3
 * So, choosing action based on policy is important
 
 ================================================================================
-</xmp><img src='https://raw.githubusercontent.com/youngminpark2559/pracrl/master/pangyolab/pics/2019_04_24_10:54:37.png' alt=''><xmp>
+</xmp><img src='https://raw.githubusercontent.com/youngminpark2559/pracrl/master/pangyolab/rl_theory/pics/2019_04_24_10:54:37.png' alt=''><xmp>
 
 * Definition of policy $$$\pi$$$
 
@@ -444,7 +444,7 @@ If agent has current state, agent determines decision
 because agent is in MDP (fully observable environment)
 
 ================================================================================
-</xmp><img src='https://raw.githubusercontent.com/youngminpark2559/pracrl/master/pangyolab/pics/2019_04_24_10:58:45.png' alt=''><xmp>
+</xmp><img src='https://raw.githubusercontent.com/youngminpark2559/pracrl/master/pangyolab/rl_theory/pics/2019_04_24_10:58:45.png' alt=''><xmp>
 
 * You can't see policy from above illustration
 
@@ -458,7 +458,7 @@ What policy will make sum of reward which agent will have?
 Above sentence is the goal of solving MDP.
 
 ================================================================================
-</xmp><img src='https://raw.githubusercontent.com/youngminpark2559/pracrl/master/pangyolab/pics/2019_04_24_11:01:15.png' alt=''><xmp>
+</xmp><img src='https://raw.githubusercontent.com/youngminpark2559/pracrl/master/pangyolab/rl_theory/pics/2019_04_24_11:01:15.png' alt=''><xmp>
 
 * Suppose agent moves based on policy $$$\pi$$$ in MDP
 
@@ -493,7 +493,7 @@ State and reward sequence ($$$S_1,R_2,S_2,\cdots$$$) becomes Markov reward proce
 $$$\mathcal{R}_{s}^{\pi} = \sum\limits_{a\in \mathcal{A}} \pi(a|s) \mathcal{R}_s^a$$$
 
 ================================================================================
-</xmp><img src='https://raw.githubusercontent.com/youngminpark2559/pracrl/master/pangyolab/pics/2019_04_24_11:24:45.png' alt=''><xmp>
+</xmp><img src='https://raw.githubusercontent.com/youngminpark2559/pracrl/master/pangyolab/rl_theory/pics/2019_04_24_11:24:45.png' alt=''><xmp>
 
 * Value function in MRP doesn't have $$$\pi$$$
 because agent doesn't do action 
@@ -533,7 +533,7 @@ by using bellman equation
 * When solving large problem, bellman equation is base algorithm
 
 ================================================================================
-</xmp><img src='https://raw.githubusercontent.com/youngminpark2559/pracrl/master/pangyolab/pics/2019_04_24_12:25:30.png' alt=''><xmp>
+</xmp><img src='https://raw.githubusercontent.com/youngminpark2559/pracrl/master/pangyolab/rl_theory/pics/2019_04_24_12:25:30.png' alt=''><xmp>
 
 Policy: at all states, each action has 0.5 probability
 $$$\pi(a|s)=0.5$$$
@@ -541,7 +541,7 @@ $$$\pi(a|s)=0.5$$$
 * When agent follow above policy, red numbers are calculated state-value function
 
 ================================================================================
-</xmp><img src='https://raw.githubusercontent.com/youngminpark2559/pracrl/master/pangyolab/pics/2019_04_24_12:28:51.png' alt=''><xmp>
+</xmp><img src='https://raw.githubusercontent.com/youngminpark2559/pracrl/master/pangyolab/rl_theory/pics/2019_04_24_12:28:51.png' alt=''><xmp>
 
 (1) Bellman expectation equation
 (2) Bellman optimility equation
@@ -565,33 +565,33 @@ $$$q_{\pi}(s,a) = \mathbb{E}_{\pi}[R_{t+1} + \gamma q_{\pi}(S_{t+1},A_{t+1}) | S
 (4) expectation of (1)(2)(3) = action-value function
 
 ================================================================================
-</xmp><img src='https://raw.githubusercontent.com/youngminpark2559/pracrl/master/pangyolab/pics/2019_04_24_12:35:28.png' alt=''><xmp>
+</xmp><img src='https://raw.githubusercontent.com/youngminpark2559/pracrl/master/pangyolab/rl_theory/pics/2019_04_24_12:35:28.png' alt=''><xmp>
 
 You can express v by using q
 
 $$$v_\pi(s)=\sum\limits_{a\in \\mathcal{A}} \pi(a|s)q_{\pi}(s,a)$$$
 
 ================================================================================
-</xmp><img src='https://raw.githubusercontent.com/youngminpark2559/pracrl/master/pangyolab/pics/2019_04_24_12:45:54.png' alt=''><xmp>
+</xmp><img src='https://raw.githubusercontent.com/youngminpark2559/pracrl/master/pangyolab/rl_theory/pics/2019_04_24_12:45:54.png' alt=''><xmp>
 
 You can express q by using v
 
 $$$q_{\pi}(s,a) = \mathcal{R}_{s}^{a} + \gamma \sum\limits_{s^{'}\in \mathcal{S}} \mathcal{P}_{ss^{'}}^{a} v_\pi(s^{'})$$$
 
 ================================================================================
-</xmp><img src='https://raw.githubusercontent.com/youngminpark2559/pracrl/master/pangyolab/pics/2019_04_24_12:51:01.png' alt=''><xmp>
+</xmp><img src='https://raw.githubusercontent.com/youngminpark2559/pracrl/master/pangyolab/rl_theory/pics/2019_04_24_12:51:01.png' alt=''><xmp>
 
 You use 1 and 2 to express $$$v_{\pi}(s)$$$
 
 ================================================================================
-</xmp><img src='https://raw.githubusercontent.com/youngminpark2559/pracrl/master/pangyolab/pics/2019_04_24_12:53:04.png' alt=''><xmp>
+</xmp><img src='https://raw.githubusercontent.com/youngminpark2559/pracrl/master/pangyolab/rl_theory/pics/2019_04_24_12:53:04.png' alt=''><xmp>
 
 Example: Bellman Expectation Equation in Student MDP using above equation
 
 policy $$$\pi(a|s)=0.5$$$
 
 ================================================================================
-</xmp><img src='https://raw.githubusercontent.com/youngminpark2559/pracrl/master/pangyolab/pics/2019_04_24_12:55:24.png' alt=''><xmp>
+</xmp><img src='https://raw.githubusercontent.com/youngminpark2559/pracrl/master/pangyolab/rl_theory/pics/2019_04_24_12:55:24.png' alt=''><xmp>
 
 ================================================================================
 You can solve value function in MDP by using Bellman equation
@@ -599,10 +599,10 @@ You can solve value function in MDP by using Bellman equation
 $$$v_\pi$$$ means value when agent does action with following policy $$$\pi$$$
 
 Again, value can be calculated like this when $$$\pi(a|s)=0.5$$$
-</xmp><img src='https://raw.githubusercontent.com/youngminpark2559/pracrl/master/pangyolab/pics/2019_04_24_12:58:01.png' alt=''><xmp>
+</xmp><img src='https://raw.githubusercontent.com/youngminpark2559/pracrl/master/pangyolab/rl_theory/pics/2019_04_24_12:58:01.png' alt=''><xmp>
 
 ================================================================================
-</xmp><img src='https://raw.githubusercontent.com/youngminpark2559/pracrl/master/pangyolab/pics/2019_04_24_13:01:23.png' alt=''><xmp>
+</xmp><img src='https://raw.githubusercontent.com/youngminpark2559/pracrl/master/pangyolab/rl_theory/pics/2019_04_24_13:01:23.png' alt=''><xmp>
 
 Goal is to find optimal value function
 
@@ -638,14 +638,14 @@ From those many q functions, find max q
 * You can say MDP is "solved" when you can know the optimal value function.
 
 ================================================================================
-</xmp><img src='https://raw.githubusercontent.com/youngminpark2559/pracrl/master/pangyolab/pics/2019_04_24_14:44:38.png' alt=''><xmp>
+</xmp><img src='https://raw.githubusercontent.com/youngminpark2559/pracrl/master/pangyolab/rl_theory/pics/2019_04_24_14:44:38.png' alt=''><xmp>
 
 Above shows optimal value function when $$$\gamma=1$$$ in student MDP
 
 Red numbers are optimal values
 
 ================================================================================
-</xmp><img src='https://raw.githubusercontent.com/youngminpark2559/pracrl/master/pangyolab/pics/2019_04_24_14:47:08.png' alt=''><xmp>
+</xmp><img src='https://raw.githubusercontent.com/youngminpark2559/pracrl/master/pangyolab/rl_theory/pics/2019_04_24_14:47:08.png' alt=''><xmp>
 
 Optimal action-value function when $$$\gamma=1$$$ in student MDP
 
@@ -702,12 +702,12 @@ So, you can say "there should be deterministic optimal policy for any MDP"
 ================================================================================
 Optimal policy for student MDP
 
-</xmp><img src='https://raw.githubusercontent.com/youngminpark2559/pracrl/master/pangyolab/pics/2019_04_24_15:19:34.png' alt=''><xmp>
+</xmp><img src='https://raw.githubusercontent.com/youngminpark2559/pracrl/master/pangyolab/rl_theory/pics/2019_04_24_15:19:34.png' alt=''><xmp>
 
 Red arrows consist of optimal policy
 
 ================================================================================
-</xmp><img src='https://raw.githubusercontent.com/youngminpark2559/pracrl/master/pangyolab/pics/2019_04_24_15:21:02.png' alt=''><xmp>
+</xmp><img src='https://raw.githubusercontent.com/youngminpark2559/pracrl/master/pangyolab/rl_theory/pics/2019_04_24_15:21:02.png' alt=''><xmp>
 
 To find optimal value at state $$$s$$$,
 you should choose max from $$$q^{*}(s,a)$$$
@@ -719,19 +719,19 @@ From those, select $$$\max_{a} q_{*}(s,a)$$$
 If agent does this, it becomes what action a chooses is v
 
 ================================================================================
-</xmp><img src='https://raw.githubusercontent.com/youngminpark2559/pracrl/master/pangyolab/pics/2019_04_24_15:26:17.png' alt=''><xmp>
+</xmp><img src='https://raw.githubusercontent.com/youngminpark2559/pracrl/master/pangyolab/rl_theory/pics/2019_04_24_15:26:17.png' alt=''><xmp>
 
 Let's express Q by using v
 
 ================================================================================
-</xmp><img src='https://raw.githubusercontent.com/youngminpark2559/pracrl/master/pangyolab/pics/2019_04_24_15:26:57.png' alt=''><xmp>
+</xmp><img src='https://raw.githubusercontent.com/youngminpark2559/pracrl/master/pangyolab/rl_theory/pics/2019_04_24_15:26:57.png' alt=''><xmp>
 
 Let's express v by using q
 
 ================================================================================
 Merge them.
 
-</xmp><img src='https://raw.githubusercontent.com/youngminpark2559/pracrl/master/pangyolab/pics/2019_04_24_15:27:25.png' alt=''><xmp>
+</xmp><img src='https://raw.githubusercontent.com/youngminpark2559/pracrl/master/pangyolab/rl_theory/pics/2019_04_24_15:27:25.png' alt=''><xmp>
 
 $$$v_{*}(s) = \max_{a} \left[ \mathcal{R}_{s}^{a} + \gamma \sum\limits_{s^{'}\in \mathcal{S}} \mathcal{P}_{ss^{'}}^{a} v_{*}(s^{'})\right]$$$
 
@@ -740,7 +740,7 @@ Above one is not linear equation. So it can't be solved by closed form method
 ================================================================================
 Bellman optimality equation in student MDP
 
-</xmp><img src='https://raw.githubusercontent.com/youngminpark2559/pracrl/master/pangyolab/pics/2019_04_24_15:32:28.png' alt=''><xmp>
+</xmp><img src='https://raw.githubusercontent.com/youngminpark2559/pracrl/master/pangyolab/rl_theory/pics/2019_04_24_15:32:28.png' alt=''><xmp>
 
 ================================================================================
 Methods to solve bellman optimality equation
