@@ -1,0 +1,354 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+   "http://www.w3.org/TR/html4/strict.dtd">
+<HTML>
+   <HEAD>
+      <TITLE>My first HTML document</TITLE>
+      <style rel="stylesheet" type="text/css">
+body {
+ font-size: 20px;
+ 
+ margin-top: 50px;
+    margin-bottom: 50px;
+    margin-right: 80px;
+    margin-left: 100px;
+    
+    padding-top: 50px;
+    padding-bottom: 50px;
+    padding-right: 80px;
+    padding-left: 80px;
+    
+    line-height:35px;
+}
+img {
+ width:900px;
+}
+</style>
+      <script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    "HTML-CSS" : {
+        availableFonts : ["STIX"],
+        preferredFont : "STIX",
+        webFont : "STIX-Web",
+        imageFont : null
+    }
+});
+</script>
+     <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js" type="text/javascript">    
+    MathJax.Hub.Config({
+        HTML: ["input/TeX","output/HTML-CSS"],
+        TeX: { extensions: ["AMSmath.js","AMSsymbols.js"], 
+               equationNumbers: { autoNumber: "AMS" } },
+        extensions: ["tex2jax.js"],
+        jax: ["input/TeX","output/HTML-CSS"],
+        tex2jax: { inlineMath: [ ['$$$','$$$'] ],
+                   displayMath: [ ['$$$$','$$$$'] ],
+                   processEscapes: true },
+        "HTML-CSS": { availableFonts: ["TeX"],
+                      linebreaks: { automatic: true } }
+    });
+</script>
+   </HEAD>
+   <BODY>
+<xmp>
+https://www.youtube.com/watch?v=rrTxOkbHj-M
+
+================================================================================
+Planning
+
+- When you know all information about MDP (environment, state)
+planning is to find optimal policy
+
+- Method for planning
+Dynamic programming
+
+================================================================================
+Policy evaluation
+
+When policy is found, if you go along the policy in MDP,
+policy evaluation is to find value function
+
+================================================================================
+Iterative methods to find policy
+policy based iteration
+value based iteration
+
+================================================================================
+Dynamic programming
+
+It's is methodology to solve complicated problem.
+
+You break large problem into small sub problems.
+
+You find solutions on each small sub problem.
+
+And you gather those solutions to find solution for large problem.
+
+================================================================================
+Reinforcement learning
+
+model free: agent doesn't know what he will get from environment
+model based: agent has environment model
+do some action, agent arrives at some state with some probability are known
+
+Planning is used on model based reinforcement learning
+
+To solve planning, dynamic programming is used.
+
+================================================================================
+Requirements for dynamic programming
+
+- optimal substructure
+optimal solution of large problem should be able to be devided into small problems.
+
+- Subproblems should be overlapped
+Subproblems recur many times.
+So, you need to store solution in the form of cache of subproblem to reuse it.
+
+================================================================================
+Markov decision processes satisfy above 2 requirements.
+
+================================================================================
+Dynamic programming assumes full knowledge 
+(state, probability, transition, reward, etc) of the MDP
+
+Dynamic programming is used for planning in an MDP
+
+================================================================================
+Solve planning.
+
+- Solve prediction
+1. Solve prediction learns value function
+2. Given input: MDP $$$\langle S,A,P,R,\gamma \rangle$$$ and policy $$$\pi$$$
+You can be given MRP $$$\langle S,P^{\pi},R^{\pi},\gamma \rangle$$$ instead of MDP
+3. Output: you would like to find value function $$$v_{\pi}$$$
+as you follow known policy $$$\pi$$$
+4. "Solving prediction" is nothing to do with optimal policy.
+No matter how bad optimal policy is given, you follow that policy in MDP,
+you predict reward up to end point via value function
+
+- Solve control
+1. Solve control learns optimal policy
+2. Given input: MDP $$$\langle S,A,P,R,\gamma \rangle$$$
+3. Output: you would like to find optimal value function $$$v_{\pi}$$$ 
+and optimal policy $$$\pi_{*}$$$
+
+================================================================================
+To define MDP, you need 5 components
+S: set of states
+A: set of actions
+P: transition matrix, when you do action A at state s, probabilities of next states in matrix
+R: set of rewards
+$$$\gamma$$$: discount factor
+
+================================================================================
+Dynamic programing is much used for other domains
+- scheduling algorithm
+- string algorithm (e.g., sequence alignment)
+- graph algorithm (e.g., shortest path algorithm)
+- graphical models (e.g., viterbi algorithm)
+- bioinformatics (e.g., lattice models)
+- planning
+
+================================================================================
+Policy evaluation
+
+- It's problem to evaluate policy.
+
+Evaluating policy means what's return value when you follow the policy
+
+Since return value is returned from value function,
+you need to find value function.
+
+- Solution
+you iteratively use Bellman expectation equation
+
+1. set random v s meaning values at all states are 0, which is $$$v_1$$$
+
+2. use iterative method and get $$$v_2$$$
+
+3. your goal is to converge to $$$v_{\pi}$$$ which is function wrt $$$\pi$$$
+
+4. Use synchronous backups
+(1)
+
+================================================================================
+Bellman expectation equation
+
+</xmp><img src='https://raw.githubusercontent.com/youngminpark2559/pracrl/master/pangyolab/pics/2019_04_19_08:57:38.png' alt=''><xmp>
+
+- Iterative form: k+1 and k are grouped in one equation
+
+- $$$v_{k+1}(s) \leftarrow s$$$: state s, you get value $$$v_{k+1}(s)$$$ at k+1 time
+
+- You goal is to make value more precise at k+1
+
+- At k+1, you have 4 states you can go.
+
+- You use 4 states and you update value at k+1
+
+- At initial time, 4 states has garbage random values
+
+- By updating many times, they become precise
+
+- Why it works? states are garbage, but reward is fixed value
+So, fixed known value is put into that iteration, so you will get precise values
+
+================================================================================
+</xmp><img src='https://raw.githubusercontent.com/youngminpark2559/pracrl/master/pangyolab/pics/2019_04_19_09:07:08.png' alt=''><xmp>
+
+Evaluating a random policy in the small gridworld
+
+- Prediction problem: so you are given MDP and policy $$$\pi$$$
+
+- (4,4) matrix is MDP
+
+- States 16 (including 2 terminal states)
+
+- You have 4 actions at each state 
+
+================================================================================
+</xmp><img src='https://raw.githubusercontent.com/youngminpark2559/pracrl/master/pangyolab/pics/2019_04_19_09:10:11.png' alt=''><xmp>
+
+k=0, policy is initialized randomly
+
+</xmp><img src='https://raw.githubusercontent.com/youngminpark2559/pracrl/master/pangyolab/pics/2019_04_19_09:48:13.png' alt=''><xmp>
+
+================================================================================
+Policy iteration
+
+</xmp><img src='https://raw.githubusercontent.com/youngminpark2559/pracrl/master/pangyolab/pics/2019_04_19_09:54:00.png' alt=''><xmp>
+
+1. You evaluate policy $$$\pi$$$
+
+Evaluating policy means you find value function
+
+2. You newly create policy which greedly moves wrt that value function you're evaluating
+
+3. You iterate "evaluate" and "improve"
+
+================================================================================
+</xmp><img src='https://raw.githubusercontent.com/youngminpark2559/pracrl/master/pangyolab/pics/2019_04_19_09:57:37.png' alt=''><xmp>
+
+- Starting V_{\pi}: bad value function
+$$$\pi$$$: bad policy
+
+- First arrow: first evaluating value function $$$v_{\pi}$$$
+And you get new value function
+
+- Based on new value function, you get new policy $$$\pi$$$
+by using $$$\pi=\text{greedy}(V)$$$
+
+- You evaluate $$$\pi$$$
+And you get new value function using $$$V^{\pi}=V_{\text{new}}$$$
+
+- You use $$$\pi=\text{greedy}(V)$$$ again
+
+- Finally, you get optial value function $$$v^{*}$$$ and optimal policy $$$\pi^{*}$$$
+
+- Policy iteration: evaluation, improvement, evaluation, improvement, ...
+
+================================================================================
+</xmp><img src='https://raw.githubusercontent.com/youngminpark2559/pracrl/master/pangyolab/pics/2019_04_19_10:03:58.png' alt=''><xmp>
+
+- States: there are 2 locations. 20 cars can be located at each location in maximum
+
+- Action: move up to 5 cars between locations overnight.
+
+- Transition:
+1. Customers comes to A location in Poisson distribution
+Poisson distribution: probability distribution of probabilities of event occuring 
+during fixed unit time
+
+2. For example, 3 times of lent request a day, 3 times of car returned a day at location A
+4 times of lent request a day, 2 times of car returned a day at location B
+
+</xmp><img src='https://raw.githubusercontent.com/youngminpark2559/pracrl/master/pangyolab/pics/2019_04_19_10:16:27.png' alt=''><xmp>
+
+================================================================================
+Policy improvement in math way
+
+- Goal of proof: if you use policy improvement, 
+found policy and value function are really optimal?
+
+- Consider deterministic policy, $$$a=\pi(s)$$$
+at state s, agent must do action a via policy $$$\pi$$$
+
+- Assumption: you can improve the policy $$$\pi$$$ by acting greedily
+$$$\pi^{'}(s)=\arg_{a\in A}\max q_{\pi}(s,a)$$$
+$$$\pi$$$: previous policy
+$$$\pi^{'}$$$: updated policy
+
+- 
+
+q(s,a) is action-value function
+at states s, via policy $$$\pi$$$, select action a
+
+================================================================================
+</xmp><img src='https://raw.githubusercontent.com/youngminpark2559/pracrl/master/pangyolab/pics/2019_04_19_10:52:09.png' alt=''><xmp>
+
+================================================================================
+Modified version of policy iteration
+
+- Should policy evaluation be to converge to $$$v_{\pi}$$$?
+- Not allowed early stopping?
+- Fixed iteration like 3 eval, 3 improves is allowed?
+- Conclusion: it makes sense.
+
+================================================================================
+Value iteration
+
+Principle of optimality
+
+</xmp><img src='https://raw.githubusercontent.com/youngminpark2559/pracrl/master/pangyolab/pics/2019_04_19_10:55:47.png' alt=''><xmp>
+
+================================================================================
+</xmp><img src='https://raw.githubusercontent.com/youngminpark2559/pracrl/master/pangyolab/pics/2019_04_19_11:00:13.png' alt=''><xmp>
+
+- If you know solution $$$v_{*}(s')$$$ to subproblem $$$s^{'}$$$
+
+- Then, solution v_{*}(s) of large problem s can be found by using one-step lookahead
+
+- $$$s^{'}$$$: states agent can go from state s
+
+================================================================================
+</xmp><img src='https://raw.githubusercontent.com/youngminpark2559/pracrl/master/pangyolab/pics/2019_04_19_11:16:29.png' alt=''><xmp>
+
+- Dynamic programming algorithm 
+(synchronous version: update all states at one time)
+
+- You saw "one prediction problems", "two control problems"
+
+- You iteratively use Bellman equation to solve prediction problem
+
+- If algorithms are based on state-value function $$$v_{\pi}(s)$$$ or $$$v_{*}(s)$$$
+complexity $$$O(mn^2)$$$ per iteration is large
+m: m number of actions
+n: n number of states
+$$$O(mn^2)$$$: time complexity in big O notation
+
+================================================================================
+</xmp><img src='https://raw.githubusercontent.com/youngminpark2559/pracrl/master/pangyolab/pics/2019_04_19_11:22:45.png' alt=''><xmp>
+
+================================================================================
+</xmp><img src='https://raw.githubusercontent.com/youngminpark2559/pracrl/master/pangyolab/pics/2019_04_19_11:23:17.png' alt=''><xmp>
+
+================================================================================
+</xmp><img src='https://raw.githubusercontent.com/youngminpark2559/pracrl/master/pangyolab/pics/2019_04_19_11:24:20.png' alt=''><xmp>
+
+================================================================================
+</xmp><img src='https://raw.githubusercontent.com/youngminpark2559/pracrl/master/pangyolab/pics/2019_04_19_11:24:36.png' alt=''><xmp>
+
+================================================================================
+</xmp><img src='https://raw.githubusercontent.com/youngminpark2559/pracrl/master/pangyolab/pics/2019_04_19_11:25:01.png' alt=''><xmp>
+
+================================================================================
+</xmp><img src='https://raw.githubusercontent.com/youngminpark2559/pracrl/master/pangyolab/pics/2019_04_19_11:25:31.png' alt=''><xmp>
+
+================================================================================
+</xmp><img src='https://raw.githubusercontent.com/youngminpark2559/pracrl/master/pangyolab/pics/2019_04_19_11:27:33.png' alt=''><xmp>
+
+================================================================================
+
+</xmp>
+   </BODY>
+</HTML>

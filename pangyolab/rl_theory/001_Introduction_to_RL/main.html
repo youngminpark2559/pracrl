@@ -1,0 +1,275 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+   "http://www.w3.org/TR/html4/strict.dtd">
+<HTML>
+   <HEAD>
+      <TITLE>My first HTML document</TITLE>
+      <style rel="stylesheet" type="text/css">
+body {
+ font-size: 20px;
+ 
+ margin-top: 50px;
+    margin-bottom: 50px;
+    margin-right: 80px;
+    margin-left: 100px;
+    
+    padding-top: 50px;
+    padding-bottom: 50px;
+    padding-right: 80px;
+    padding-left: 80px;
+    
+    line-height:35px;
+}
+img {
+ width:900px;
+}
+</style>
+      <script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    "HTML-CSS" : {
+        availableFonts : ["STIX"],
+        preferredFont : "STIX",
+        webFont : "STIX-Web",
+        imageFont : null
+    }
+});
+</script>
+     <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js" type="text/javascript">    
+    MathJax.Hub.Config({
+        HTML: ["input/TeX","output/HTML-CSS"],
+        TeX: { extensions: ["AMSmath.js","AMSsymbols.js"], 
+               equationNumbers: { autoNumber: "AMS" } },
+        extensions: ["tex2jax.js"],
+        jax: ["input/TeX","output/HTML-CSS"],
+        tex2jax: { inlineMath: [ ['$$$','$$$'] ],
+                   displayMath: [ ['$$$$','$$$$'] ],
+                   processEscapes: true },
+        "HTML-CSS": { availableFonts: ["TeX"],
+                      linebreaks: { automatic: true } }
+    });
+</script>
+   </HEAD>
+   <BODY>
+<xmp>
+
+https://www.youtube.com/watch?v=wYgyiCEkwC8
+
+================================================================================
+Reinforcement learning
+
+* There is no supervisor who teaches how to maximize reward
+* There is reward signals
+* Feedback can be delayed
+For example, agent does action, agent gets reward in 10 minutes
+* Time matters (left to right and right to left are different)
+Non i.i.d data
+* Agent's actions affect the subsequent data which agent receives
+
+================================================================================
+Reward
+
+* $$$R_t$$$ is a scalar feedback signal
+* Reward $$$R_t$$$ indicates how well agent is doing at time t
+* Agent's job is to maximize "cumulative reward"
+* Reinforcement learning is based on the "reward hypothesis"
+* "Reward hypothesis": all goals can be described by the maximization of expected culuative reward
+* Agree with this hypothesis?
+
+================================================================================
+Reinforcement learning is "sequential decision making"
+
+RL is not about one time good action but sequential good action.
+
+================================================================================
+Agent does "action"
+Environmen gives "reward" and "observation (state)" to the agent
+Agent does "action" based on reward and observation (state)
+...
+
+================================================================================
+History: is records that agent does
+
+$$$H_t = O_1,R_1,A_1,\cdots,A_{t-1},O_t,R_t$$$
+
+$$$H_t$$$: all records until time t
+
+================================================================================
+State: is information which is used for agent and environment to do next step
+
+* $$$S_t=f(H_t)$$$
+* Input history $$$H_t$$$
+* Output state $$$S_t$$$
+
+================================================================================
+State for environment $$$S_t^e$$$
+
+* $$$S_t^e$$$ is all information to make observation and reward to agent
+
+================================================================================
+State for agent $$$S_t^a$$$
+
+* All informations which agent uses when doing action
+
+================================================================================
+Markov state (aka information state)
+
+* When agent decision action, agent depends on only very previous state
+
+* When controling hellicopter, state is Markov state
+
+* $$$P[S_{t+1}|S_{t}] = P[S_{t+1}|S_{1},\cdots,S_{t}]$$$
+
+================================================================================
+Fully observability: anvironment where agent can see states of environment
+
+$$$O_t=S_t^a=S_t^e$$$
+
+This is also called Markov decision process (MDP)
+
+================================================================================
+Partial observability: anvironment where agent can see states of environment
+
+Agent state $$$\ne$$$ environment state
+
+This is also called partially observable Markov decision process (POMDP)
+
+* Agent must construct agent's state representation $$$S_t^a$$$
+(1) Agent can use history as state, $$$S_t^a = H_t$$$
+(2) Agent can use Beliefs of environment state:
+$$$S_t^a = (P[S_t^e=s^1],\cdots,P[S_t^e=s^n)$$$
+(3) Agent can use RNN, $$$S_t^a=\sigma(S_{t-1}^aW_s+O_tW_o)$$$
+
+================================================================================
+How agent is composed of?
+
+(1) Policy: is agent's behaviour function
+(2) Value function: represents how good is each state and/or action
+(3) Model: agent's representation of the environment
+
+Agent can have one or one two or all
+
+================================================================================
+Policy
+
+* is the thing that represents agent's behavior
+* policy is function and mapping
+action=policy(state)
+* deterministic policy: $$$a=\pi(s)$$$
+Input state s, and one action is deterministically determined
+* stochastic policy: $$$\pi(a|s)=\mathbb{P}[A_t=a|S_t=s]$$$
+Input state s, multiple actions are possible to happen.
+[prob_to_action1,prob_to_action2,prob_to_action3,...]=stochastic_policy(state)
+
+idx=argmax(prob_to_action1,prob_to_action2,prob_to_action3,...)
+chosen_action=actions[idx]
+
+================================================================================
+Value function
+
+* represents how good state and action of agent are
+* is prediction of future reward
+* is used to evaluate the goodness/badness of states
+* is used to select between actions
+* $$$v_{\pi}(s)=\mathbb{E}_{\pi}[R_{t+1}+\gamma R_{t+2}+\gamma^2 R_{t+3}+\cdots | S_t=s]$$$
+
+v: value function
+s: state as input
+$$$\pi$$$: from state, when agent follows policy $$$\pi$$$
+expectation value of all rewards until the end of game
+$$$\gamma$$$: discount factor
+
+If there is no policy, value function can't be defined
+because agent should play the game until the end of game
+and it means there is guide (policy) whichh is used for agent 
+to use information about how to play game
+
+================================================================================
+Model: is the thing which predicts how environment varies
+
+Model P predicts next state
+$$$\mathbb{P}_{ss{'}}=\mathbb{E}[S_{t+1}=s^{'}|S_t=s,A_t=a]$$$
+
+Model R predicts next (immediate) reward
+$$$\mathbb{R}_s^a=\mathbb{E}[R_{t+1}|S_t=s,A_t=a]$$$
+
+Model free agent: agent doesn't use model 
+
+Model based agent: agent uses model
+
+================================================================================
+</xmp><img src='https://raw.githubusercontent.com/youngminpark2559/pracrl/master/pangyolab/pics/2019_04_24_00:26:56.png' alt=''><xmp>
+
+================================================================================
+</xmp><img src='https://raw.githubusercontent.com/youngminpark2559/pracrl/master/pangyolab/pics/2019_04_24_00:27:13.png' alt=''><xmp>
+
+Each cell represents optimal policy
+
+action=policy_function(state)
+
+================================================================================
+</xmp><img src='https://raw.githubusercontent.com/youngminpark2559/pracrl/master/pangyolab/pics/2019_04_24_00:28:28.png' alt=''><xmp>
+
+Values when agent follows optimal policy 
+
+================================================================================
+</xmp><img src='https://raw.githubusercontent.com/youngminpark2559/pracrl/master/pangyolab/pics/2019_04_24_00:30:08.png' alt=''><xmp>
+
+================================================================================
+Categorizing agents
+
+(1) Value based agent
+agent has value function (no policy, implicit)
+good locations, agent can follow good locations
+
+(2) Policy based agent
+agent has policy (no value function)
+
+(3) Actor critic agent
+policy
+value function
+
+================================================================================
+(4) model free agent
+agent doesn't make model.
+agent does using policy and/or value function
+
+(5) model based agent
+agent creates model
+agent moves based on model
+
+================================================================================
+Categorizinig problems
+
+2 fundamental problems in sequential decision making problem
+
+(1) learning
+RL.
+Environment is initially unknown.
+Agent interacts with the environment
+Agent improves agent's policy
+
+(2) planning
+Search
+model of the environment is known (reward and transition are known)
+* Agent performs computations (simulation without directly doing trial) 
+with agent's model (without any external interaction)
+because agent knows environment --> MCTS of AlphaGo
+* Agent improves agent's policy
+aka deliberation, reasoning, introspection, pondering, thought, search
+
+================================================================================
+Exploration and exploit
+
+tradeoff relationship
+
+================================================================================
+Prediction problem
+when given policy, predict future 
+goal: train value function well
+
+Control problem
+optimizes future.
+finds best policy
+
+</xmp>
+   </BODY>
+</HTML>
